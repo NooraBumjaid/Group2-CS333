@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Course Reviews | Campus Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h4 {
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+            border-left: 4px solid white;
+        }
+
+        /* Content Layout */
+        .content {
+            margin-left: 270px;
+            padding: 40px 20px;
+        }
+        .box {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            border-radius: 5px;
+        }
+        .input, .textarea, .select select {
+            border-radius: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .content {
+                margin-left: 240px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding-bottom: 10px;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <h4>📖 Campus Hub</h4>
+    <a href="#">🏠 Home</a>
+    <a href="#"> 📅 Event Calender</a>
+    <a href="#">👥 Study group Finder</a>
+    <a href="#" class="active">⭐ Course Reviews</a>
+    <a href="#">📚 Course Notes</a>
+    <a href="#">📰 Campus News</a>
+    <a href="#"> 👥 Club Activities</a>
+    <a href="#"> 💰 Student Marketplace</a>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+    <h2 class="title is-3">Course Reviews</h2>
+
+    <!-- Searching and Filter -->
+    <div class="columns mb-4">
+        <div class="column is-8">
+            <input class="input" type="text" placeholder="Search course reviews...">
+        </div>
+        <div class="column is-4">
+            <div class="select is-fullwidth">
+                <select>
+                    <option>Sort by Rating</option>
+                    <option>Sort by Most Recent</option>
+                </select>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reviews Listing -->
+    <div class="columns is-multiline">
+        <div class="column is-half">
+            <div class="box">
+                <h5 class="title is-5">Cloud Computing</h5>
+                <p><strong>Rating:</strong> ⭐⭐⭐⭐☆ (4.5)</p>
+                <p>"The course was well-structured, and the professor was good!"</p>
+                <p><em>- Dana Abdulla</em></p>
+            </div>
+        </div>
+        <div class="column is-half">
+            <div class="box">
+                <h5 class="title is-5">Java 1</h5>
+                <p><strong>Rating:</strong> ⭐⭐⭐☆☆ (3.5)</p>
+                <p>"Challenging as its the first language to take in coding! The assignments were tough."</p>
+                <p><em>- Noora Rashid</em></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Review Button -->
+    <div class="mb-5">
+        <a href="#" class="button is-success">➕ Add Course Review</a>
+    </div>
+
+    <!-- Review Submission Form -->
+    <div class="box">
+        <h2 class="title is-4">Submit a Review</h2>
+        <form>
+            <div class="field">
+                <label class="label">Course Name</label>
+                <div class="control">
+                    <input class="input" type="text" placeholder="Enter course name" required>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Your Rating</label>
+                <div class="control">
+                    <div class="select is-fullwidth">
+                        <select>
+                            <option>⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                            <option>⭐⭐⭐⭐☆ (4 - Good)</option>
+                            <option>⭐⭐⭐☆☆ (3 - Average)</option>
+                            <option>⭐⭐☆☆☆ (2 - Poor)</option>
+                            <option>⭐☆☆☆☆ (1 - Bad)</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Review</label>
+                <div class="control">
+                    <textarea class="textarea" rows="4" placeholder="Write your review here..." required></textarea>
+                </div>
+            </div>
+            <div class="buttons">
+                <button type="submit" class="button is-primary">Submit</button>
+                <a href="#" class="button is-light">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+</body>
+</html>
