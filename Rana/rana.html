@@ -78,20 +78,21 @@
             }
         }
 
+      /*///////////////////////////////////////*/
+      /*start*/
       .section-title{
         font-size: 99px; 
         margin-left: 400px;
         margin-right: 30px;
         color: #191970;
       }
-
       .search-filter-container {
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 10px;
     margin-left: 170px;
-}
+    }
 input[type="text"].search-input { 
     padding: 0.75em;
     font-size: 1em;
@@ -112,9 +113,488 @@ button.filter-button {
 button.filter-button:hover {
     background-color: #191970;
 }
+/*end of start*/
+/*///////////////////////////////////////*/
 
-    </style>
+/*posts buttons*/
+.news-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 100px;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.sort-button {
+    background-color: #222293; /* Green */
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    margin-left: 165px;
+    margin-right:90px;
+}
+.sort-button:hover {
+    background-color: #191970; /* Darker green on hover */
+}
+
+.add-post-button {
+    background-color: #222293; /* Blue */
+    color: white;
+    padding: 12px 25px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s ease;
+    margin-left: 500px;
+    
+}
+.add-post-button:hover {
+    background-color: #191970; /* Darker blue on hover */
+}
+/*end of posts buttons*/
+/*///////////////////////////////////////*/
+
+/*posts layout*/
+.news-pages-container {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        width: calc( (270px * 3) + (20px * 2) ); 
+        height: 330px;
+        margin: 20px auto; 
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+        padding: 15px;
+        gap: 35px;
+        margin-right: 100px;
+    }
+    .news-page {
+        display: flex;
+        flex-shrink: 0;
+        width: 25%;
+        gap: 25px;
+        justify-content: flex-start; 
+    }
+
+    .news-item {
+        background-color: white;
+        border: 1px solid #eee;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        width: 200px;
+        flex-shrink: 0;
+        text-align: center;
+        padding: 10px;
+        cursor: pointer;
+        transition: transform 0.2s ease-in-out; 
+    }
+
+    .news-item:hover {
+        transform: scale(1.02);
+    }
+
+    .news-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 5px;
+        padding: 0 5px;
+    }
+
+    .news-date {
+        font-size: 0.8em;
+        color: #777;
+    }
+
+    .like-button {
+        font-size: 1.1em;
+        cursor: pointer;
+        color: #aaa;
+    }
+
+    .like-button:hover {
+        color: red;
+    }
+
+    .news-image {
+        width: 100%;
+        height: auto;
+        overflow: hidden;
+        border-radius: 6px;
+        margin-bottom: 10px;
+    }
+
+    .news-image img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover; /* Ensure image covers the area */
+    }
+
+    .news-title {
+        font-size: 1em;
+        margin-top: 5px;
+        margin-bottom: 5px;
+        color: #333;
+        font-weight: bold;
+        padding: 0 5px;
+    }
+
+    .news-author {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75em;
+        color: #555;
+        margin-top: 10px;
+    }
+
+    .author-avatar {
+        width: 25px;
+        height: 25px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 5px;
+    }
+
+    .author-avatar img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .news-item-full {
+        display: none;
+        padding: 15px;
+        text-align: left;
+        border-top: 1px solid #eee;
+        margin-top: 10px;
+    }
+
+    .news-item.expanded .news-item-preview {
+        display: none;
+    }
+
+    .news-item.expanded .news-item-full {
+        display: block;
+    }
+
+    .read-less-button {
+        margin-top: 10px;
+        padding: 8px 15px;
+        cursor: pointer;
+        background-color: #f0f0f0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        font-size: 0.9em;
+    }
+
+    .read-less-button:hover {
+        background-color: #e0e0e0;
+    }
+
+    .pagination {
+        display: flex;
+        justify-content: center;
+        margin-top: 20px;
+        gap: 10px;
+        margin-left: 75px;
+    }
+
+    .pagination button {
+        padding: 8px 12px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        background-color: white;
+        cursor: pointer;
+        font-size: 0.9em;
+
+    }
+
+    .pagination button.active {
+        background-color: #007bff;
+        color: white;
+        border-color: #000000;
+    }
+
+    .pagination button:hover {
+        background-color: #eee;
+    }
+/*end of posts layout*/
+/*///////////////////////////////////////*/
+
+/*full news page*/
+.news-item-container {
+    display: flex; 
+    border: 1px solid #ddd;  
+    padding: 10px;          
+    margin-bottom: 15px;   
+    align-items: flex-start; 
+    border-radius: 8px; 
+    margin-left: 300px;
+    width: 950px; /* Decreased width */
+    height: 350px; /* Increased height */
+
+}
+
+.news-photo {
+    width: 250px;         
+    height: 290px;        
+    border: 1px solid #eee;  
+    margin-right: 50px;    
+    margin-left: 25px;
+    flex-shrink: 0;       
+    border-radius: 4px;  
+    overflow: hidden; 
+}
+
+.news-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    display: block;       
+}
+
+.news-text-content {
+    flex-grow: 1;       
+}
+
+.news-title {
+    font-size: 1.2em;      
+    margin-bottom: 5px;    
+    color: #333;          
+}
+
+.news-paragraph {
+    font-size: 0.9em;      
+    color: #555;          
+    line-height: 1.4;    
+}
+.news-datess {
+    font-size: 0.75em;
+    margin-top: 15px;
+    margin-left: 525px;
+    color: #888;
+}
+
+.news-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+    margin-left: -180px;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+}
+
+.author-photo {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.author-name {
+    font-size: 0.8em;
+    color: #333;
+}
+
+.like-button {
+    font-size: 1.2em;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #888;
+    margin-left: 65px;
+    margin-right: 50px;
+}
+
+/*end of full news page*/
+/*///////////////////////////////////////*/
+
+
+
+/*comment sec start*/
+.comment-section {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.comment-header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    margin-left:400px ;
+    margin-right: auto;
+    margin-top: 30px;
+}
+.comment-section-title{
+    font-size: 2.5em;
+    margin-right: 110px;
+    margin-left: -65px;
+    color: #191970;
+}
+
+.add-comment-button { 
+    padding: 0.75em 1em;
+    font-size: 1em;
+    background-color: #222293;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-right: 425px;
+    margin-top: 30px;
+}
+.add-comment-button:hover {
+    background-color: #191970;
+}
+
+/*end of comment sec start*/
+/*///////////////////////////////////////*/
+
+/*comment-section*/
+
+.comments-section {
+            margin-top: 20px;
+            padding: 20px;
+            max-width: 950px;
+            margin-left: 280px ;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            overflow-y: auto;
+            max-height: 500px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .comment {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .comment:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .comment-author-info {
+            display: flex;
+            align-items: center;
+            margin-bottom: 5px;
+        }
+
+        .author-avatar {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            margin-right: 10px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .author-avatar img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .comment-author {
+            font-size: 0.9em;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 0;
+        }
+
+        .comment-content {
+            font-size: 0.85em;
+            color: #555;
+            line-height: 1.4;
+            flex-grow: 1;
+        }
+
+        .comment-actions {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+
+        .comment-like-button {
+            font-size: 1.2em;
+            cursor: pointer;
+            color: #888;
+            margin-right: 10px;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        .comment-reply-button {
+            font-size: 0.9em;
+            cursor: pointer;
+            color: #007bff;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+
+        .edit-delete-buttons {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-button, .delete-button {
+            font-size: 0.7em;
+            cursor: pointer;
+            color: #007bff;
+            border: none;
+            background: none;
+            padding: 0;
+        }
+        .delete-button{
+          color: #ff0000;
+        }
+
+        body {
+            font-family: sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f8f8;
+        }
+
+/*end of comment-section*/
+/*///////////////////////////////////////*/
+
+
+
+
+  </style>
+
+
+
 <body>
+ 
     <div class="sidebar">
     <h4>📖 Campus Hub</h4>
     <a href="#">🏠 Home</a>
@@ -127,18 +607,183 @@ button.filter-button:hover {
     <a href="#"> 💰 Student Marketplace</a>
     </div>
 
-       /* the title and search + filter botton */
-    <div class="campus-news-container">
+
+    <div class="start">
     <h1 class="section-title"> Campus News</h1>
     <div class="search-filter-container">
         <input type="text" id="campus-news-search" class="search-input" placeholder="Search">
         <button class="filter-button">Filter ☰</button>
     </div>
+    </div>
+    
+
+  
+    <div class="news-buttons"> <button class="sort-button">Sort</button>
+        <button class="add-post-button">Add Post</button>
+    </div>
+   
+
+    <div class="news-pages-container">
+    <div class="news-page">
+        <div class="news-item">
+            <div class="news-item-preview">
+                <div class="news-header">
+                    <span class="news-date">12/3/2025</span>
+                    <span class="like-button">❤️</span>
+                </div>
+                <div class="news-image">
+                    <img src="collage.PNG" alt="News Image">
+                </div>
+                <h3 class="news-title">Campus news1</h3>
+                <div class="news-author">
+                    <div class="author-avatar">
+                        <img src="woman.PNG" alt="Avatar">
+                    </div>
+                    <span>Author</span>
+                </div>
+            </div>
+        </div>
+        </div>
+        
+        <div class="news-page">
+        <div class="news-item">
+            <div class="news-item-preview">
+                <div class="news-header">
+                    <span class="news-date">12/3/2025</span>
+                    <span class="like-button">❤️</span>
+                </div>
+                <div class="news-image">
+                    <img src="collage.PNG" alt="News Image">
+                </div>
+                <h3 class="news-title">Campus news1</h3>
+                <div class="news-author">
+                    <div class="author-avatar">
+                        <img src="woman.PNG" alt="Avatar">
+                    </div>
+                    <span>Author</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    <div class="news-page">
+        <div class="news-item">
+            <div class="news-item-preview">
+                <div class="news-header">
+                    <span class="news-date">12/3/2025</span>
+                    <span class="like-button">❤️</span>
+                </div>
+                <div class="news-image">
+                    <img src="collage.PNG" alt="News Image">
+                </div>
+                <h3 class="news-title">Campus news1</h3>
+                <div class="news-author">
+                    <div class="author-avatar">
+                        <img src="woman.PNG" alt="Avatar">
+                    </div>
+                    <span>Author</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+
+    <div class="pagination">
+    <button> << </button>
+    <button>1</button>
+    <button>2</button>
+    <button>3</button>
+    <button>4</button>
+    <button>5</button>
+    <button>... </button> 
+    <button>9</button>
+    <button> >> </button>
+    </div>
+
+    <div class="news-item-container">
+    <div class="news-photo">
+        <img src="collage.PNG" alt="News Photo">
+    </div>
+    <div class="news-text-content">
+        <span class="news-datess">Date</span>
+        <h2 class="news-title">News Title</h2>
+        <p class="news-paragraph">here is a paragraph  </p>
+    </div>
+    <div class="news-footer">
+            <div class="author-info">
+                <img src="woman.PNG" alt="Author Photo" class="author-photo">
+                <span class="author-name">Author Name</span>
+            </div>
+            <button class="like-button">❤️</button>
+        </div>
+    </div>
 </div>
 
+<div class="comment-section">
+    <div class="comment-header">
+        <h1 class="comment-section-title">Comment Section</h1>
+        <button class="add-comment-button">Add</button>
+    </div>
+</div>
 
-</body>
-</html>
+<div class="comments-section">  <div class="comment">
+            <div class="edit-delete-buttons">
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="comment-author-info">
+                <div class="author-avatar">
+                    <img src="woman.PNG" alt="Author Photo">
+                </div>
+                <span class="comment-author">person 1</span>
+            </div>
+            <p class="comment-content">This is a sample comment. </p>
+            <div class="comment-actions">
+                <button class="comment-like-button">❤️</button>
+                <button class="comment-reply-button">Reply</button>
+            </div>
+        </div>
+        <div class="comment">
+             <div class="edit-delete-buttons">
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="comment-author-info">
+                <div class="author-avatar">
+                    <img src="woman.PNG" alt="Author Photo">
+                </div>
+                <span class="comment-author">person 2</span>
+            </div>
+            <p class="comment-content">Another comment here.</p>
+             <div class="comment-actions">
+                <button class="comment-like-button">❤️</button>
+                <button class="comment-reply-button">Reply</button>
+            </div>
+        </div>
+        <div class="comment">
+             <div class="edit-delete-buttons">
+                <button class="edit-button">Edit</button>
+                <button class="delete-button">Delete</button>
+            </div>
+            <div class="comment-author-info">
+                <div class="author-avatar">
+                    <img src="woman.PNG" alt="Author Photo">
+                </div>
+                <span class="comment-author">person 3</span>
+            </div>
+            <p class="comment-content">and a comment here.</p>
+             <div class="comment-actions">
+                <button class="comment-like-button">❤️</button>
+                <button class="comment-reply-button">Reply</button>
+            </div>
+        </div>
+    </div>
 
-git config --global user.name "RanaElias"
-git config --global user.email "ranaelias04@gmail.com"
+
+ </body>
+
+ </html>
+
+ git config --global user.name "RanaElias"
+git config --global user.email "ranaelias04@gmail.com" 
