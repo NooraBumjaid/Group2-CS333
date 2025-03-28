@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Marketplace</title>
+
+    <link rel="stylesheet" type="text/css" href="./stylesheet.css">
+
+</head>
+
+<body>
+    <div class="sidebar">
+        <br/>
+        <h4>📖 Campus Hub</h4>
+        <br/><br/>
+        <a href="#">🏠 Home</a>
+        <a href="#"> 📅 Event Calender</a>
+        <a href="#">👥 Study group Finder</a>
+        <a href="#">⭐ Course Reviews</a>
+        <a href="#">📚 Course Notes</a>
+        <a href="#">📰 Campus News</a>
+        <a href="#"> 👥 Club Activities</a>
+        <a href="#" class="active"> 💰 Student Marketplace</a>
+    </div>
+
+    <div class="top-bar">
+        <h1 class="page-title">My Store</h1>
+        <div class="cart-icon">
+            🛒 <span id="cart-count">0</span>
+        </div>
+    </div>
+    
+    <div class="container">
+        <div class="filter-bar">
+            <span class="category-tag"><input type="text" class="search-input open-modal-btn" placeholder="Search...">
+                <!-- <button class="reset-btn">Search</button> -->
+            </span>
+            <button class="new-card-btn" id="open-modal-btn">+ New Card</button>
+
+        </div>
+
+        <!-- Modal (Popup) -->
+        <div class="modal-overlay">
+            <div class="modal">
+                <h2>Create New Card</h2>
+                <label>Title:</label>
+                <input type="text" id="card-title" placeholder="Enter title" required>
+
+                <label>Price (BHD):</label>
+                <input type="number" id="card-price" placeholder="Enter price" required>
+
+                <label>Tags (comma-separated):</label>
+                <input type="text" id="card-tags" placeholder="e.g., UI/UX, Urgent">
+
+                <label>Upload Image:</label>
+                <input type="file" id="card-image" accept="image/*">
+                <img id="image-preview" src="" class="hidden" alt="Image Preview">
+
+                <button class="create-card-btn">Create Card</button>
+                <button class="close-modal-btn">Cancel</button>
+            </div>
+        </div>
+
+        <div class="content-grid">
+        </div>
+    </div>
+    <script src="index.js"></script>
+
+</body>
+
+</html>
+
+
+ <!-- <div class="card">
+                <div class="assigned-badge">2100 bhd</div>
+                <div class="buy-badge">Buy</div>
+                <img src="https://picsum.photos/seed/13/400/300" alt="UI/UX Design" class="card-image">
+                <h3 class="card-title">Mastering UI/UX Design for Impactful Solutions</h3>
+                <div class="tags">
+                    <span class="tag">UI/UX</span>
+                    <span class="tag">Not Urgent</span>
+                </div>
+                <p class="card-info">Edited 2h ago </p>
+            </div>
+
+            <div class="card">
+                <div class="assigned-badge">10 bhd</div>
+                <div class="buy-badge">Buy</div>
+
+                <img src="https://picsum.photos/seed/133/400/300" alt="UI Design" class="card-image">
+                <h3 class="card-title">Mastering UI Design for Impactful Experiences</h3>
+                <div class="tags">
+                    <span class="tag">Fundamental</span>
+                    <span class="tag">Not Urgent</span>
+                </div>
+                <p class="card-info">Edited 2h ago</p>
+            </div>
+
+            <div class="card">
+                <div class="assigned-badge">5 bhd</div>
+                <div class="buy-badge">Buy</div>
+                <img src="https://picsum.photos/seed/132/400/300" alt="Innovation Design" class="card-image">
+                <h3 class="card-title">Where Innovation Meets Design</h3>
+                <div class="tags">
+                    <span class="tag">Design</span>
+                    <span class="tag">Not Urgent</span>
+                </div>
+                <p class="card-info">Edited 2h ago</p>
+            </div> -->
