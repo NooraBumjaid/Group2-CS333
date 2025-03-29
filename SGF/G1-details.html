@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Study Group Details | Campus Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+    <style>
+      .container {
+        max-width: 800px;
+        margin-top: 40px;
+      }
+      .comment {
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .buttons {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <section class="section">
+      <div class="container">
+        <a href="SGF.html" class="button is-link mb-4">← Back to Finder</a>
+
+        <!-- Group Info -->
+        <div class="box">
+          <h1 class="title is-3">Data Structures Study Group</h1>
+          <h2 class="subtitle is-5">📚 Major: Computer Science</h2>
+          <p><strong>Meeting Time:</strong> Every Monday at 3PM - Room 204</p>
+          <p><strong>Members:</strong> 5/10</p>
+          <p><strong>Description:</strong> Focused on mastering data structures through weekly discussions, quizzes, and LeetCode challenges.</p>
+
+          <div class="buttons">
+            <a href="#" class="button is-warning">✏️ Edit</a>
+            <a href="#" class="button is-danger">🗑️ Delete</a>
+          </div>
+        </div>
+
+        <!-- Members -->
+        <div class="box">
+          <h2 class="title is-4">👥 Group Members</h2>
+          <ul>
+            <li><strong>Maryam Abdulla</strong> — Computer Science</li>
+            <li><strong>Faisal Ali</strong> — Software Engineering</li>
+            <li><strong>Omar Mohammed</strong> — Computer Science</li>
+            <li><strong>Sara Mahmood</strong> — AI & Data Science</li>
+            <li><strong>Ahmed Khaled</strong> — Information Systems</li>
+          </ul>
+        </div>
+
+        <!-- Comments -->
+        <div class="box">
+          <h2 class="title is-4">💬 Comments</h2>
+
+          <!-- Static comments -->
+          <div class="comment">
+            <strong>Sara:</strong> Looking forward to this week's meeting!
+          </div>
+          <div class="comment">
+            <strong>Omar:</strong> Can we go over trees again next time?
+          </div>
+          <div class="comment">
+            <strong>Maryam:</strong> Thanks for the practice problems you shared!
+          </div>
+
+          <!-- Comment input form -->
+          <div class="mt-5">
+            <div class="field">
+              <label class="label">Your Name</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Enter your name">
+              </div>
+            </div>
+
+            <div class="field">
+              <label class="label">Your Comment</label>
+              <div class="control">
+                <textarea class="textarea" placeholder="Write your comment..."></textarea>
+              </div>
+            </div>
+
+            <button class="button is-primary mt-2">Post Comment</button>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </body>
+</html>
