@@ -96,16 +96,25 @@
         
         <!-- Search and Filter Section -->
         <div class="form-inline mb-4 justify-content-between">
-            <input type="text" class="form-control w-75" placeholder="Search for activity">
+            <input type="text" class="form-control w-50" placeholder="Search for activity">
             <button class="btn btn-primary ml-2" onclick="window.location.href='add-activity.html'">Add New Activity</button>
         </div>
 
-        <!-- Sort by Controls -->
+        <!-- Sort and Filter Controls -->
         <div class="form-inline mb-4">
             <label class="mr-2">Sort by:</label>
+            <select class="form-control mr-3">
+                <option></option>
+                <option>(Newest to Oldest)</option>
+                <option>(Oldest to Newest)</option>
+                <option>(A to Z)</option>
+                <option>(Z to A)</option>
+            </select>
+            <label class="mr-2">Filter by:</label>
             <select class="form-control">
-                <option>Date</option>
-                <option>Name</option>
+                <option>All Categories</option>
+                <option>Workshops</option>
+                <option>Courses</option>
             </select>
         </div>
 
