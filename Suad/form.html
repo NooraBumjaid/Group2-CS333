@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en" dir="auto">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add New Activity</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* General Body Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Container Styling */
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Header Styling */
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        /* Form Styles */
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input, textarea {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            min-height: 120px;
+        }
+
+        .save-btn, .cancel-btn {
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 48%; /* Ensure both buttons have same width */
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .save-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+        }
+
+        .cancel-btn {
+            background-color: #f44336; /* Red color for emphasis */
+            color: white;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .save-btn:hover, .cancel-btn:hover {
+            opacity: 0.9;
+        }
+
+        .cancel-btn:hover {
+            background-color: #d32f2f; /* Darker red on hover */
+        }
+
+        .cancel-btn:focus {
+            outline: none;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Button Container */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+
+        /* Responsiveness for mobile screens */
+        @media (max-width: 768px) {
+            .button-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .save-btn, .cancel-btn {
+                width: 100%; /* Full width for mobile */
+            }
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container mt-4">
+        <h1>Add New Activity</h1>
+        <form>
+            <div class="form-group">
+                <label for="activityName">Activity Name</label>
+                <input type="text" class="form-control" id="activityName" required>
+            </div>
+            <div class="form-group">
+                <label for="activityDescription">Description</label>
+                <textarea class="form-control" id="activityDescription" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="activityDate">Date</label>
+                <input type="date" class="form-control" id="activityDate" required>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="btn save-btn">Save</button>
+                <a href="index.html" class="btn cancel-btn">Cancel</a>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
