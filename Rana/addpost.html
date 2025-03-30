@@ -1,1 +1,159 @@
-addpost.html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+       .custom-blue {
+    background-color: #0074D9; /* A custom blue */
+    color: white; /* White text */
+    border: none; /* Remove border */
+  }
+</style>
+<body>
+ 
+<!-- Back to Main Page Button -->
+<div class="container mt-4">
+  <div class="columns">
+    <div class="column">
+      <a href="index.html" class="button custom-blue">Back to Main Page</a>
+    </div>
+  </div>
+</div>
+
+ <!-- View Post Page -->
+ <div class="container mt-6">
+  <div class="box" style="padding: 30px;">
+    <!-- Title -->
+    <h1 class="title is-2 has-text-centered">The News Title</h1>
+
+    <!-- Author -->
+    <p class="subtitle is-6 has-text-centered has-text-grey">
+      By <strong>The Author</strong> | Date: 10/3/2025
+    </p>
+
+    <!-- Image and Text Layout -->
+    <div class="columns mt-4">
+      <!-- Left Column: Image -->
+      <div class="column is-one-third">
+        <figure class="image">
+          <img src="collage.PNG" alt="News Image" style="border-radius: 8px; width: 100%; height: auto;">
+        </figure>
+      </div>
+
+      <!-- Right Column: Text -->
+      <div class="column is-two-thirds">
+        <div class="content">
+          <p>
+            The College of Engineering has just announced the launch of a new
+             "Introduction to Information Technology" course, designed to 
+             equip students with foundational skills in modern technology.
+              This hands-on class covers essential topics such as computer systems, networking 
+              basics, cybersecurity principles, and an introduction to programming languages
+               like Python and JavaScript. Students will also explore emerging technologies 
+               like artificial intelligence, cloud computing, and data analytics,
+                preparing them for diverse career paths in
+                 the ever-evolving IT industry. With a focus on practical applications 
+                 and real-world problem-solving, this course is ideal for beginners looking
+                  to build a strong technological foundation while fostering creativity and
+                   innovation. Whether you're pursuing a career in software development,
+                    IT support,
+             or tech entrepreneurship, this class promises to be a valuable stepping stone.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Buttons -->
+    <div class="buttons is-centered mt-4">
+      <button class="button is-primary">Edit Post</button>
+      <button class="button is-danger">Delete Post</button>
+    </div>
+  </div>
+ </div>
+
+ <!-- Comment Section Header -->
+ <div class="columns is-vcentered mt-4" style="padding: 0 60px;">
+  <div class="column">
+    <h2 class="title is-3" style="color: darkblue;">Comment Section</h2>
+  </div>
+  <div class="column has-text-right">
+    <button class="button is-primary">Add Post Comment</button>
+  </div>
+ </div>
+
+<!-- Comment Section Box -->
+<div class="box mt-4" style="padding: 30px;">
+  <!-- Comment 1 -->
+  <div class="box" style="padding: 15px;">
+    <!-- Profile Picture and Top Buttons -->
+    <div class="columns is-vcentered">
+      <div class="column is-narrow">
+        <figure class="image is-48x48">
+          <img src="woman.PNG" alt="Profile Picture" style="border-radius: 50%;">
+        </figure>
+      </div>
+      <div class="column">
+        <strong>sara ahmed</strong>
+      </div>
+      <div class="column is-narrow">
+        <button class="button is-small is-primary">Like</button>
+        <button class="button is-small is-info ml-2">Reply</button>
+      </div>
+    </div>
+
+    <!-- Comment Text -->
+    <div class="content mt-3">
+      <p>
+        This is a sample comment. 
+      </p>
+    </div>
+
+    <!-- Bottom Buttons -->
+    <div class="has-text-right">
+      <button class="button is-small is-danger">Delete</button>
+      <button class="button is-small is-info ml-2">Edit</button>
+    </div>
+  </div>
+
+  <!-- Comment 2 -->
+  <div class="box mt-3" style="padding: 15px;">
+    <!-- Profile Picture and Top Buttons -->
+    <div class="columns is-vcentered">
+      <div class="column is-narrow">
+        <figure class="image is-48x48">
+          <img src="woman.PNG" alt="Profile Picture" style="border-radius: 50%;">
+        </figure>
+      </div>
+      <div class="column">
+        <strong>lola Smith</strong>
+      </div>
+      <div class="column is-narrow">
+        <button class="button is-small is-primary">Like</button>
+        <button class="button is-small is-info ml-2">Reply</button>
+      </div>
+    </div>
+
+    <!-- Comment Text -->
+    <div class="content mt-3">
+      <p>
+        Another comment here.
+    </div>
+
+    <!-- Bottom Buttons -->
+    <div class="has-text-right">
+      <button class="button is-small is-danger">Delete</button>
+      <button class="button is-small is-info ml-2">Edit</button>
+    </div>
+  </div>
+</div>
+
+ </body>
+
+ </html>
+
+ git config --global user.name "RanaElias"
+ git config --global user.email "ranaelias04@gmail.com" 
