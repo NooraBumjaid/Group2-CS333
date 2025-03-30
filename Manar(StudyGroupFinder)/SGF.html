@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Study Group Finder | Campus Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+      /* Sidebar Styles */
+      .sidebar {
+        width: 250px;
+        height: 100vh;
+        position: fixed;
+        background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+        padding-top: 20px;
+        box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .sidebar h4 {
+        color: white;
+        text-align: center;
+        font-weight: 600;
+      }
+
+      .sidebar a {
+        display: block;
+        padding: 12px 20px;
+        color: white;
+        text-decoration: none;
+        font-size: 16px;
+        font-weight: 500;
+        transition: background 0.3s;
+      }
+
+      .sidebar a:hover {
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+      }
+
+      .sidebar a.active {
+        background: rgba(255, 255, 255, 0.3);
+        font-weight: 700;
+        border-left: 4px solid white;
+      }
+
+      /* Content Layout */
+      .content {
+        margin-left: 270px;
+        padding: 40px 20px;
+      }
+
+      .box {
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      .button {
+        border-radius: 5px;
+      }
+
+      .input, .textarea, .select select {
+        border-radius: 5px;
+      }
+
+      /* Responsive Design */
+      @media (max-width: 1024px) {
+        .sidebar {
+          width: 220px;
+        }
+        .content {
+          margin-left: 240px;
+        }
+      }
+
+      @media (max-width: 768px) {
+        .sidebar {
+          width: 100%;
+          height: auto;
+          position: relative;
+          padding-bottom: 10px;
+        }
+
+        .content {
+          margin-left: 0;
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+   
+       <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <h4>📖 Campus Hub</h4>
+    <a href="../main.html">🏠 Home</a>
+    <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
+    <a href="#" class="active">👥 Study group Finder</a>
+    <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
+    <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+    <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
+    <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
+    <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
+  </div>
+     
+
+    <!-- Main Content -->
+    <div class="content">
+      <h2 class="title is-3">Study Group Finder</h2>
+
+      <!-- Search, Filter, and Sort -->
+      <div class="columns mb-4 is-multiline">
+
+        <div class="column is-4">
+          <input class="input" type="text" placeholder="Search for study groups..." />
+        </div>
+
+        <div class="column is-4">
+          <div class="select is-fullwidth">
+            <select>
+              <option>Filter by Major</option>
+              <option>Computer Science</option>
+              <option>Information System</option>
+              <option>Network Engineering</option>
+              <option>Elective Courses</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="column is-4">
+          <div class="select is-fullwidth">
+              <select>
+              <option>Sort Options</option>
+              <option>Sort A to Z</option>
+              <option>Sort Z to A</option>
+              </select>
+          </div>
+        </div>
+
+      </div>
+    
+
+      <!-- Study Group Cards -->
+      <div class="columns is-multiline">
+
+        <div class="column is-half">
+          <div class="box">
+              <h5 class="title is-5">Data Structures Study Group</h5>
+              <p><strong>Major:</strong> Computer Science</p>
+              <p><strong>Meeting:</strong> Mondays @ 3PM in Room 204</p>
+              <p><strong>Members:</strong> 5/10</p>
+              <a href="G1-details.html" class="button is-primary is-small">View Details</a>
+          </div>
+        </div>
+      
+        <div class="column is-half">
+          <div class="box">
+              <h5 class="title is-5">Network Technology Study Group</h5>
+              <p><strong>Major:</strong> Network Engineering</p>
+              <p><strong>Meeting:</strong> Thursdays @ 11AM in Library</p>
+              <p><strong>Members:</strong> 4/10</p>
+              <a href="G2-details.html" class="button is-primary is-small">View Details</a>
+          </div>
+        </div>
+
+      </div>
+    
+      <!-- Pagination Controls -->
+      <nav class="pagination is-centered mt-4" role="navigation" aria-label="pagination">
+
+        <a class="pagination-previous is-disabled">Previous</a>
+        <a class="pagination-next">Next</a>
+
+        <ul class="pagination-list">
+          <li><a class="pagination-link is-current">1</a></li>
+          <li><a class="pagination-link">2</a></li>
+          <li><a class="pagination-link">3</a></li>
+        </ul>
+
+      </nav>
+    
+
+      <!-- Create Group Button -->
+      <div class="mb-5">
+        <a href="#" class="button is-success">➕ Create Study Group</a>
+      </div>
+
+      <!-- Create Group Form -->
+      <div class="box">
+        <h2 class="title is-4">Create a New Study Group</h2>
+        <form>
+
+          <div class="field">
+            <label class="label">Group Name</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Enter group name" required />
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Major</label>
+            <div class="control">
+              <div class="select is-fullwidth">
+                <select required>
+                  <option>Select Major</option>
+                  <option>Computer Science</option>
+                  <option>Information System</option>
+                  <option>Network Engineering</option>
+                  <option>Elective Courses</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Meeting Details</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="e.g. Mondays @ 2PM in Room 101" required />
+            </div>
+          </div>
+
+          <!-- Number of Members -->
+          <div class="field">
+            <label class="label">Number of Members</label>
+            <div class="control">
+              <input class="input" type="number" min="1" max="50" placeholder="e.g. 5" />
+            </div>
+          </div>
+
+          <!-- Names & Majors Textfield -->
+          <div class="field">
+            <label class="label">Members - Names & Majors</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="e.g. 
+              Ali - Computer Science
+              Fatima - Networking" rows="5"></textarea>
+            </div>
+          </div>
+
+          <div class="field">
+            <label class="label">Group Description</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Describe your group and goals..." required> </textarea>
+            </div>
+          </div>
+
+          <div class="buttons">
+            <button type="submit" class="button is-primary">Create Group</button>
+            <a href="#" class="button is-light">Cancel</a>
+          </div>
+
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

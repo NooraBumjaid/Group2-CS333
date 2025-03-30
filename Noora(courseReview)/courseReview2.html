@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Course Reviews | Page 2</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <style>
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+      padding-top: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar h4 {
+      color: white;
+      text-align: center;
+      font-weight: 600;
+    }
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: 700;
+      border-left: 4px solid white;
+    }
+
+    .content {
+      margin-left: 270px;
+      padding: 40px 20px;
+    }
+
+    .box.review-box {
+      height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .column.is-half {
+      display: flex;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .content { margin-left: 240px; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .content { margin-left: 0; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<div class="sidebar">
+  <h4>📖 Campus Hub</h4>
+  <a href="../main.html">🏠 Home</a>
+  <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
+  <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
+  <a href="#" class="active">⭐ Course Reviews</a>
+  <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+  <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
+  <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
+  <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
+</div>
+
+<!-- Main Content -->
+<div class="content">
+  <h2 class="title is-3">Course Reviews</h2>
+
+  <!-- Course Reviews 2 -->
+  <div class="columns is-multiline">
+    <!-- Network Programming -->
+    <div class="column is-half">
+      <div class="box review-box">
+        <div>
+          <h5 class="title is-5">Network Programming</h5>
+          <p><strong>Department:</strong> Network Engineering</p>
+          <p><strong>Rating:</strong> ⭐⭐⭐⭐☆ (4)</p>
+          <p>"The course was well-structured, it gave me great knowledge about client-server model."</p>
+          <p><em>- Remma</em></p>
+        </div>
+        <div>
+          <a href="networkProgramming.html" class="button is-link is-small mt-2">👀 View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pagination for view -->
+  <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+    <a class="pagination-previous" href="courseReview.html">Previous</a>
+    <a class="pagination-next" disabled>Next</a>
+    <ul class="pagination-list">
+      <li><a class="pagination-link" href="courseReview.html">1</a></li>
+      <li><a class="pagination-link is-current" href="#">2</a></li>
+    </ul>
+  </nav>
+</div>
+
+</body>
+</html>

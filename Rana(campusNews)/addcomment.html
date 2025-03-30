@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+       .custom-blue {
+    background-color: #0074D9; /* A custom blue */
+    color: white; /* White text */
+    border: none; /* Remove border */
+  }
+</style>
+<body>
+ 
+<!-- Back to Main Page Button -->
+<div class="container mt-4">
+  <div class="columns">
+    <div class="column">
+      <a href="index.html" class="button custom-blue">Back to Main Page</a>
+    </div>
+  </div>
+ </div>
+
+  <!-- Add Comment Section -->
+  <div class="container mt-4">
+    <div class="columns is-centered">
+      <div class="column is-half">
+        <div class="box custom-box">
+          <h1 class="title has-text-centered">Add a Comment</h1>
+
+          <!-- Radio Buttons for Submission Type -->
+          <div class="field">
+            <label class="label">Choose Submission Type</label>
+            <div class="control">
+              <label class="radio">
+                <input type="radio" name="submission-type" value="photo">
+                Photo
+              </label>
+              <label class="radio ml-4">
+                <input type="radio" name="submission-type" value="link">
+                Link
+              </label>
+              <label class="radio ml-4">
+                <input type="radio" name="submission-type" value="none" checked>
+                No Upload
+              </label>
+            </div>
+          </div>
+
+          <!-- Photo Upload Field -->
+          <div class="field photo-field" style="display: none;">
+            <label class="label">Upload Photo</label>
+            <div class="control">
+              <input class="input" type="file" accept="image/*">
+            </div>
+          </div>
+
+          <!-- Link Input Field -->
+          <div class="field link-field" style="display: none;">
+            <label class="label">Enter Link</label>
+            <div class="control">
+              <input class="input" type="url" placeholder="https://example.com">
+            </div>
+          </div>
+
+          <!-- Comment Textarea -->
+          <div class="field">
+            <label class="label">Comment</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Write your comment here..."></textarea>
+            </div>
+          </div>
+
+          <!-- Submit and Delete Buttons -->
+          <div class="buttons is-centered mt-4">
+            <button class="button is-primary"> Submit / replay </button>
+            <button class="button is-danger">Delete</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+ </body>
+
+ </html>
+
+ git config --global user.name "RanaElias"
+ git config --global user.email "ranaelias04@gmail.com" 

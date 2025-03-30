@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Events Calendar - Campus Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background-color: #3f51b5;
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h4 {
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background-color: #5c6bc0;
+        }
+
+        .calendar {
+            margin-left: 270px;
+            padding: 20px;
+        }
+
+        .month {
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .week {
+            margin-bottom: 20px;
+        }
+
+        .week h4 {
+            font-size: 1.2em;
+            font-weight: bold;
+            padding: 10px;
+            background-color: #5c6bc0;
+            color: white;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+
+        .event {
+            padding: 10px;
+            margin-bottom: 5px;
+            border-left: 4px solid #3f51b5;
+            background-color: #f0f0f0;
+            border-radius: 3px;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+            }
+            .calendar {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Sidebar Navigation -->
+<div class="sidebar">
+    <h4>📖 Campus Hub</h4>
+    <a href="../main.html">🏠 Home</a>
+    <a href="#" class="active">📅 Event Calendar</a>
+    <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
+    <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
+    <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+    <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
+    <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
+    <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
+  </div>
+
+  
+    <!-- Calendar Content -->
+    <div class="calendar">
+        <div class="month">April 2025</div>
+
+         <!-- Search Bar -->
+        <div class="field">
+            <input class="input" type="text" placeholder="Search events">
+        </div>
+
+        <!-- Filter and Sort Options -->
+        <div class="field is-grouped">
+            <div class="control">
+                <div class="select">
+                    <select>
+                        <option>Filter by Category </option>
+                        <option>Workshop</option>
+                        <option>Lecture</option>
+                        <option>Seminar</option>
+                        <option>Networking Event</option>
+                    </select>
+                </div>
+            </div>
+            <div class="control">
+                <div class="select">
+                    <select>
+                        <option>Sort by </option>
+                        <option>Date</option>
+                        <option>Name</option>
+                        <option>Category</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="buttons">
+            <button class="button is-small">Previous</button>
+            <button class="button is-small">1</button>
+            <button class="button is-small">2</button>
+            <button class="button is-small">Next</button>
+        </div>
+
+
+
+        <!-- Week 1 -->
+        <div class="week">
+            <h4>Week 1 (April 1st - April 7th)</h4>
+            <div class="event">April 1st - Senior Project Exhibition</div>
+            <div class="event">April 3rd - Networking Event: Meet & Greet with Alumni</div>
+        </div>
+
+        <!-- Week 2 -->
+        <div class="week">
+            <h4>Week 2 (April 8th - April 14th)</h4>
+            <div class="event">April 7th - Webinar: Introduction to Data Science</div>
+            <div class="event">April 9th - Club Meeting: Technology Club</div>
+        </div>
+
+        <!-- Week 3 -->
+        <div class="week">
+            <h4>Week 3 (April 15th - April 21st)</h4>
+            <div class="event">April 14th - Panel Discussion: Future of Artificial Intelligence</div>
+            <div class="event">April 16th - Workshop: Graphic Design with Adobe</div>
+        </div>
+
+        <!-- Week 4 -->
+        <div class="week">
+            <h4>Week 4 (April 22nd - April 28th)</h4>
+            <div class="event">April 21st - Coding Bootcamp: From Beginner to Pro</div>
+            <div class="event">April 23rd - Leadership Seminar: Building Strong Teams</div>
+        </div>
+    </div>
+
+</body>
+</html>

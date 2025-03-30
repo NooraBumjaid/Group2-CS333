@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Course Reviews | Campus Hub</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+  <style>
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+      padding-top: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar h4 {
+      color: white;
+      text-align: center;
+      font-weight: 600;
+    }
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: 700;
+      border-left: 4px solid white;
+    }
+
+    .content {
+      margin-left: 270px;
+      padding: 40px 20px;
+    }
+
+    .tabs a {
+      text-decoration: none;
+    }
+
+    .box.review-box {
+      height: 300px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .column.is-half {
+      display: flex;
+    }
+
+    @media (max-width: 1024px) {
+      .sidebar { width: 220px; }
+      .content { margin-left: 240px; }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .content { margin-left: 0; padding: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+     <!-- Sidebar Navigation -->
+     <div class="sidebar">
+      <h4>📖 Campus Hub</h4>
+      <a href="../main.html">🏠 Home</a>
+      <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
+      <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
+      <a href="#" class="active">⭐ Course Reviews</a>
+      <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+      <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
+      <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
+      <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
+    </div>
+
+<!-- Main Content -->
+<div class="content">
+  <h2 class="title is-3">Course Reviews</h2>
+
+  <!-- Filter Tabs -->
+  <div class="tabs is-toggle is-toggle-rounded mb-4">
+    <ul>
+      <li><a href="#">All</a></li>
+      <li><a href="#">Computer Science</a></li>
+      <li><a href="#">Information System</a></li>
+      <li><a href="#">Network Engineering</a></li>
+      <li><a href="#">Elective Courses</a></li>
+    </ul>
+  </div>
+
+  <!-- Searching and Sorting -->
+  <div class="columns mb-4">
+    <div class="column is-8">
+      <input class="input" type="text" placeholder="Search course reviews...">
+    </div>
+    <div class="column is-4">
+      <div class="select is-fullwidth">
+        <select>
+          <option>Sort by Rating</option>
+          <option>Sort by Most Recent</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <!-- Course Reviews -->
+  <div class="columns is-multiline">
+    <!-- Java 1 -->
+    <div class="column is-half">
+      <div class="box review-box">
+        <div>
+          <h5 class="title is-5">Java 1</h5>
+          <p><strong>Department:</strong> Computer Science</p>
+          <p><strong>Rating:</strong> ⭐⭐⭐☆☆ (3)</p>
+          <p>
+            "The assignments were tough,its was my first coding language"
+          </p>
+          <p><em>- Noora Rashid</em></p>
+        </div>
+        <div>
+          <a href="java.html" class="button is-link is-small mt-2">👀 View</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cloud Computing -->
+    <div class="column is-half">
+      <div class="box review-box">
+        <div>
+          <h5 class="title is-5">Cloud Computing</h5>
+          <p><strong>Department:</strong> Information System</p>
+          <p><strong>Rating:</strong> ⭐⭐⭐⭐☆ (4)</p>
+          <p><strong>Preferred Professor:</strong> Dr. Abdulla Mohammed</p>
+          <p>"The course was well-structured, and the professor was good!"</p>
+          <p><em>- Dana Abdulla</em></p>
+        </div>
+        <div>
+          <a href="cloudcomputing.html" class="button is-link is-small mt-2">👀 View</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  
+
+  <!--Pagination for the view -->
+  <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+    <a class="pagination-previous" disabled>Previous</a>
+    <a class="pagination-next" href="courseReview2.html">Next</a>
+    <ul class="pagination-list">
+      <li><a class="pagination-link is-current" href="#">1</a></li>
+      <li><a class="pagination-link" href="courseReview2.html">2</a></li>
+    </ul>
+  </nav>
+
+  <!-- Review box -->
+  <div class="box mt-6">
+    <h2 class="title is-4">Submit a Review</h2>
+    <form>
+      <div class="field">
+        <label class="label">Course Name</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Enter course name" required />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Department</label>
+        <div class="control">
+          <label class="radio">
+            <input type="radio" name="department" required />
+            Computer Science
+          </label>
+          <label class="radio">
+            <input type="radio" name="department" />
+            Information System
+          </label>
+          <label class="radio">
+            <input type="radio" name="department" />
+            Network Engineering
+          </label>
+          <label class="radio">
+            <input type="radio" name="department" />
+            Elective Courses
+          </label>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Preferred Professor <span class="has-text-grey-light">(optional)</span></label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Enter professor's name if you want" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Your Rating</label>
+        <div class="control">
+          <div class="select is-fullwidth">
+            <select required>
+              <option value="" disabled selected>Select rating</option>
+              <option>⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+              <option>⭐⭐⭐⭐☆ (4 - Good)</option>
+              <option>⭐⭐⭐☆☆ (3 - Average)</option>
+              <option>⭐⭐☆☆☆ (2 - Poor)</option>
+              <option>⭐☆☆☆☆ (1 - Bad)</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Review</label>
+        <div class="control">
+          <textarea class="textarea" rows="4" placeholder="Write your review here..." required></textarea>
+        </div>
+      </div>
+
+      <div class="buttons">
+        <button type="submit" class="button is-primary">Submit</button>
+        <a href="#" class="button is-light">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+
+</body>
+</html>
