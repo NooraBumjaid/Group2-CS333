@@ -76,523 +76,56 @@
                 margin-left: 0;
                 padding: 20px;
             }
-        }
-
-      /*///////////////////////////////////////*/
-      /*start*/
-      .section-title{
-        font-size: 99px; 
-        margin-left: 400px;
-        margin-right: 30px;
-        color: #191970;
       }
-      .search-filter-container {
+
+
+         .main-content {
+                margin-left: 275px;
+                padding: 20px;
+            }
+
+        .news-posts-card{
+            margin-left: auto; 
+            max-width: 80%; 
+        }  
+        .pagination-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    margin-top: 10px;
-    margin-left: 170px;
-    }
-input[type="text"].search-input { 
-    padding: 0.75em;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    flex-grow: 1;
-    max-width: 600px;
-    margin-right: 10px;
+    margin-top: 2rem;
 }
-button.filter-button { 
-    padding: 0.75em 1em;
-    font-size: 1em;
-    background-color: #222293;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-}
-button.filter-button:hover {
-    background-color: #191970;
-}
-/*end of start*/
-/*///////////////////////////////////////*/
 
-/*posts buttons*/
-.news-buttons {
+.pagination {
     display: flex;
-    justify-content: center;
-    gap: 100px;
-    margin-top: 20px;
-    margin-bottom: 30px;
+    align-items: center; 
+    gap: 5px;
 }
 
-.sort-button {
-    background-color: #222293; /* Green */
-    color: white;
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;
-    margin-left: 165px;
-    margin-right:90px;
-}
-.sort-button:hover {
-    background-color: #191970; /* Darker green on hover */
+.pagination-previous,
+.pagination-next,
+.pagination-link {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dbdbdb;
+    text-decoration: none;
+    color: #363636;
+    background-color: #fff;
+    font-size: 0.875rem;
 }
 
-.add-post-button {
-    background-color: #222293; /* Blue */
-    color: white;
-    padding: 12px 25px;
-    font-size: 16px;
-    font-weight: bold;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    transition: background-color 0.3s ease;
-    margin-left: 500px;
-    
+.pagination-link.is-current {
+    background-color: #00d1b2;
+    color: #fff;
+    border-color: #00d1b2;
 }
-.add-post-button:hover {
-    background-color: #191970; /* Darker blue on hover */
-}
-/*end of posts buttons*/
-/*///////////////////////////////////////*/
-
-/*posts layout*/
-.news-pages-container {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        width: calc( (270px * 3) + (20px * 2) ); 
-        height: 330px;
-        margin: 20px auto; 
-        border: 1px solid #ddd;
-        border-radius: 5px;
-        background-color: #f9f9f9;
-        padding: 15px;
-        gap: 35px;
-        margin-right: 100px;
-    }
-    .news-page {
-        display: flex;
-        flex-shrink: 0;
-        width: 25%;
-        gap: 25px;
-        justify-content: flex-start; 
-    }
-
-    .news-item {
-        background-color: white;
-        border: 1px solid #eee;
-        border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        width: 200px;
-        flex-shrink: 0;
-        text-align: center;
-        padding: 10px;
-        cursor: pointer;
-        transition: transform 0.2s ease-in-out; 
-    }
-
-    .news-item:hover {
-        transform: scale(1.02);
-    }
-
-    .news-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 5px;
-        padding: 0 5px;
-    }
-
-    .news-date {
-        font-size: 0.8em;
-        color: #777;
-    }
-
-    .like-button {
-        font-size: 1.1em;
-        cursor: pointer;
-        color: #aaa;
-    }
-
-    .like-button:hover {
-        color: red;
-    }
-
-    .news-image {
-        width: 100%;
-        height: auto;
-        overflow: hidden;
-        border-radius: 6px;
-        margin-bottom: 10px;
-    }
-
-    .news-image img {
-        display: block;
-        width: 100%;
-        height: auto;
-        object-fit: cover; /* Ensure image covers the area */
-    }
-
-    .news-title {
-        font-size: 1em;
-        margin-top: 5px;
-        margin-bottom: 5px;
-        color: #333;
-        font-weight: bold;
-        padding: 0 5px;
-    }
-
-    .news-author {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.75em;
-        color: #555;
-        margin-top: 10px;
-    }
-
-    .author-avatar {
-        width: 25px;
-        height: 25px;
-        border-radius: 50%;
-        overflow: hidden;
-        margin-right: 5px;
-    }
-
-    .author-avatar img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
-
-    .news-item-full {
-        display: none;
-        padding: 15px;
-        text-align: left;
-        border-top: 1px solid #eee;
-        margin-top: 10px;
-    }
-
-    .news-item.expanded .news-item-preview {
-        display: none;
-    }
-
-    .news-item.expanded .news-item-full {
-        display: block;
-    }
-
-    .read-less-button {
-        margin-top: 10px;
-        padding: 8px 15px;
-        cursor: pointer;
-        background-color: #f0f0f0;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        font-size: 0.9em;
-    }
-
-    .read-less-button:hover {
-        background-color: #e0e0e0;
-    }
-
-    .pagination {
-        display: flex;
-        justify-content: center;
-        margin-top: 20px;
-        gap: 10px;
-        margin-left: 75px;
-    }
-
-    .pagination button {
-        padding: 8px 12px;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        background-color: white;
-        cursor: pointer;
-        font-size: 0.9em;
-
-    }
-
-    .pagination button.active {
-        background-color: #007bff;
-        color: white;
-        border-color: #000000;
-    }
-
-    .pagination button:hover {
-        background-color: #eee;
-    }
-/*end of posts layout*/
-/*///////////////////////////////////////*/
-
-/*full news page*/
-.news-item-container {
-    display: flex; 
-    border: 1px solid #ddd;  
-    padding: 10px;          
-    margin-bottom: 15px;   
-    align-items: flex-start; 
-    border-radius: 8px; 
-    margin-left: 300px;
-    width: 950px; /* Decreased width */
-    height: 350px; /* Increased height */
-
-}
-
-.news-photo {
-    width: 250px;         
-    height: 290px;        
-    border: 1px solid #eee;  
-    margin-right: 50px;    
-    margin-left: 25px;
-    flex-shrink: 0;       
-    border-radius: 4px;  
-    overflow: hidden; 
-}
-
-.news-photo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover; 
-    display: block;       
-}
-
-.news-text-content {
-    flex-grow: 1;       
-}
-
-.news-title {
-    font-size: 1.2em;      
-    margin-bottom: 5px;    
-    color: #333;          
-}
-
-.news-paragraph {
-    font-size: 0.9em;      
-    color: #555;          
-    line-height: 1.4;    
-}
-.news-datess {
-    font-size: 0.75em;
-    margin-top: 15px;
-    margin-left: 525px;
-    color: #888;
-}
-
-.news-footer {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-top: auto;
-    margin-left: -180px;
-}
-
-.author-info {
-    display: flex;
-    align-items: center;
-}
-
-.author-photo {
-    width: 30px;
-    height: 30px;
-    border-radius: 50%;
-    margin-right: 5px;
-}
-
-.author-name {
-    font-size: 0.8em;
-    color: #333;
-}
-
-.like-button {
-    font-size: 1.2em;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: #888;
-    margin-left: 65px;
-    margin-right: 50px;
-}
-
-/*end of full news page*/
-/*///////////////////////////////////////*/
-
-
-
-/*comment sec start*/
-.comment-section {
-    width: 100%;
-    margin-top: 20px;
-}
-
-.comment-header{
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
-    margin-left:400px ;
-    margin-right: auto;
-    margin-top: 30px;
-}
-.comment-section-title{
-    font-size: 2.5em;
-    margin-right: 110px;
-    margin-left: -65px;
-    color: #191970;
-}
-
-.add-comment-button { 
-    padding: 0.75em 1em;
-    font-size: 1em;
-    background-color: #222293;
-    color: white;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-right: 425px;
-    margin-top: 30px;
-}
-.add-comment-button:hover {
-    background-color: #191970;
-}
-
-/*end of comment sec start*/
-/*///////////////////////////////////////*/
-
-/*comment-section*/
-
-.comments-section {
-            margin-top: 20px;
-            padding: 20px;
-            max-width: 950px;
-            margin-left: 280px ;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            background-color: #f9f9f9;
-            overflow-y: auto;
-            max-height: 500px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-        }
-
-        .comment {
-            padding: 10px;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .comment:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .comment-author-info {
-            display: flex;
-            align-items: center;
-            margin-bottom: 5px;
-        }
-
-        .author-avatar {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            margin-right: 10px;
-            overflow: hidden;
-            flex-shrink: 0;
-        }
-
-        .author-avatar img{
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .comment-author {
-            font-size: 0.9em;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 0;
-        }
-
-        .comment-content {
-            font-size: 0.85em;
-            color: #555;
-            line-height: 1.4;
-            flex-grow: 1;
-        }
-
-        .comment-actions {
-            display: flex;
-            align-items: center;
-            margin-top: 10px;
-            justify-content: flex-end;
-        }
-
-        .comment-like-button {
-            font-size: 1.2em;
-            cursor: pointer;
-            color: #888;
-            margin-right: 10px;
-            border: none;
-            background: none;
-            padding: 0;
-        }
-
-        .comment-reply-button {
-            font-size: 0.9em;
-            cursor: pointer;
-            color: #007bff;
-            border: none;
-            background: none;
-            padding: 0;
-        }
-
-        .edit-delete-buttons {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            display: flex;
-            gap: 10px;
-        }
-
-        .edit-button, .delete-button {
-            font-size: 0.7em;
-            cursor: pointer;
-            color: #007bff;
-            border: none;
-            background: none;
-            padding: 0;
-        }
-        .delete-button{
-          color: #ff0000;
-        }
-
-        body {
-            font-family: sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f8f8;
-        }
-
-/*end of comment-section*/
-/*///////////////////////////////////////*/
-
-
-
-
-  </style>
-
-
-
+.form-right {
+    margin-left: auto; /* Pushes the form to the far-right side */
+    border: 2px solid rgba(255, 0, 0, 0); /* Temporary for debugging */
+    margin-right: 80px;
+  }
+  
+
+        
+
+</style>
 <body>
  
     <div class="sidebar">
@@ -607,183 +140,231 @@ button.filter-button:hover {
     <a href="#"> 💰 Student Marketplace</a>
     </div>
 
+    <!--main page content-->
+    <div class="main-content">
 
-    <div class="start">
-    <h1 class="section-title"> Campus News</h1>
-    <div class="search-filter-container">
-        <input type="text" id="campus-news-search" class="search-input" placeholder="Search">
-        <button class="filter-button">Filter ☰</button>
+        <!--title-->
+        <h1 class="title is-1" style="color: darkblue;"> Campus News </h1>
+
+        <!--search bar & filter & sort-->
+        <div class="columns mb-5">
+            <div class="column is-6">
+                <input class="input" type="text" id="search-news" placeholder="search new">
+            </div>
+            <div class="column is-2">
+                <div class="select" id="news-filter">
+                    <select>
+                        <option value="no-filter-option"> Department </option>
+                        <option value="Science"> Science </option>
+                        <option value="Technology"> Technology </option>
+                        <option value="Medical-&-Health"> Medical & Health </option>
+                        <option value="Business"> Business  </option>
+                        <option value="Arts-&-Design"> Arts & Design </option>
+                        <option value="Law"> Law </option>
+                        <option value="Education">Education</option>
+                    </select>
+                </div>
+            </div>
+            <div class="column is-2">
+                <div class="select" id="news-sort">
+                    <select>
+                        <option value="no-sort-option"> Sort by </option>
+                        <option value="sort-by-date"> Date </option>
+                        <option value="most-popular"> most popular </option>
+                        <option value="from-A-to-Z"> A to Z </option>
+                        <option value="from-Z-to-A"> Z to A</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </div>
-    </div>
+
     
-
+    <!-- News Cards -->
+     <div class="news-posts-card">
+    <div class="columns is-multiline is-centered">
+        <!-- Card 1 -->
+        <div class="column is-one-quarter">
+          <div class="box">
+            <!-- Date -->
+            <p class="is-size-7 has-text-grey">Date: 10/3/2025</p>
   
-    <div class="news-buttons"> <button class="sort-button">Sort</button>
-        <button class="add-post-button">Add Post</button>
-    </div>
-   
-
-    <div class="news-pages-container">
-    <div class="news-page">
-        <div class="news-item">
-            <div class="news-item-preview">
-                <div class="news-header">
-                    <span class="news-date">12/3/2025</span>
-                    <span class="like-button">❤️</span>
-                </div>
-                <div class="news-image">
-                    <img src="collage.PNG" alt="News Image">
-                </div>
-                <h3 class="news-title">Campus news1</h3>
-                <div class="news-author">
-                    <div class="author-avatar">
-                        <img src="woman.PNG" alt="Avatar">
-                    </div>
-                    <span>Author</span>
-                </div>
+            <!-- Image -->
+            <figure class="image is-4by3">
+              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
+            </figure>
+  
+            <!-- Title -->
+            <h3 class="title is-6">The News Title</h3>
+  
+            <!-- Author -->
+            <p class="is-size-7"><strong>By: The Author</strong></p>
+  
+            <!-- News Details -->
+            <div id="news-details-1" class="mt-4">
+              <p class="is-size-7">The full details of the news article go here.</p>
             </div>
-        </div>
-        </div>
-        
-        <div class="news-page">
-        <div class="news-item">
-            <div class="news-item-preview">
-                <div class="news-header">
-                    <span class="news-date">12/3/2025</span>
-                    <span class="like-button">❤️</span>
-                </div>
-                <div class="news-image">
-                    <img src="collage.PNG" alt="News Image">
-                </div>
-                <h3 class="news-title">Campus news1</h3>
-                <div class="news-author">
-                    <div class="author-avatar">
-                        <img src="woman.PNG" alt="Avatar">
-                    </div>
-                    <span>Author</span>
-                </div>
+  
+            <!-- Buttons -->
+            <div class="buttons mt-4">
+              <a href="#news-details-1" class="button is-info is-small">View Details</a>
+              <button class="button is-primary is-small">
+                <span class="icon">
+                  <i class="fas fa-heart">❤️</i>
+                </span>
+                <span>250</span>
+              </button>
             </div>
+          </div>
         </div>
-
-    </div>
-    <div class="news-page">
-        <div class="news-item">
-            <div class="news-item-preview">
-                <div class="news-header">
-                    <span class="news-date">12/3/2025</span>
-                    <span class="like-button">❤️</span>
-                </div>
-                <div class="news-image">
-                    <img src="collage.PNG" alt="News Image">
-                </div>
-                <h3 class="news-title">Campus news1</h3>
-                <div class="news-author">
-                    <div class="author-avatar">
-                        <img src="woman.PNG" alt="Avatar">
-                    </div>
-                    <span>Author</span>
-                </div>
+  
+        <!-- Card 2 -->
+        <div class="column is-one-quarter">
+          <div class="box">
+            <!-- Date -->
+            <p class="is-size-7 has-text-grey">Date: 12/5/2025</p>
+  
+            <!-- Image -->
+            <figure class="image is-4by3">
+              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
+            </figure>
+  
+            <!-- Title -->
+            <h3 class="title is-6">Another News Title</h3>
+  
+            <!-- Author -->
+            <p class="is-size-7"><strong>By: Another Author</strong></p>
+  
+            <!-- News Details -->
+            <div id="news-details-2" class="mt-4">
+              <p class="is-size-7">The full details of another news article go here.</p>
             </div>
-        </div>
-
-    </div>
-    </div>
-
-    <div class="pagination">
-    <button> << </button>
-    <button>1</button>
-    <button>2</button>
-    <button>3</button>
-    <button>4</button>
-    <button>5</button>
-    <button>... </button> 
-    <button>9</button>
-    <button> >> </button>
-    </div>
-
-    <div class="news-item-container">
-    <div class="news-photo">
-        <img src="collage.PNG" alt="News Photo">
-    </div>
-    <div class="news-text-content">
-        <span class="news-datess">Date</span>
-        <h2 class="news-title">News Title</h2>
-        <p class="news-paragraph">here is a paragraph  </p>
-    </div>
-    <div class="news-footer">
-            <div class="author-info">
-                <img src="woman.PNG" alt="Author Photo" class="author-photo">
-                <span class="author-name">Author Name</span>
+  
+            <!-- Buttons -->
+            <div class="buttons mt-4">
+              <a href="#news-details-2" class="button is-info is-small">View Details</a>
+              <button class="button is-primary is-small">
+                <span class="icon">
+                  <i class="fas fa-heart">❤️</i>
+                </span>
+                <span>150</span>
+              </button>
             </div>
-            <button class="like-button">❤️</button>
+          </div>
         </div>
+  
+        <!-- Card 3 -->
+        <div class="column is-one-quarter">
+          <div class="box">
+            <!-- Date -->
+            <p class="is-size-7 has-text-grey">Date: 15/7/2025</p>
+  
+            <!-- Image -->
+            <figure class="image is-4by3">
+              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
+            </figure>
+  
+            <!-- Title -->
+            <h3 class="title is-6">Yet Another News Title</h3>
+  
+            <!-- Author -->
+            <p class="is-size-7"><strong>By: Yet Another Author</strong></p>
+  
+            <!-- News Details -->
+            <div id="news-details-3" class="mt-4">
+              <p class="is-size-7">The full details of yet another news article go here.</p>
+            </div>
+  
+            <!-- Buttons -->
+            <div class="buttons mt-4">
+              <a href="#news-details-3" class="button is-info is-small">View Details</a>
+              <button class="button is-primary is-small">
+                <span class="icon">
+                  <i class="fas fa-heart">❤️</i>
+                </span>
+                <span>300</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination-container">
+        <nav class="pagination" role="navigation" aria-label="pagination">
+            <ul class="pagination-list" style="display: flex; list-style: none; margin: 0; padding: 0;">
+                <!-- Previous Button -->
+                <li><a class="pagination-link pagination-previous" href="#">Previous</a></li>
+    
+                <!-- Numbered Links -->
+                <li><a class="pagination-link is-current" href="#">1</a></li>
+                <li><a class="pagination-link" href="#">2</a></li>
+                <li><a class="pagination-link" href="#">3</a></li>
+    
+                <!-- Next Button -->
+                <li><a class="pagination-link pagination-next" href="#">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+
+<!-- Add Post Button -->
+<div class="columns mt-4">
+    <div class="column is-one-quarter" style="margin-left: 345px;">
+      <button id="add-post-btn" class="button is-primary is-fullwidth">Add Post</button>
     </div>
 </div>
-
-<div class="comment-section">
-    <div class="comment-header">
-        <h1 class="comment-section-title">Comment Section</h1>
-        <button class="add-comment-button">Add</button>
+  
+  <!-- Form for Adding News -->
+  <div id="add-post-form" class="mt-4">
+    <div class="columns">
+      <div class="column is-two-thirds form-right">
+        <div class="box" style="padding: 20px;">
+          <!-- Title Input -->
+          <div class="field">
+            <label class="label">Title</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Enter the title of the news">
+            </div>
+          </div>
+  
+          <!-- Author Input -->
+          <div class="field">
+            <label class="label">Author</label>
+            <div class="control">
+              <input class="input" type="text" placeholder="Enter the author's name">
+            </div>
+          </div>
+  
+          <!-- News Details Textarea -->
+          <div class="field">
+            <label class="label">News Details</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Enter the full details of the news"></textarea>
+            </div>
+          </div>
+  
+          <!-- Image Upload -->
+          <div class="field">
+            <label class="label">Upload Image</label>
+            <div class="control">
+              <input class="input" type="file" accept="image/*">
+            </div>
+          </div>
+  
+          <!-- Submit and Cancel Buttons -->
+          <div class="buttons mt-4">
+            <button class="button is-success is-fullwidth">Submit</button>
+            <button class="button is-danger is-fullwidth mt-2">Cancel</button>
+          </div>
+        </div>
+      </div>
     </div>
-</div>
-
-<div class="comments-section">  <div class="comment">
-            <div class="edit-delete-buttons">
-                <button class="edit-button">Edit</button>
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="comment-author-info">
-                <div class="author-avatar">
-                    <img src="woman.PNG" alt="Author Photo">
-                </div>
-                <span class="comment-author">person 1</span>
-            </div>
-            <p class="comment-content">This is a sample comment. </p>
-            <div class="comment-actions">
-                <button class="comment-like-button">❤️</button>
-                <button class="comment-reply-button">Reply</button>
-            </div>
-        </div>
-        <div class="comment">
-             <div class="edit-delete-buttons">
-                <button class="edit-button">Edit</button>
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="comment-author-info">
-                <div class="author-avatar">
-                    <img src="woman.PNG" alt="Author Photo">
-                </div>
-                <span class="comment-author">person 2</span>
-            </div>
-            <p class="comment-content">Another comment here.</p>
-             <div class="comment-actions">
-                <button class="comment-like-button">❤️</button>
-                <button class="comment-reply-button">Reply</button>
-            </div>
-        </div>
-        <div class="comment">
-             <div class="edit-delete-buttons">
-                <button class="edit-button">Edit</button>
-                <button class="delete-button">Delete</button>
-            </div>
-            <div class="comment-author-info">
-                <div class="author-avatar">
-                    <img src="woman.PNG" alt="Author Photo">
-                </div>
-                <span class="comment-author">person 3</span>
-            </div>
-            <p class="comment-content">and a comment here.</p>
-             <div class="comment-actions">
-                <button class="comment-like-button">❤️</button>
-                <button class="comment-reply-button">Reply</button>
-            </div>
-        </div>
-    </div>
-
+  </div>
 
  </body>
 
  </html>
 
  git config --global user.name "RanaElias"
-git config --global user.email "ranaelias04@gmail.com" 
+ git config --global user.email "ranaelias04@gmail.com" 
