@@ -1,12 +1,12 @@
 @import url("https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.4/css/bulma.min.css");
-/* Sidebar Styles */
+
 .sidebar {
     width: 250px;
     height: 100vh;
     position: fixed;
-    background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+    background: #3f51b5; 
     padding-top: 20px;
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.3);
 }
 
 .sidebar h4 {
@@ -36,16 +36,18 @@
     border-left: 4px solid white;
 }
 
-/* Content Layout */
+
 .content {
     margin-left: 270px;
     padding: 40px 20px;
+    background-color: #f9f9f9; 
 }
 
 .box {
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    background-color: white; 
+} 
 
 .button {
     border-radius: 5px;
@@ -57,7 +59,7 @@
     border-radius: 5px;
 }
 
-/* Responsive Design */
+
 @media (max-width: 1024px) {
     .sidebar {
         width: 220px;
@@ -82,26 +84,26 @@
     }
 }
 
-/* Main Container */
+
 .container {
     margin-left: 270px;
     padding: 20px;
 }
 
-/* Filter Bar */
+
 .filter-bar {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #f5f5f5;
+    background: #e0e0e0; 
     padding: 10px 15px;
     border-radius: 8px;
     margin-bottom: 20px;
 }
 
 .category-tag {
-    background: #e3e7ff;
-    color: #3f51b5;
+    background: #c9cbd7; 
+    color: white;
     padding: 5px 10px;
     border-radius: 20px;
     font-weight: 600;
@@ -110,7 +112,7 @@
 .reset-btn {
     border: none;
     background: transparent;
-    color: #3f51b5;
+    color: #acb0c7;
     font-weight: bold;
     cursor: pointer;
 }
@@ -137,14 +139,13 @@
     cursor: pointer;
 }
 
-/* Card Grid */
 .content-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 20px;
 }
 
-/* Card */
+
 .card {
     background: white;
     border-radius: 10px;
@@ -183,8 +184,6 @@
 }
 
 
-
-/* Tags */
 .tags {
     margin-top: 10px;
 }
@@ -201,9 +200,9 @@
 
 .buy-badge {
     position: absolute;
-    bottom: 10px; /* Moves it to the bottom */
-    right: 10px; /* Moves it to the right */
-    background-color: #28a745; /* Green color */
+    bottom: 10px;
+    right: 10px;
+    background-color: #28a745; 
     color: white;
     padding: 5px 15px;
     font-size: 14px;
@@ -211,33 +210,30 @@
     border-radius: 5px;
     cursor: pointer;
 }
+
 .not-urgent {
     background: #ffccbc;
     color: #d84315;
 }
 
-/* Card Info */
+
 .card-info {
     font-size: 14px;
     color: #757575;
     margin-top: 10px;
 }
 
-
 .search-input {
     background-color: transparent;
     border: none;
     margin-left: 10px;
-    outline: none; /* Removes the default focus outline */
+    outline: none;
 }
 
 .search-input:focus {
-    border: none; /* Ensures no border appears on focus */
-    outline: none; /* Prevents any browser-specific focus outline */
+    border: none;
+    outline: none;
 }
-
-
-
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -255,8 +251,6 @@
         grid-template-columns: 1fr;
     }
 }
-
-
 
 .modal-overlay {
     display: none;
@@ -309,7 +303,7 @@
 }
 
 .create-card-btn {
-    background: #3f51b5;
+    background: #2f409e;
     color: white;
 }
 
@@ -330,7 +324,7 @@
 
 .controls button {
     padding: 8px 12px;
-    background: #3f51b5;
+    background: #202d76;
     color: white;
     border: none;
     border-radius: 5px;
@@ -338,7 +332,6 @@
 }
 
 
-/* Top Bar */
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -350,7 +343,7 @@
     font-weight: bold;
 }
 
-/* Cart Icon */
+
 .cart-icon {
     font-size: 22px;
     cursor: pointer;
@@ -366,4 +359,24 @@
     position: absolute;
     top: -5px;
     right: -10px;
+}
+.filter {
+    position: absolute;
+    left: 20px; 
+    background: #f5f5f5; 
+    padding: 12px 15px;
+    border-radius: 1cqb 10px 0 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 10;
+}
+
+.filter label {
+    margin-right: 10px; 
+    font-weight: bold;
+}
+
+.filter select {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 5px; 
 }
