@@ -1,0 +1,82 @@
+[
+    {
+      "id": 1,
+      "name": "Data Structures Study Group",
+      "major": "Computer Science",
+      "meeting": "Mondays @ 3PM in Room 204",
+      "membersCount": 5,
+      "maxMembers": 10,
+      "description": "Focused on mastering data structures through weekly discussions, quizzes, and LeetCode challenges.",
+      "members": [
+        {"name": "Maryam Abdulla", "major": "Computer Science"},
+        {"name": "Faisal Ali", "major": "Software Engineering"},
+        {"name": "Omar Mohammed", "major": "Computer Science"},
+        {"name": "Sara Mahmood", "major": "AI & Data Science"},
+        {"name": "Ahmed Khaled", "major": "Information Systems"}
+      ],
+      "comments": [
+        {"author": "Sara", "text": "Looking forward to this week's meeting!"},
+        {"author": "Omar", "text": "Can we go over trees again next time?"},
+        {"author": "Maryam", "text": "Thanks for the practice problems you shared!"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Network Technology Study Group",
+      "major": "Network Engineering",
+      "meeting": "Thursdays @ 11AM in Library",
+      "membersCount": 4,
+      "maxMembers": 10,
+      "description": "Deep dive into routing, switching, and wireless technologies with hands‑on labs.",
+      "members": [
+        {"name": "Huda Salman", "major": "Network Engineering"},
+        {"name": "Khalid Hussein", "major": "Information Systems"},
+        {"name": "Lina Younis", "major": "Computer Science"},
+        {"name": "Nasser Ali", "major": "Network Engineering"}
+      ],
+      "comments": [
+        {"author": "Khalid", "text": "Don’t forget to bring your router configs!"},
+        {"author": "Lina", "text": "Can we schedule a packet‑tracer session?"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Algorithms Enthusiasts",
+      "major": "Computer Science",
+      "meeting": "Wednesdays @ 5PM in Room 310",
+      "membersCount": 6,
+      "maxMembers": 12,
+      "description": "Solve classic algorithm problems together and optimize for performance.",
+      "members": [
+        {"name": "Rana Khalifa", "major": "Computer Science"},
+        {"name": "Yousef Ahmed", "major": "Computer Science"},
+        {"name": "Mariam Saeed", "major": "AI & Data Science"},
+        {"name": "Bilal Omar", "major": "Software Engineering"},
+        {"name": "Zainab Isa", "major": "Information Systems"},
+        {"name": "Nada Hassan", "major": "Computer Science"}
+      ],
+      "comments": [
+        {"author": "Rana", "text": "Next topic: Dijkstra’s algorithm."},
+        {"author": "Bilal", "text": "I found a neat proof for merge sort."}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "Database Systems Group",
+      "major": "Information System",
+      "meeting": "Tuesdays @ 2PM in Lab 5",
+      "membersCount": 3,
+      "maxMembers": 8,
+      "description": "Hands‑on sessions building SQL queries and ER diagrams.",
+      "members": [
+        {"name": "Ali Mahmood", "major": "Information System"},
+        {"name": "Reem Farooq", "major": "Information System"},
+        {"name": "Tariq Saleh", "major": "Database Administration"}
+      ],
+      "comments": [
+        {"author": "Reem", "text": "Can we do a NoSQL comparison next time?"},
+        {"author": "Tariq", "text": "I’ll bring some sample datasets."}
+      ]
+    }
+  ]
+  
