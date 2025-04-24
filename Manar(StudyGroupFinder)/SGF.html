@@ -140,29 +140,7 @@
     
 
       <!-- Study Group Cards -->
-      <div class="columns is-multiline">
-
-        <div class="column is-half">
-          <div class="box">
-              <h5 class="title is-5">Data Structures Study Group</h5>
-              <p><strong>Major:</strong> Computer Science</p>
-              <p><strong>Meeting:</strong> Mondays @ 3PM in Room 204</p>
-              <p><strong>Members:</strong> 5/10</p>
-              <a href="G1-details.html" class="button is-primary is-small">View Details</a>
-          </div>
-        </div>
-      
-        <div class="column is-half">
-          <div class="box">
-              <h5 class="title is-5">Network Technology Study Group</h5>
-              <p><strong>Major:</strong> Network Engineering</p>
-              <p><strong>Meeting:</strong> Thursdays @ 11AM in Library</p>
-              <p><strong>Members:</strong> 4/10</p>
-              <a href="G2-details.html" class="button is-primary is-small">View Details</a>
-          </div>
-        </div>
-
-      </div>
+      <div id="cards-container" class="columns is-multiline"> </div>
     
       <!-- Pagination Controls -->
       <nav class="pagination is-centered mt-4" role="navigation" aria-label="pagination">
@@ -170,22 +148,18 @@
         <a class="pagination-previous is-disabled">Previous</a>
         <a class="pagination-next">Next</a>
 
-        <ul class="pagination-list">
-          <li><a class="pagination-link is-current">1</a></li>
-          <li><a class="pagination-link">2</a></li>
-          <li><a class="pagination-link">3</a></li>
-        </ul>
+        <ul class="pagination-list"> </ul>
 
       </nav>
     
 
       <!-- Create Group Button -->
       <div class="mb-5">
-        <a href="#" class="button is-success">➕ Create Study Group</a>
+        <a href="#" id="show-create-form" class="button is-success">➕ Create Study Group</a>
       </div>
 
       <!-- Create Group Form -->
-      <div class="box">
+      <div id="create-group-container" class="box" style="display: none;">
         <h2 class="title is-4">Create a New Study Group</h2>
         <form>
 
@@ -245,14 +219,14 @@
 
           <div class="buttons">
             <button type="submit" class="button is-primary">Create Group</button>
-            <a href="#" class="button is-light">Cancel</a>
+            <a href="#" id="cancel-create-form" class="button is-light">Cancel</a>
           </div>
 
         </form>
       </div>
     </div>
 
-    <script src="./studyGroupFinder.js" defer></script>
+    <script src="studyGroupFinder.js" defer></script>
 
   </body>
 </html>
