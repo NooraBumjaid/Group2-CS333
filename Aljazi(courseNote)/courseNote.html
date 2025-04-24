@@ -54,6 +54,12 @@
         .input, .textarea, .select select {
             border-radius: 5px;
         }
+        /* Keep the disabled “Previous” looking like the other link-buttons */
+.pagination-previous[disabled] {
+  opacity: 1 !important;
+  pointer-events: none;  /* still non‑clickable */
+}
+
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -94,144 +100,120 @@
   </div>
 
   
-  
-<!-- Main Content -->
-<div class="content">
+
+  <!-- Main Content -->
+  <div class="content">
     <h2 class="title is-3">Course Notes</h2>
 
-    <!-- Search and Filter -->
+    <!-- Search & Filter -->
     <div class="columns mb-4">
-        <div class="column is-6">
-            <input class="input" type="text" id="searchInput" placeholder="Search notes...">
+      <div class="column is-6">
+        <input id="searchInput" class="input" type="text" placeholder="Search notes…">
+      </div>
+      <div class="column is-3">
+        <div class="select is-fullwidth" id="departmentFilter">
+          <select>
+            <option value="">Filter by Department</option>
+            <option value="computer-science">Computer Science</option>
+            <option value="information-system">Information System</option>
+            <option value="network-engineering">Network Engineering</option>
+            <option value="Elective">Elective</option>
+          </select>
         </div>
-        <div class="column is-3">
-            <div class="select is-fullwidth" id="departmentFilter">
-                <select>
-                    <option value="">Filter by Department</option>
-                    <option value="computer-science">Computer Science</option>
-                    <option value="information-system">Information System</option>
-                    <option value="network-engineering">Network Engineering</option>
-                    <option value="Elective">Elective</option>
-                </select>
-            </div>
+      </div>
+      <div class="column is-3">
+        <div class="select is-fullwidth" id="sortSelect">
+          <select>
+            <option value="">Sort by</option>
+            <option value="asc">A–Z</option>
+            <option value="desc">Z–A</option>
+          </select>
         </div>
-        <div class="column is-3">
-            <div class="select is-fullwidth" id="sortSelect">
-                <select>
-                    <option value="">Sort by</option>
-                    <option value="asc">A-Z</option>
-                    <option value="desc">Z-A</option>
-                </select>
-            </div>
-        </div>
+      </div>
     </div>
 
-    <!-- Notes Listing -->
-    <div class="columns is-multiline notes-container" id="courseNotes">
-        <div class="column is-half course-note" data-department="computer-science">
-            <div class="box">
-                <h5 class="title is-5">Design of Algorithms</h5>
-                <h6 class="title is-6">Chapter1 - Algorithm Introduction</h6>
-                <p>Algorithm Design and Analysis Techniques.</p>
-                <a href="view.html" class="button is-primary is-small">👀 View </a>
-            </div>
-        </div>
-        <div class="column is-half course-note" data-department="information-system">
-            <div class="box">
-                <h5 class="title is-5">Database Mamagement Systems</h5>
-                <h6 class="title is-6">Chapter1 - Introduction</h6>
-                <p>Fundamental Concepts of Database Systems.</p>
-                <a href="view1.html" class="button is-primary is-small">👀 View </a>
-            </div>
-        </div>
-        <!-- Add more course-note items here -->
-    </div>
+    <!-- Notes Listing (will be filled by JS) -->
+    <div id="courseNotes" class="columns is-multiline notes-container"></div>
+
+    <!-- Pagination -->
+    <!-- Pagination Controls -->
+<nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+  <a class="pagination-previous button is-link" href="#" id="prevBtn">Previous</a>
+  <a class="pagination-next button is-link" href="#" id="nextBtn">Next</a>
+  <ul class="pagination-list"></ul>
+</nav>
 
 
-    <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
-        <a class="pagination-previous" disabled>Previous</a>
-        <a class="pagination-next" href="courseNote2.html">Next</a>
-        <ul class="pagination-list">
-          <li><a class="pagination-link is-current" href="#">1</a></li>
-          <li><a class="pagination-link" href="courseNote2.html">2</a></li>
-        </ul>
-      </nav>
-
-    <!-- Add Note Button -->
-    <div class="mb-5">
-        <a href="#" class="button is-success"> ➕ Add New Note</a>
-    </div>
-
-    <!-- Item Creation Form -->
+    <!-- Add New Note Form -->
     <div class="box">
-        <h2 class="title is-4">Add New Course Note</h2>
-        <form>
-            <div class="field">
-                <label class="label">Course Name</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="Enter course name" required>
-                </div>
+      <h2 class="title is-4">Add New Course Note</h2>
+      <form>
+        <!-- Course Name -->
+        <div class="field">
+          <label class="label">Course Name</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter course name" required>
+          </div>
+        </div>
+        <!-- Note Title -->
+        <div class="field">
+          <label class="label">Note Title</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter note title" required>
+          </div>
+        </div>
+        <!-- Description -->
+        <div class="field">
+          <label class="label">Note Description</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter note description" required>
+          </div>
+        </div>
+        <!-- File Upload -->
+        <div class="field">
+          <label class="label">Upload Files</label>
+          <div class="control">
+            <div class="file is-primary is-small has-name">
+              <label class="file-label">
+                <input id="noteFile" class="file-input" type="file" accept="application/pdf" required>
+                <span class="file-cta">
+                  <span class="file-icon">📁</span>
+                  <span class="file-label">Choose file</span>
+                </span>
+                <span id="file-name" class="file-name">No file uploaded</span>
+              </label>
             </div>
-            <div class="field">
-                <label class="label">Note Title</label>
-                <div class="control">
-                    <input class="input" type="text" placeholder="Enter note title" required>
-                </div>
-             <div>
-                <br>
-                <div class="field">
-                    <label class="label">Note Discription</label>
-                    <div class="control">
-                        <input class="input" type="text" placeholder="Enter note discription" required>
-                    </div>
-                </div>
-             </div>   
-            </div>
-            <div class="field">
-                <label class="label">Upload Files</label>
-                <div class="control">
-                    <div class="file is-primary is-small has-name">
-                        <label class="file-label">
-                            <input class="file-input" type="file" id="noteFile" accept="application/pdf" required>
-                            <span class="file-cta">
-                                <span class="file-icon">📁</span>
-                                <span class="file-label">Choose file</span>
-                            </span>
-                            <span class="file-name" id="file-name">No file uploaded</span>
-                        </label>
-                    </div>
-                    <button type="button" id="removeFileButton" class="button is-primary is-small mt-2">🗑️ Remove File</button>
-                </div>
-            </div>
-            <div class="field">
-                <label class="label">Department</label>
-                <div class="control">
-                    <label class="radio">
-                        <input type="radio" name="department" value="computer-science" required>
-                        Computer Science
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="department" value="information-system" required>
-                        Information System
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="department" value="network-engineering" required>
-                        Network Engineering
-                    </label>
-                    <label class="radio">
-                        <input type="radio" name="department" value="Elective" required>
-                        Elective
-                    </label>
-                </div>
-            </div>
-            <div class="buttons">
-                <button type="submit" class="button is-primary">Submit</button>
-                <a href="#" class="button is-light">Cancel</a>
-            </div>
-        </form>
+            <button type="button" id="removeFileButton" class="button is-primary is-small mt-2">🗑️ Remove File</button>
+          </div>
+        </div>
+        <!-- Department Radios -->
+        <div class="field">
+          <label class="label">Department</label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="department" value="computer-science" required> Computer Science
+            </label>
+            <label class="radio">
+              <input type="radio" name="department" value="information-system" required> Information System
+            </label>
+            <label class="radio">
+              <input type="radio" name="department" value="network-engineering" required> Network Engineering
+            </label>
+            <label class="radio">
+              <input type="radio" name="department" value="Elective" required> Elective
+            </label>
+          </div>
+        </div>
+        <!-- Buttons -->
+        <div class="buttons">
+          <button type="submit" class="button is-primary">Submit</button>
+          <button type="reset" class="button is-light">Cancel</button>
+        </div>
+      </form>
     </div>
-</div>
+  </div>
 
-
+  <!-- Link to our new JS -->
+  <script src="course-notes.js"></script>
 </body>
 </html>

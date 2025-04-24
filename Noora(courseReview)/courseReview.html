@@ -73,173 +73,146 @@
       }
       .content { margin-left: 0; padding: 20px; }
     }
+    /* Keep the disabled “Previous” looking like the other link-buttons */
+    .pagination-previous[disabled] {
+     opacity: 1 !important;
+     pointer-events: none;  /* still non‑clickable */
+}
+
   </style>
 </head>
 <body>
 
-     <!-- Sidebar Navigation -->
-     <div class="sidebar">
-      <h4>📖 Campus Hub</h4>
-      <a href="../index.html">🏠 Home</a>
-      <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
-      <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
-      <a href="#" class="active">⭐ Course Reviews</a>
-      <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
-      <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
-      <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
-      <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
-    </div>
-
-<!-- Main Content -->
-<div class="content">
-  <h2 class="title is-3">Course Reviews</h2>
-
-  <!-- Filter Tabs -->
-  <div class="tabs is-toggle is-toggle-rounded mb-4">
-    <ul>
-      <li><a href="#">All</a></li>
-      <li><a href="#">Computer Science</a></li>
-      <li><a href="#">Information System</a></li>
-      <li><a href="#">Network Engineering</a></li>
-      <li><a href="#">Elective Courses</a></li>
-    </ul>
+  <!-- Sidebar Navigation -->
+  <div class="sidebar">
+    <h4>📖 Campus Hub</h4>
+    <a href="../index.html">🏠 Home</a>
+    <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
+    <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
+    <a href="#" class="active">⭐ Course Reviews</a>
+    <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+    <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
+    <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
+    <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
   </div>
 
-  <!-- Searching and Sorting -->
-  <div class="columns mb-4">
-    <div class="column is-8">
-      <input class="input" type="text" placeholder="Search course reviews...">
+  <!-- Main Content -->
+  <div class="content">
+    <h2 class="title is-3">Course Reviews</h2>
+
+    <!-- Filter Tabs -->
+    <div class="tabs is-toggle is-toggle-rounded mb-4">
+      <ul>
+        <li class="is-active"><a>All</a></li>
+        <li><a>Computer Science</a></li>
+        <li><a>Information System</a></li>
+        <li><a>Network Engineering</a></li>
+        <li><a>Elective Courses</a></li>
+      </ul>
     </div>
-    <div class="column is-4">
-      <div class="select is-fullwidth">
-        <select>
-          <option>Sort by Rating</option>
-          <option>Sort by Most Recent</option>
-        </select>
+
+    <!-- Search & Sort -->
+    <div class="columns mb-4">
+      <div class="column is-8">
+        <input class="input" type="text" placeholder="Search course reviews...">
       </div>
-    </div>
-  </div>
-
-  <!-- Course Reviews -->
-  <div class="columns is-multiline">
-    <!-- Java 1 -->
-    <div class="column is-half">
-      <div class="box review-box">
-        <div>
-          <h5 class="title is-5">Java 1</h5>
-          <p><strong>Department:</strong> Computer Science</p>
-          <p><strong>Rating:</strong> ⭐⭐⭐☆☆ (3)</p>
-          <p>
-            "The assignments were tough,its was my first coding language"
-          </p>
-          <p><em>- Noora Rashid</em></p>
-        </div>
-        <div>
-          <a href="java.html" class="button is-link is-small mt-2">👀 View</a>
+      <div class="column is-4">
+        <div class="select is-fullwidth">
+          <select>
+            <option value="rating">Sort by Rating</option>
+            <option value="date">Sort by Most Recent</option>
+          </select>
         </div>
       </div>
     </div>
 
-    <!-- Cloud Computing -->
-    <div class="column is-half">
-      <div class="box review-box">
-        <div>
-          <h5 class="title is-5">Cloud Computing</h5>
-          <p><strong>Department:</strong> Information System</p>
-          <p><strong>Rating:</strong> ⭐⭐⭐⭐☆ (4)</p>
-          <p><strong>Preferred Professor:</strong> Dr. Abdulla Mohammed</p>
-          <p>"The course was well-structured, and the professor was good!"</p>
-          <p><em>- Dana Abdulla</em></p>
-        </div>
-        <div>
-          <a href="cloudcomputing.html" class="button is-link is-small mt-2">👀 View</a>
-        </div>
-      </div>
-    </div>
-  </div>
+    <!-- Loading & Error -->
+    <p id="loading"></p>
+    <p id="error" style="color:red;"></p>
 
+    <!-- Reviews will be injected here -->
+    <div id="reviews-container" class="columns is-multiline"></div>
+
+    <!-- Pagination Controls -->
+<nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+    <a class="pagination-previous button is-link" href="#" id="prevBtn">Previous</a>
+    <a class="pagination-next button is-link" href="#" id="nextBtn">Next</a>
+    <ul class="pagination-list"></ul>
+  </nav>
   
 
-  <!--Pagination for the view -->
-  <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
-    <a class="pagination-previous" disabled>Previous</a>
-    <a class="pagination-next" href="courseReview2.html">Next</a>
-    <ul class="pagination-list">
-      <li><a class="pagination-link is-current" href="#">1</a></li>
-      <li><a class="pagination-link" href="courseReview2.html">2</a></li>
-    </ul>
-  </nav>
-
-  <!-- Review box -->
-  <div class="box mt-6">
-    <h2 class="title is-4">Submit a Review</h2>
-    <form>
-      <div class="field">
-        <label class="label">Course Name</label>
-        <div class="control">
-          <input class="input" type="text" placeholder="Enter course name" required />
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Department</label>
-        <div class="control">
-          <label class="radio">
-            <input type="radio" name="department" required />
-            Computer Science
-          </label>
-          <label class="radio">
-            <input type="radio" name="department" />
-            Information System
-          </label>
-          <label class="radio">
-            <input type="radio" name="department" />
-            Network Engineering
-          </label>
-          <label class="radio">
-            <input type="radio" name="department" />
-            Elective Courses
-          </label>
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Preferred Professor <span class="has-text-grey-light">(optional)</span></label>
-        <div class="control">
-          <input class="input" type="text" placeholder="Enter professor's name if you want" />
-        </div>
-      </div>
-
-      <div class="field">
-        <label class="label">Your Rating</label>
-        <div class="control">
-          <div class="select is-fullwidth">
-            <select required>
-              <option value="" disabled selected>Select rating</option>
-              <option>⭐⭐⭐⭐⭐ (5 - Excellent)</option>
-              <option>⭐⭐⭐⭐☆ (4 - Good)</option>
-              <option>⭐⭐⭐☆☆ (3 - Average)</option>
-              <option>⭐⭐☆☆☆ (2 - Poor)</option>
-              <option>⭐☆☆☆☆ (1 - Bad)</option>
-            </select>
+    <!-- Submit a Review Form (static) -->
+    <div class="box mt-6">
+      <h2 class="title is-4">Submit a Review</h2>
+      <form>
+        <div class="field">
+          <label class="label">Course Name</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter course name" required />
           </div>
         </div>
-      </div>
 
-      <div class="field">
-        <label class="label">Review</label>
-        <div class="control">
-          <textarea class="textarea" rows="4" placeholder="Write your review here..." required></textarea>
+        <div class="field">
+          <label class="label">Department</label>
+          <div class="control">
+            <label class="radio">
+              <input type="radio" name="department" required />
+              Computer Science
+            </label>
+            <label class="radio">
+              <input type="radio" name="department" />
+              Information System
+            </label>
+            <label class="radio">
+              <input type="radio" name="department" />
+              Network Engineering
+            </label>
+            <label class="radio">
+              <input type="radio" name="department" />
+              Elective Courses
+            </label>
+          </div>
         </div>
-      </div>
 
-      <div class="buttons">
-        <button type="submit" class="button is-primary">Submit</button>
-        <a href="#" class="button is-light">Cancel</a>
-      </div>
-    </form>
+        <div class="field">
+          <label class="label">Preferred Professor <span class="has-text-grey-light">(optional)</span></label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter professor's name if you want" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Your Rating</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select required>
+                <option value="" disabled selected>Select rating</option>
+                <option>⭐⭐⭐⭐⭐ (5 - Excellent)</option>
+                <option>⭐⭐⭐⭐☆ (4 - Good)</option>
+                <option>⭐⭐⭐☆☆ (3 - Average)</option>
+                <option>⭐⭐☆☆☆ (2 - Poor)</option>
+                <option>⭐☆☆☆☆ (1 - Bad)</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Review</label>
+          <div class="control">
+            <textarea class="textarea" rows="4" placeholder="Write your review here..." required></textarea>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button type="submit" class="button is-primary">Submit</button>
+          <a href="#" class="button is-light">Cancel</a>
+        </div>
+      </form>
+    </div>
   </div>
-</div>
 
+  <!-- Link to the JavaScript -->
+  <script src="courseReview.js" defer></script>
 </body>
 </html>
