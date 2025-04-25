@@ -1,0 +1,286 @@
+{
+    "newsPosts": [
+      {
+        "id": 1,
+        "title": "New Research Center Opening Next Month",
+        "content": "The university is proud to announce the opening of our new Research Center for Advanced Materials. This state-of-the-art facility will house over 30 laboratories equipped with the latest technology.\n\nThe center will focus on interdisciplinary research spanning materials science, nanotechnology, and sustainable engineering solutions. Faculty members from various departments have already begun planning collaborative projects that will utilize the new facilities.\n\n\"This new center represents a significant investment in our research infrastructure,\" said Dr. Linda Harris, Dean of Research. \"It will enable our faculty and students to pursue cutting-edge research and strengthen our position as a leader in materials science.\"\n\nThe grand opening ceremony is scheduled for June 15, with tours available to all students and faculty. Research grant applications for projects utilizing the new center will open next week.",
+        "author": "Prof. James Wilson",
+        "department": "Science",
+        "image": "https://images.unsplash.com/photo-1541339907198-e08756dedf3f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+        "likes": 42,
+        "createdAt": "2025-04-10T15:30:00Z"
+      },
+      {
+        "id": 2,
+        "title": "Annual Tech Fair Draws Record Attendance",
+        "content": "This year's campus Technology Fair attracted over 5,000 students and industry professionals, setting a new attendance record. The event featured demos from over 50 tech companies and startups.",
+        "author": "Sarah Chen",
+        "department": "Technology",
+        "image": "https://images.unsplash.com/photo-1523050854058-8df90110c9f1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+        "likes": 28,
+        "createdAt": "2025-04-15T09:45:00Z"
+      },
+      {
+        "id": 3,
+        "title": "Library Hours Extended During Finals Week",
+        "content": "The main campus library will be open 24/7 during finals week to accommodate student study needs. Additional study rooms have been made available and can be reserved online.",
+        "author": "Admin Team",
+        "department": "Education",
+        "image": "https://images.unsplash.com/photo-1517486808906-6ca8b3f8e1c1?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+        "likes": 85,
+        "createdAt": "2025-04-18T12:00:00Z"
+      },
+      {
+        "id": 4,
+        "title": "Medical School Symposium on Global Health",
+        "content": "The Medical School is hosting a symposium on global health challenges next week. International experts will discuss pandemic preparedness and healthcare equity.",
+        "author": "Dr. Emily Johnson",
+        "department": "Medical & Health",
+        "image": "https://images.unsplash.com/photo-1576091160550-2173dba999ef?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+        "likes": 36,
+        "createdAt": "2025-04-20T10:15:00Z"
+      },
+      {
+        "id": 5,
+        "title": "Business School Launches Entrepreneurship Program",
+        "content": "The Business School has launched a new entrepreneurship program designed to help students develop and launch their own startups while completing their degrees.",
+        "author": "Prof. Robert Kim",
+        "department": "Business",
+        "image": "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+        "likes": 52,
+        "createdAt": "2025-04-22T14:30:00Z"
+      },
+      {
+        "id": 6,
+        "title": "Arts Department Exhibition Opens This Weekend",
+        "content": "The Arts Department's annual student exhibition opens this weekend in the campus gallery. The exhibition features works across various media from undergraduate and graduate students.",
+        "author": "Prof. Lisa Taylor",
+        "department": "Arts & Design",
+        "image": "https://images.unsplash.com/photo-1513364776144-60967b0f800f?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80",
+        "likes": 17,
+        "createdAt": "2025-04-24T16:45:00Z"
+      }
+    ],
+    "comments": [
+      {
+        "id": 1,
+        "postId": 1,
+        "userId": "user1",
+        "username": "Sarah Chen",
+        "content": "This is very exciting news! Will there be opportunities for undergraduate students to participate in research at the new center?",
+        "parentId": null,
+        "createdAt": "2025-04-12T09:15:00Z"
+      },
+      {
+        "id": 2,
+        "postId": 1,
+        "userId": "user2",
+        "username": "Prof. James Wilson",
+        "content": "Yes, absolutely! We'll be announcing several undergraduate research positions next month. Keep an eye on the department newsletter.",
+        "parentId": 1,
+        "createdAt": "2025-04-12T10:30:00Z"
+      },
+      {
+        "id": 3,
+        "postId": 1,
+        "userId": "user3",
+        "username": "Michael Johnson",
+        "content": "Will the facility be open for tours before the grand opening? I'd like to include it in my campus tour for prospective students.",
+        "parentId": null,
+        "createdAt": "2025-04-13T14:45:00Z"
+      },
+      {
+        "id": 4,
+        "postId": 2,
+        "userId": "user4",
+        "username": "Alex Wong",
+        "content": "The VR demos were incredible! I particularly enjoyed the aerospace engineering simulation.",
+        "parentId": null,
+        "createdAt": "2025-04-16T08:20:00Z"
+      },
+      {
+        "id": 5,
+        "postId": 2,
+        "userId": "user5",
+        "username": "Jessica Park",
+        "content": "Does anyone know if the presentations will be available online for those who couldn't attend?",
+        "parentId": null,
+        "createdAt": "2025-04-16T11:05:00Z"
+      },
+      {
+        "id": 6,
+        "postId": 2,
+        "userId": "user1",
+        "username": "Sarah Chen",
+        "content": "Yes, all presentations were recorded and will be available on the university's tech fair website next week!",
+        "parentId": 5,
+        "createdAt": "2025-04-16T12:30:00Z"
+      },
+      {
+        "id": 7,
+        "postId": 3,
+        "userId": "user6",
+        "username": "David Miller",
+        "content": "This is great news! Will the quiet study floors also be open 24/7?",
+        "parentId": null,
+        "createdAt": "2025-04-18T13:15:00Z"
+      },
+      {
+        "id": 8,
+        "postId": 4,
+        "userId": "user7",
+        "username": "Priya Patel",
+        "content": "Is this event open to all students or just medical school students?",
+        "parentId": null,
+        "createdAt": "2025-04-21T09:40:00Z"
+      },
+      {
+        "id": 9,
+        "postId": 5,
+        "userId": "user8",
+        "username": "Tom Garcia",
+        "content": "I've been waiting for a program like this! How can we apply?",
+        "parentId": null,
+        "createdAt": "2025-04-22T16:20:00Z"
+      },
+      {
+        "id": 10,
+        "postId": 6,
+        "userId": "user9",
+        "username": "Emma Wilson",
+        "content": "Looking forward to seeing all the amazing artwork this weekend!",
+        "parentId": null,
+        "createdAt": "2025-04-24T17:55:00Z"
+      }
+    ],
+    "likes": [
+      {
+        "id": 1,
+        "postId": 1,
+        "userId": "user1",
+        "createdAt": "2025-04-10T16:20:00Z"
+      },
+      {
+        "id": 2,
+        "postId": 1,
+        "userId": "user3",
+        "createdAt": "2025-04-11T09:15:00Z"
+      },
+      {
+        "id": 3,
+        "postId": 1,
+        "userId": "user5",
+        "createdAt": "2025-04-11T14:30:00Z"
+      },
+      {
+        "id": 4,
+        "postId": 2,
+        "userId": "user2",
+        "createdAt": "2025-04-15T10:20:00Z"
+      },
+      {
+        "id": 5,
+        "postId": 2,
+        "userId": "user4",
+        "createdAt": "2025-04-15T11:45:00Z"
+      },
+      {
+        "id": 6,
+        "postId": 3,
+        "userId": "user1",
+        "createdAt": "2025-04-18T13:10:00Z"
+      },
+      {
+        "id": 7,
+        "postId": 3,
+        "userId": "user6",
+        "createdAt": "2025-04-18T14:25:00Z"
+      },
+      {
+        "id": 8,
+        "postId": 4,
+        "userId": "user7",
+        "createdAt": "2025-04-20T11:05:00Z"
+      },
+      {
+        "id": 9,
+        "postId": 5,
+        "userId": "user8",
+        "createdAt": "2025-04-22T15:40:00Z"
+      },
+      {
+        "id": 10,
+        "postId": 6,
+        "userId": "user9",
+        "createdAt": "2025-04-24T17:30:00Z"
+      }
+    ],
+    "users": [
+      {
+        "id": 1,
+        "username": "Sarah Chen",
+        "password": "hashed_password_1"
+      },
+      {
+        "id": 2,
+        "username": "Prof. James Wilson",
+        "password": "hashed_password_2"
+      },
+      {
+        "id": 3,
+        "username": "Michael Johnson",
+        "password": "hashed_password_3"
+      },
+      {
+        "id": 4,
+        "username": "Alex Wong",
+        "password": "hashed_password_4"
+      },
+      {
+        "id": 5,
+        "username": "Jessica Park",
+        "password": "hashed_password_5"
+      },
+      {
+        "id": 6,
+        "username": "David Miller",
+        "password": "hashed_password_6"
+      },
+      {
+        "id": 7,
+        "username": "Priya Patel",
+        "password": "hashed_password_7"
+      },
+      {
+        "id": 8,
+        "username": "Tom Garcia",
+        "password": "hashed_password_8"
+      },
+      {
+        "id": 9,
+        "username": "Emma Wilson",
+        "password": "hashed_password_9"
+      }
+    ],
+    "pagination": {
+      "page": 1,
+      "limit": 3,
+      "total": 6,
+      "totalPages": 2
+    },
+    "departments": [
+      "Science",
+      "Technology",
+      "Medical & Health",
+      "Business",
+      "Arts & Design",
+      "Law",
+      "Education"
+    ],
+    "sortOptions": [
+      {"id": "date", "label": "Most Recent"},
+      {"id": "most-popular", "label": "Most Popular"},
+      {"id": "from-A-to-Z", "label": "Title (A-Z)"},
+      {"id": "from-Z-to-A", "label": "Title (Z-A)"}
+    ]
+  }

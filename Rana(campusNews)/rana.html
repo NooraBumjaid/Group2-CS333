@@ -156,13 +156,16 @@
                 <div class="select" id="news-filter">
                     <select>
                         <option value="no-filter-option"> Department </option>
-                        <option value="Science"> Science </option>
-                        <option value="Technology"> Technology </option>
-                        <option value="Medical-&-Health"> Medical & Health </option>
-                        <option value="Business"> Business  </option>
-                        <option value="Arts-&-Design"> Arts & Design </option>
-                        <option value="Law"> Law </option>
-                        <option value="Education">Education</option>
+                        <option value="">Select department</option>
+                        <option value="engineering">Engineering</option>
+                        <option value="business">Business</option>
+                        <option value="science">Science</option>
+                        <option value="arts">Arts & Design </option>
+                        <option value="medicine">Medicine & Health</option>
+                        <option value="law">Law</option>
+                        <option value="education">Education</option>
+                        <option value="sports">Sports</option>
+                        <option value="Technology">Technology</option>
                     </select>
                 </div>
             </div>
@@ -307,52 +310,69 @@
     </div>
 </div>
   
-  <!-- Form for Adding News -->
-  <div id="add-post-form" class="mt-4">
-    <div class="columns">
-      <div class="column is-two-thirds form-right">
-        <div class="box" style="padding: 20px;">
-          <!-- Title Input -->
-          <div class="field">
-            <label class="label">Title</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Enter the title of the news">
+ <!-- Form for Adding News -->
+<div id="add-post-form" class="mt-4">
+  <div class="columns">
+    <div class="column is-two-thirds form-right">
+      <div class="box" style="padding: 20px;">
+        <!-- Title Input -->
+        <div class="field">
+          <label class="label">Title</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter the title of the news">
+          </div>
+        </div>
+        <!-- Author Input -->
+        <div class="field">
+          <label class="label">Author</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Enter the author's name">
+          </div>
+        </div>
+        
+        <!-- Department Dropdown -->
+        <div class="field">
+          <label class="label">Department</label>
+          <div class="control">
+            <div class="select is-fullwidth">
+              <select id="department-select">
+                <option value="">Select department</option>
+                <option value="engineering">Engineering</option>
+                <option value="business">Business</option>
+                <option value="science">Science</option>
+                <option value="arts">Arts & Design </option>
+                <option value="medicine">Medicine & Health</option>
+                <option value="law">Law</option>
+                <option value="education">Education</option>
+                <option value="sports">Sports</option>
+                <option value="Technology">Technology</option>
+              </select>
             </div>
           </div>
-  
-          <!-- Author Input -->
-          <div class="field">
-            <label class="label">Author</label>
-            <div class="control">
-              <input class="input" type="text" placeholder="Enter the author's name">
-            </div>
+        </div>
+        <!-- News Details Textarea -->
+        <div class="field">
+          <label class="label">News Details</label>
+          <div class="control">
+            <textarea class="textarea" placeholder="Enter the full details of the news"></textarea>
           </div>
-  
-          <!-- News Details Textarea -->
-          <div class="field">
-            <label class="label">News Details</label>
-            <div class="control">
-              <textarea class="textarea" placeholder="Enter the full details of the news"></textarea>
-            </div>
+        </div>
+        <!-- Image Upload -->
+        <div class="field">
+          <label class="label">Upload Image</label>
+          <div class="control">
+            <input class="input" type="file" accept="image/*">
           </div>
-  
-          <!-- Image Upload -->
-          <div class="field">
-            <label class="label">Upload Image</label>
-            <div class="control">
-              <input class="input" type="file" accept="image/*">
-            </div>
-          </div>
-  
-          <!-- Submit and Cancel Buttons -->
-          <div class="buttons mt-4">
-            <button class="button is-success is-fullwidth">Submit</button>
-            <button class="button is-danger is-fullwidth mt-2">Cancel</button>
-          </div>
+        </div>
+        <!-- Submit and Cancel Buttons -->
+        <div class="buttons mt-4">
+          <button class="button is-success is-fullwidth">Submit</button>
+          <button class="button is-danger is-fullwidth mt-2">Cancel</button>
         </div>
       </div>
     </div>
   </div>
+</div>
   <script src="script.js"></script>
  </body>
 

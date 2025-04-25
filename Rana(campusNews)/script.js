@@ -12,6 +12,14 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeCommentSubmission();
 });
 
+// Helper function to generate a unique ID for posts
+function generatePostId(postElement) {
+    const title = postElement.querySelector('.title.is-6').textContent;
+    const author = postElement.querySelector('p.is-size-7 strong').textContent;
+    // Create a simple hash from title and author
+    return `post_${title.replace(/\s+/g, '_')}_${author.replace(/\s+/g, '_')}_${Date.now()}`;
+}
+
 // Function to handle navigation between pages
 function initializeNavigation() {
     // Handle "Back to Main Page" buttons
@@ -35,19 +43,39 @@ function initializeNavigation() {
                 // Get the post data to store in session storage
                 const postCard = button.closest('.box');
                 if (postCard) {
+                    const parentColumn = postCard.closest('.column');
+                    const postId = parentColumn.dataset.postId || generatePostId(postCard);
+                    parentColumn.dataset.postId = postId; // Store the ID on the element
+                    
                     const title = postCard.querySelector('.title.is-6').textContent;
                     const author = postCard.querySelector('p.is-size-7 strong').textContent;
                     const date = postCard.querySelector('.is-size-7.has-text-grey').textContent.replace('Date: ', '');
                     const details = postCard.querySelector('[id^="news-details-"]').textContent;
                     const imgSrc = postCard.querySelector('img').src;
+                    const department = parentColumn.dataset.department || '';
+                    
+                    // Get the like count
+                    const likeButton = postCard.querySelector('.button.is-primary.is-small');
+                    let likeCount = 0;
+                    if (likeButton && likeButton.querySelector('span')) {
+                        likeCount = parseInt(likeButton.querySelector('span').textContent) || 0;
+                    }
+                    
+                    // Check if user has liked this post already
+                    const userLikedPosts = JSON.parse(localStorage.getItem('userLikedPosts') || '[]');
+                    const hasLiked = userLikedPosts.includes(postId);
                     
                     // Store post data in session storage to use in the post page
                     sessionStorage.setItem('currentPost', JSON.stringify({
+                        id: postId,
                         title: title,
                         author: author,
                         date: date,
                         details: details,
-                        image: imgSrc
+                        image: imgSrc,
+                        likes: likeCount,
+                        hasLiked: hasLiked,
+                        department: department
                     }));
                 }
                 
@@ -72,21 +100,53 @@ function initializeCommentInteractions() {
     const commentLikeButtons = document.querySelectorAll('.box .button.is-small.is-primary');
     if (commentLikeButtons.length > 0) {
         commentLikeButtons.forEach(button => {
-            // Initialize like count for each comment
-            let likeCount = 0;
+            // Skip if already disabled (user has liked)
+            if (button.disabled) return;
             
-            button.addEventListener('click', function() {
-                likeCount++;
-                
-                // Update the button text to include the like count
-                if (button.querySelector('span')) {
-                    // If a span already exists for the count, update it
-                    button.querySelector('span').textContent = likeCount;
-                } else {
-                    // Otherwise, create and append the count
-                    button.innerHTML = `❤️Like <span>${likeCount}</span>`;
+            // Find the comment container
+            const commentBox = button.closest('.box');
+            if (!commentBox) return;
+            
+            // Generate comment ID if it doesn't exist
+            if (!commentBox.dataset.commentId) {
+                const authorElement = commentBox.querySelector('strong');
+                const author = authorElement ? authorElement.textContent : 'Unknown';
+                commentBox.dataset.commentId = `comment_${author.replace(/\s+/g, '_')}_${Date.now()}`;
+            }
+            
+            // Check if user has already liked this comment
+            const commentId = commentBox.dataset.commentId;
+            const userLikedComments = JSON.parse(localStorage.getItem('userLikedComments') || '[]');
+            
+            if (userLikedComments.includes(commentId)) {
+                // User already liked this comment - disable button
+                button.disabled = true;
+                button.classList.add('is-light');
+                button.title = 'You already liked this comment';
+            } else {
+                // Set up button to show existing like count
+                if (!button.querySelector('span')) {
+                    button.innerHTML = '❤️ Like <span>0</span>';
                 }
-            });
+                
+                button.addEventListener('click', function() {
+                    // Get current like count
+                    let likeCount = parseInt(button.querySelector('span').textContent) || 0;
+                    likeCount++;
+                    
+                    // Update the like count (keeping emoji visible)
+                    button.querySelector('span').textContent = likeCount;
+                    
+                    // Disable button after clicking
+                    button.disabled = true;
+                    button.classList.add('is-light');
+                    button.title = 'You already liked this comment';
+                    
+                    // Update user's liked comments in localStorage
+                    userLikedComments.push(commentId);
+                    localStorage.setItem('userLikedComments', JSON.stringify(userLikedComments));
+                });
+            }
         });
     }
     
@@ -140,13 +200,24 @@ function initializePostInteractions() {
     // Check if on post detail page and try to load post data
     if (window.location.pathname.includes('addpost.html')) {
         // Try to get post data from session storage
-        const postData = JSON.parse(sessionStorage.getItem('currentPost'));
+        const postData = JSON.parse(sessionStorage.getItem('currentPost') || '{}');
         if (postData) {
             // Update post details with the stored data
             document.querySelector('.title.is-2').textContent = postData.title;
-            document.querySelector('.subtitle.is-6 strong').textContent = postData.author;
-            document.querySelector('.subtitle.is-6').innerHTML = 
-                document.querySelector('.subtitle.is-6').innerHTML.replace(/Date: .*?(?=<\/p>|$)/, `Date: ${postData.date}`);
+            
+            // Update subtitle to include department
+            const subtitleElement = document.querySelector('.subtitle.is-6');
+            if (subtitleElement) {
+                subtitleElement.innerHTML = `
+                    <p><strong>${postData.author}</strong></p>
+                    <p>Date: ${postData.date} ${postData.department ? `• <span class="tag is-info is-light">${postData.department}</span>` : ''}</p>
+                `;
+            } else {
+                document.querySelector('.subtitle.is-6 strong').textContent = postData.author;
+                document.querySelector('.subtitle.is-6').innerHTML = 
+                    document.querySelector('.subtitle.is-6').innerHTML.replace(/Date: .*?(?=<\/p>|$)/, `Date: ${postData.date}`);
+            }
+            
             document.querySelector('.content p').textContent = postData.details;
             document.querySelector('.image img').src = postData.image;
         }
@@ -155,20 +226,67 @@ function initializePostInteractions() {
     // Handle post "Like" button
     const postLikeButton = document.querySelector('.buttons.is-centered .button.is-small.is-primary');
     if (postLikeButton) {
-        // Initialize like count for the post
-        let postLikeCount = 0;
+        // Get post data from session storage
+        const postData = JSON.parse(sessionStorage.getItem('currentPost') || '{}');
         
-        postLikeButton.addEventListener('click', function() {
-            postLikeCount++;
+        // Initialize like count from stored data
+        let postLikeCount = postData.likes || 0;
+        
+        // Update button text to show current likes (keeping emoji visible)
+        postLikeButton.innerHTML = `❤️ Like <span>${postLikeCount}</span>`;
+        
+        // Check if user has already liked this post
+        if (postData.hasLiked) {
+            postLikeButton.disabled = true;
+            postLikeButton.classList.add('is-light');
+            postLikeButton.title = 'You already liked this post';
+        } else {
+            postLikeButton.addEventListener('click', function() {
+                if (!postData.id) return; // Skip if no post ID
+                
+                postLikeCount++;
+                
+                // Update the like count (keeping emoji visible)
+                postLikeButton.innerHTML = `❤️ Like <span>${postLikeCount}</span>`;
+                
+                // Disable button after clicking
+                postLikeButton.disabled = true;
+                postLikeButton.classList.add('is-light');
+                postLikeButton.title = 'You already liked this post';
+                
+                // Update user's liked posts in localStorage
+                const userLikedPosts = JSON.parse(localStorage.getItem('userLikedPosts') || '[]');
+                userLikedPosts.push(postData.id);
+                localStorage.setItem('userLikedPosts', JSON.stringify(userLikedPosts));
+                
+                // Update like count in session storage
+                postData.likes = postLikeCount;
+                postData.hasLiked = true;
+                sessionStorage.setItem('currentPost', JSON.stringify(postData));
+                
+                // Store post+likes in a separate variable to find when returning to main page
+                sessionStorage.setItem('updatedPostLikes', JSON.stringify({
+                    id: postData.id,
+                    title: postData.title,
+                    author: postData.author,
+                    likes: postLikeCount
+                }));
+            });
+        }
+    }
+    
+    // Handle post "Edit" button
+    const postEditButton = document.querySelector('.buttons.is-centered .button.is-info');
+    if (postEditButton && postEditButton.textContent.includes('Edit Post')) {
+        postEditButton.addEventListener('click', function() {
+            // Get the current post data
+            const postData = JSON.parse(sessionStorage.getItem('currentPost') || '{}');
             
-            // Update the button text to include the like count
-            if (postLikeButton.querySelector('span')) {
-                // If a span already exists for the count, update it
-                postLikeButton.querySelector('span').textContent = postLikeCount;
-            } else {
-                // Otherwise, create and append the count
-                postLikeButton.innerHTML = `❤️Like <span>${postLikeCount}</span>`;
-            }
+            // Set a flag to indicate we're editing
+            sessionStorage.setItem('isEditing', 'true');
+            
+            // Navigate to main page
+            window.location.href = 'rana.html';
         });
     }
     
@@ -190,13 +308,83 @@ function initializePostInteractions() {
 
 // Function to handle main page features (rana.html)
 function initializeMainPageFeatures() {
+    // Check for updated likes when returning to main page
+    const updatedPostLikes = JSON.parse(sessionStorage.getItem('updatedPostLikes') || '{}');
+    if (updatedPostLikes.id) {
+        // Find the post card and update likes
+        const newsCards = document.querySelectorAll('.news-posts-card .column.is-one-quarter');
+        newsCards.forEach(card => {
+            // Check if this card has the same ID or matches title/author
+            if ((card.dataset.postId && card.dataset.postId === updatedPostLikes.id) || 
+                (card.querySelector('.title.is-6').textContent === updatedPostLikes.title && 
+                 card.querySelector('p.is-size-7 strong').textContent.includes(updatedPostLikes.author))) {
+                
+                // Update like count in the card
+                const likeButton = card.querySelector('.button.is-primary.is-small');
+                if (likeButton) {
+                    likeButton.innerHTML = `❤️ Like <span>${updatedPostLikes.likes}</span>`;
+                    
+                    // Disable the button since user has liked this post
+                    likeButton.disabled = true;
+                    likeButton.classList.add('is-light');
+                    likeButton.title = 'You already liked this post';
+                    
+                    // Store the post ID on the card element for future reference
+                    if (!card.dataset.postId) {
+                        card.dataset.postId = updatedPostLikes.id;
+                    }
+                }
+            }
+        });
+        
+        // Clear the updated likes data
+        sessionStorage.removeItem('updatedPostLikes');
+    }
+    
+    // Check if we're editing a post
+    const isEditing = sessionStorage.getItem('isEditing') === 'true';
+    const postData = isEditing ? JSON.parse(sessionStorage.getItem('currentPost')) : null;
+    
+    if (isEditing && postData) {
+        // Show the form
+        const addPostForm = document.getElementById('add-post-form');
+        if (addPostForm) {
+            addPostForm.style.display = 'block';
+            
+            // Fill in the form with existing data
+            const titleInput = document.querySelector('#add-post-form input[placeholder="Enter the title of the news"]');
+            const authorInput = document.querySelector('#add-post-form input[placeholder="Enter the author\'s name"]');
+            const detailsInput = document.querySelector('#add-post-form textarea');
+            const departmentSelect = document.getElementById('department-select');
+            
+            if (titleInput) titleInput.value = postData.title;
+            if (authorInput) authorInput.value = postData.author;
+            if (detailsInput) detailsInput.value = postData.details;
+            if (departmentSelect && postData.department) departmentSelect.value = postData.department;
+            
+            // Store original post details to find and replace it later
+            sessionStorage.setItem('originalPostDetails', JSON.stringify({
+                title: postData.title,
+                author: postData.author
+            }));
+            
+            // Change submit button text to indicate editing
+            const submitBtn = document.querySelector('#add-post-form .button.is-success');
+            if (submitBtn) {
+                submitBtn.textContent = 'Update Post';
+            }
+        }
+    }
+    
     // Handle Add Post button to show form
     const addPostBtn = document.getElementById('add-post-btn');
     const addPostForm = document.getElementById('add-post-form');
     
     if (addPostBtn && addPostForm) {
-        // Initially hide the form
-        addPostForm.style.display = 'none';
+        // Initially hide the form unless we're editing
+        if (!isEditing) {
+            addPostForm.style.display = 'none';
+        }
         
         addPostBtn.addEventListener('click', function() {
             // Toggle the form visibility
@@ -257,8 +445,8 @@ function initializeMainPageFeatures() {
             } else if (sortOption === 'most-popular') {
                 // Sort by likes (popularity)
                 newsCards.sort((a, b) => {
-                    const likesA = parseInt(a.querySelector('.button.is-primary.is-small span').textContent) || 0;
-                    const likesB = parseInt(b.querySelector('.button.is-primary.is-small span').textContent) || 0;
+                    const likesA = parseInt(a.querySelector('.button.is-primary.is-small span')?.textContent) || 0;
+                    const likesB = parseInt(b.querySelector('.button.is-primary.is-small span')?.textContent) || 0;
                     return likesB - likesA; // Most likes first
                 });
             } else if (sortOption === 'from-A-to-Z') {
@@ -303,40 +491,117 @@ function initializeAddPostFunctionality() {
             const authorInput = document.querySelector('#add-post-form input[placeholder="Enter the author\'s name"]');
             const detailsInput = document.querySelector('#add-post-form textarea');
             const fileInput = document.querySelector('#add-post-form input[type="file"]');
+            const departmentSelect = document.getElementById('department-select');
             
             if (titleInput && authorInput && detailsInput) {
                 const title = titleInput.value;
                 const author = authorInput.value;
                 const details = detailsInput.value;
+                const department = departmentSelect ? departmentSelect.value : '';
                 
                 // Validate inputs
-                if (!title || !author || !details) {
-                    alert('Please fill out all fields.');
+                if (!title || !author || !details || !department) {
+                    alert('Please fill out all required fields including department.');
                     return;
                 }
                 
-                // Create a new post card
-                const newPost = createNewPostCard(title, author, details, fileInput);
+                // Check if we're editing or creating new
+                const isEditing = sessionStorage.getItem('isEditing') === 'true';
                 
-                // Add to the news grid
-                const newsGrid = document.querySelector('.news-posts-card .columns.is-multiline');
-                if (newsGrid) {
-                    newsGrid.prepend(newPost); // Add to the beginning
+                if (isEditing) {
+                    // Get original post details
+                    const originalDetails = JSON.parse(sessionStorage.getItem('originalPostDetails'));
                     
-                    // Reset form
-                    titleInput.value = '';
-                    authorInput.value = '';
-                    detailsInput.value = '';
-                    if (fileInput) fileInput.value = '';
+                    // Find the post to edit
+                    const newsCards = document.querySelectorAll('.news-posts-card .column.is-one-quarter');
+                    let foundCard = null;
                     
-                    // Hide form
-                    document.getElementById('add-post-form').style.display = 'none';
+                    newsCards.forEach(card => {
+                        const cardTitle = card.querySelector('.title.is-6').textContent;
+                        const cardAuthor = card.querySelector('p.is-size-7 strong').textContent.replace('By: ', '');
+                        
+                        if (cardTitle === originalDetails.title && cardAuthor.includes(originalDetails.author)) {
+                            foundCard = card;
+                        }
+                    });
                     
-                    // Update pagination
-                    updatePagination();
+                    if (foundCard) {
+                        // Update the card
+                        foundCard.querySelector('.title.is-6').textContent = title;
+                        foundCard.querySelector('p.is-size-7 strong').textContent = 'By: ' + author;
+                        foundCard.querySelector('[id^="news-details-"]').textContent = details;
+                        
+                        // Update department
+                        foundCard.dataset.department = department;
+                        
+                        // Update department tag if it exists
+                        const tagElement = foundCard.querySelector('.tag.is-info.is-light');
+                        if (tagElement) {
+                            tagElement.textContent = department;
+                        } else {
+                            // Add department tag if it doesn't exist
+                            const authorElement = foundCard.querySelector('p.is-size-7 strong');
+                            if (authorElement) {
+                                authorElement.insertAdjacentHTML('afterend', 
+                                    ` • <span class="tag is-info is-light">${department}</span>`);
+                            }
+                        }
+                        
+                        // Update image if a new one was selected
+                        if (fileInput && fileInput.files && fileInput.files[0]) {
+                            const newImageUrl = URL.createObjectURL(fileInput.files[0]);
+                            foundCard.querySelector('img').src = newImageUrl;
+                        }
+                        
+                        // Clear editing state
+                        sessionStorage.removeItem('isEditing');
+                        sessionStorage.removeItem('originalPostDetails');
+                        
+                        // Reset form elements
+                        titleInput.value = '';
+                        authorInput.value = '';
+                        detailsInput.value = '';
+                        if (fileInput) fileInput.value = '';
+                        if (departmentSelect) departmentSelect.selectedIndex = 0;
+                        
+                        // Reset submit button text
+                        submitBtn.textContent = 'Add Post';
+                        
+                        // Hide form
+                        document.getElementById('add-post-form').style.display = 'none';
+                        
+                        // Show success message
+                        alert('Post updated successfully!');
+                        return;
+                    } else {
+                        alert('Could not find the original post to update.');
+                        return;
+                    }
+                } else {
+                    // Create a new post card
+                    const newPost = createNewPostCard(title, author, details, department, fileInput);
                     
-                    // Show success message
-                    alert('Post added successfully!');
+                    // Add to the news grid
+                    const newsGrid = document.querySelector('.news-posts-card .columns.is-multiline');
+                    if (newsGrid) {
+                        newsGrid.prepend(newPost); // Add to the beginning
+                        
+                        // Reset form
+                        titleInput.value = '';
+                        authorInput.value = '';
+                        detailsInput.value = '';
+                        if (fileInput) fileInput.value = '';
+                        if (departmentSelect) departmentSelect.selectedIndex = 0;
+                        
+                        // Hide form
+                        document.getElementById('add-post-form').style.display = 'none';
+                        
+                        // Update pagination
+                        updatePagination();
+                        
+                        // Show success message
+                        alert('Post added successfully!');
+                    }
                 }
             }
         });
@@ -353,11 +618,25 @@ function initializeAddPostFunctionality() {
             const authorInput = document.querySelector('#add-post-form input[placeholder="Enter the author\'s name"]');
             const detailsInput = document.querySelector('#add-post-form textarea');
             const fileInput = document.querySelector('#add-post-form input[type="file"]');
+            const departmentSelect = document.getElementById('department-select');
             
             if (titleInput) titleInput.value = '';
             if (authorInput) authorInput.value = '';
             if (detailsInput) detailsInput.value = '';
             if (fileInput) fileInput.value = '';
+            if (departmentSelect) departmentSelect.selectedIndex = 0;
+            
+            // Reset editing state
+            if (sessionStorage.getItem('isEditing') === 'true') {
+                sessionStorage.removeItem('isEditing');
+                sessionStorage.removeItem('originalPostDetails');
+                
+                // Reset submit button text
+                const submitBtn = document.querySelector('#add-post-form .button.is-success');
+                if (submitBtn) {
+                    submitBtn.textContent = 'Add Post';
+                }
+            }
             
             // Hide form
             document.getElementById('add-post-form').style.display = 'none';
@@ -366,12 +645,21 @@ function initializeAddPostFunctionality() {
 }
 
 // Helper function to create a new post card
-function createNewPostCard(title, author, details, fileInput) {
+function createNewPostCard(title, author, details, department, fileInput) {
     const today = new Date();
     const dateString = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
     
+    // Generate a post ID
+    const postId = `post_${title.replace(/\s+/g, '_')}_${author.replace(/\s+/g, '_')}_${Date.now()}`;
+    
     const column = document.createElement('div');
     column.className = 'column is-one-quarter';
+    
+    // Add the post ID to the column element
+    column.dataset.postId = postId;
+    
+    // Add department data attribute
+    column.dataset.department = department;
     
     // Get image URL - use default if no file selected
     let imageUrl = 'collage.PNG'; // Default image
@@ -393,8 +681,8 @@ function createNewPostCard(title, author, details, fileInput) {
         <!-- Title -->
         <h3 class="title is-6">${title}</h3>
 
-        <!-- Author -->
-        <p class="is-size-7"><strong>By: ${author}</strong></p>
+        <!-- Author and Department -->
+        <p class="is-size-7"><strong>By: ${author}</strong> • <span class="tag is-info is-light">${department}</span></p>
 
         <!-- News Details -->
         <div id="news-details-new" class="mt-4">
@@ -404,12 +692,7 @@ function createNewPostCard(title, author, details, fileInput) {
         <!-- Buttons -->
         <div class="buttons mt-4">
           <a href="#" class="button is-info is-small">View Details</a>
-          <button class="button is-primary is-small">
-            <span class="icon">
-              <i class="fas fa-heart">❤️</i>
-            </span>
-            <span>0</span>
-          </button>
+          <button class="button is-primary is-small">❤️ Like <span>0</span></button>
         </div>
       </div>
     `;
@@ -421,15 +704,59 @@ function createNewPostCard(title, author, details, fileInput) {
         
         // Store post data in session storage
         sessionStorage.setItem('currentPost', JSON.stringify({
+            id: postId,
             title: title,
             author: author,
             date: dateString,
             details: details,
-            image: imageUrl
+            image: imageUrl,
+            likes: 0,
+            hasLiked: false,
+            department: department
         }));
         
         window.location.href = 'addpost.html';
     });
+    
+    // Add event listener to the Like button
+    const likeButton = column.querySelector('.button.is-primary.is-small');
+    if (likeButton) {
+        // Check if user has already liked this post
+        const userLikedPosts = JSON.parse(localStorage.getItem('userLikedPosts') || '[]');
+        if (userLikedPosts.includes(postId)) {
+            likeButton.disabled = true;
+            likeButton.classList.add('is-light');
+            likeButton.title = 'You already liked this post';
+        } else {
+            likeButton.addEventListener('click', function() {
+                // Get current like count
+                let likeCount = parseInt(likeButton.querySelector('span').textContent) || 0;
+                likeCount++;
+                
+                // Update the like count (keeping emoji visible)
+                likeButton.querySelector('span').textContent = likeCount;
+                
+                // Disable button after clicking
+                likeButton.disabled = true;
+                likeButton.classList.add('is-light');
+                likeButton.title = 'You already liked this post';
+                
+                // Update user's liked posts in localStorage
+                const userLikedPosts = JSON.parse(localStorage.getItem('userLikedPosts') || '[]');
+                userLikedPosts.push(postId);
+                localStorage.setItem('userLikedPosts', JSON.stringify(userLikedPosts));
+                
+                // Update likes for this post if it's being viewed
+                const currentPostData = JSON.parse(sessionStorage.getItem('currentPost') || '{}');
+                if (currentPostData.id === postId || 
+                    (currentPostData.title === title && currentPostData.author.includes(author))) {
+                    currentPostData.likes = likeCount;
+                    currentPostData.hasLiked = true;
+                    sessionStorage.setItem('currentPost', JSON.stringify(currentPostData));
+                }
+            });
+        }
+    }
     
     return column;
 }
@@ -665,23 +992,25 @@ function initializeCommentSubmission() {
         
         // Handle radio button changes to show/hide appropriate fields
         const radioButtons = document.querySelectorAll('input[name="submission-type"]');
-        radioButtons.forEach(radio => {
-            radio.addEventListener('change', function() {
-                const photoField = document.querySelector('.photo-field');
-                const linkField = document.querySelector('.link-field');
-                
-                if (this.value === 'photo') {
-                    photoField.style.display = 'block';
-                    linkField.style.display = 'none';
-                } else if (this.value === 'link') {
-                    photoField.style.display = 'none';
-                    linkField.style.display = 'block';
-                } else {
-                    photoField.style.display = 'none';
-                    linkField.style.display = 'none';
-                }
+        if (radioButtons.length > 0) {
+            radioButtons.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    const photoField = document.querySelector('.photo-field');
+                    const linkField = document.querySelector('.link-field');
+                    
+                    if (this.value === 'photo') {
+                        photoField.style.display = 'block';
+                        linkField.style.display = 'none';
+                    } else if (this.value === 'link') {
+                        photoField.style.display = 'none';
+                        linkField.style.display = 'block';
+                    } else {
+                        photoField.style.display = 'none';
+                        linkField.style.display = 'none';
+                    }
+                });
             });
-        });
+        }
     }
     
     // Check if on post page to handle displaying pending comments
@@ -742,6 +1071,14 @@ function createCommentElement(commentData) {
     commentBox.className = 'box mt-3';
     commentBox.style.padding = '15px';
     
+    // Generate a unique comment ID
+    const commentId = `comment_${commentData.author.replace(/\s+/g, '_')}_${Date.now()}`;
+    commentBox.dataset.commentId = commentId;
+    
+    // Check if user has already liked this comment
+    const userLikedComments = JSON.parse(localStorage.getItem('userLikedComments') || '[]');
+    const hasLiked = userLikedComments.includes(commentId);
+    
     // Create the HTML structure for the comment
     let commentHtml = `
         <div class="columns is-vcentered">
@@ -754,7 +1091,7 @@ function createCommentElement(commentData) {
             <strong>${commentData.author}</strong>
           </div>
           <div class="column is-narrow">
-            <button class="button is-small is-primary">❤️Like</button>
+            <button class="button is-small is-primary${hasLiked ? ' is-light' : ''}" ${hasLiked ? 'disabled' : ''}>❤️ Like <span>0</span></button>
             <button class="button is-small is-info ml-2">Reply</button>
           </div>
         </div>
@@ -795,19 +1132,22 @@ function createCommentElement(commentData) {
     
     // Add event listeners for the new buttons
     const likeButton = commentBox.querySelector('.button.is-small.is-primary');
-    if (likeButton) {
+    if (likeButton && !hasLiked) {
         likeButton.addEventListener('click', function() {
-            let likeCount = 0;
-            if (likeButton.querySelector('span')) {
-                likeCount = parseInt(likeButton.querySelector('span').textContent);
-            }
+            // Update like count (keeping emoji visible)
+            let likeCount = parseInt(likeButton.querySelector('span').textContent) || 0;
             likeCount++;
+            likeButton.querySelector('span').textContent = likeCount;
             
-            if (likeButton.querySelector('span')) {
-                likeButton.querySelector('span').textContent = likeCount;
-            } else {
-                likeButton.innerHTML = `❤️Like <span>${likeCount}</span>`;
-            }
+            // Disable button after clicking
+            likeButton.disabled = true;
+            likeButton.classList.add('is-light');
+            likeButton.title = 'You already liked this comment';
+            
+            // Update user's liked comments in localStorage
+            const userLikedComments = JSON.parse(localStorage.getItem('userLikedComments') || '[]');
+            userLikedComments.push(commentId);
+            localStorage.setItem('userLikedComments', JSON.stringify(userLikedComments));
         });
     }
     
