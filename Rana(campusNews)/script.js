@@ -386,11 +386,68 @@ class NewsPortal {
                             // Get the raw text first to check if it's valid JSON
                             responseText = await response.text();
                         } catch (fetchError) {
-                            console.log('Fetch error caught, continuing with direct load:', fetchError);
-                            // We'll handle this by falling back to hard-coded sample data
+                            console.log('Fetch error caught, using sample data:', fetchError);
+                            // Use sample data if fetch fails
                             responseText = JSON.stringify({
-                                posts: [],
-                                comments: []
+                                posts: [
+                                    {
+                                        "id": "abc123",
+                                        "title": "New Campus Library Opening Soon",
+                                        "author": "John Smith",
+                                        "department": "Engineering",
+                                        "date": "2023-04-15",
+                                        "image": "collage.PNG",
+                                        "details": "The new state-of-the-art campus library will be opening next month.",
+                                        "likes": 15,
+                                        "likedBy": ["user1", "user2", "user3"]
+                                    },
+                                    {
+                                        "id": "def456",
+                                        "title": "Engineering Department Wins Competition",
+                                        "author": "Sarah Johnson",
+                                        "department": "Engineering",
+                                        "date": "2023-04-10",
+                                        "image": "woman.PNG",
+                                        "details": "Our Engineering Department has won the prestigious National Robotics Competition.",
+                                        "likes": 32,
+                                        "likedBy": ["user1", "user4", "user5"]
+                                    },
+                                    {
+                                        "id": "ghi789",
+                                        "title": "Campus Sustainability Initiative Launches",
+                                        "author": "Michael Chen",
+                                        "department": "Science",
+                                        "date": "2023-04-05",
+                                        "image": "man.PNG",
+                                        "details": "The university has announced a new campus-wide sustainability initiative.",
+                                        "likes": 27,
+                                        "likedBy": ["user3", "user5"]
+                                    }
+                                ],
+                                comments: [
+                                    {
+                                        "id": "comment1",
+                                        "username": "Alex Thompson",
+                                        "text": "This is fantastic news! I've been waiting for the new library to open.",
+                                        "postId": "abc123",
+                                        "replyTo": null,
+                                        "timestamp": "2023-04-15T15:30:00.000Z",
+                                        "likes": 7,
+                                        "likedBy": ["user1", "user3"],
+                                        "profilePic": "man.PNG"
+                                    },
+                                    {
+                                        "id": "comment4",
+                                        "username": "Jordan Lee",
+                                        "text": "Congratulations to the engineering team! Their robot design was truly innovative.",
+                                        "postId": "def456",
+                                        "replyTo": null,
+                                        "timestamp": "2023-04-10T14:20:00.000Z",
+                                        "likes": 12,
+                                        "likedBy": ["user1", "user5"],
+                                        "profilePic": "woman.PNG"
+                                    }
+                                ]
                             });
                         }
                         console.log('Response text (first 100 chars):', responseText.substring(0, 100));
@@ -437,10 +494,67 @@ class NewsPortal {
                         this.posts = data.posts || [];
                         this.comments = data.comments || [];
                     } catch (fallbackError) {
-                        console.log('Fallback fetch error, using empty data:', fallbackError);
-                        // Use default empty arrays if fetch fails completely
-                        this.posts = [];
-                        this.comments = [];
+                        console.log('Fallback fetch error, using sample data:', fallbackError);
+                        // Use sample data if fetch fails completely
+                        this.posts = [
+                            {
+                                "id": "abc123",
+                                "title": "New Campus Library Opening Soon",
+                                "author": "John Smith",
+                                "department": "Engineering",
+                                "date": "2023-04-15",
+                                "image": "collage.PNG",
+                                "details": "The new state-of-the-art campus library will be opening next month.",
+                                "likes": 15,
+                                "likedBy": ["user1", "user2", "user3"]
+                            },
+                            {
+                                "id": "def456",
+                                "title": "Engineering Department Wins Competition",
+                                "author": "Sarah Johnson",
+                                "department": "Engineering",
+                                "date": "2023-04-10",
+                                "image": "woman.PNG",
+                                "details": "Our Engineering Department has won the prestigious National Robotics Competition.",
+                                "likes": 32,
+                                "likedBy": ["user1", "user4", "user5"]
+                            },
+                            {
+                                "id": "ghi789",
+                                "title": "Campus Sustainability Initiative Launches",
+                                "author": "Michael Chen",
+                                "department": "Science",
+                                "date": "2023-04-05",
+                                "image": "man.PNG",
+                                "details": "The university has announced a new campus-wide sustainability initiative.",
+                                "likes": 27,
+                                "likedBy": ["user3", "user5"]
+                            }
+                        ];
+                        this.comments = [
+                            {
+                                "id": "comment1",
+                                "username": "Alex Thompson",
+                                "text": "This is fantastic news! I've been waiting for the new library to open.",
+                                "postId": "abc123",
+                                "replyTo": null,
+                                "timestamp": "2023-04-15T15:30:00.000Z",
+                                "likes": 7,
+                                "likedBy": ["user1", "user3"],
+                                "profilePic": "man.PNG"
+                            },
+                            {
+                                "id": "comment4",
+                                "username": "Jordan Lee",
+                                "text": "Congratulations to the engineering team! Their robot design was truly innovative.",
+                                "postId": "def456",
+                                "replyTo": null,
+                                "timestamp": "2023-04-10T14:20:00.000Z",
+                                "likes": 12,
+                                "likedBy": ["user1", "user5"],
+                                "profilePic": "woman.PNG"
+                            }
+                        ];
                     }
                     
                     // Save to localStorage for future use
