@@ -54,6 +54,12 @@
         .input, .textarea, .select select {
             border-radius: 5px;
         }
+        /* Keep the disabled “Previous” looking like the other link-buttons */
+.pagination-previous[disabled] {
+  opacity: 1 !important;
+  pointer-events: none;  /* still non‑clickable */
+}
+
 
         /* Responsive Design */
         @media (max-width: 1024px) {
@@ -130,11 +136,13 @@
     <div id="courseNotes" class="columns is-multiline notes-container"></div>
 
     <!-- Pagination -->
-    <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
-      <a class="pagination-previous" href="#" disabled>Previous</a>
-      <a class="pagination-next" href="#">Next</a>
-      <ul class="pagination-list"></ul>
-    </nav>
+    <!-- Pagination Controls -->
+<nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+  <a class="pagination-previous button is-link" href="#" id="prevBtn">Previous</a>
+  <a class="pagination-next button is-link" href="#" id="nextBtn">Next</a>
+  <ul class="pagination-list"></ul>
+</nav>
+
 
     <!-- Add New Note Form -->
     <div class="box">
