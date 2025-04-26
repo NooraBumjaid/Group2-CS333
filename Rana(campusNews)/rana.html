@@ -1,394 +1,186 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Campus Hub - News</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="styles.css"> 
 </head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-    <style>
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
-            padding-top: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .sidebar h4 {
-            color: white;
-            text-align: center;
-            font-weight: 600;
-        }
-        .sidebar a {
-            display: block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-        }
-        .sidebar a.active {
-            background: rgba(255, 255, 255, 0.3);
-            font-weight: 700;
-            border-left: 4px solid white;
-        }
-
-        /* Content Layout */
-        .content {
-            margin-left: 270px;
-            padding: 40px 20px;
-        }
-        .box {
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-        .button {
-            border-radius: 5px;
-        }
-        .input, .textarea, .select select {
-            border-radius: 5px;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 220px;
-            }
-            .content {
-                margin-left: 240px;
-            }
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding-bottom: 10px;
-            }
-            .content {
-                margin-left: 0;
-                padding: 20px;
-            }
-      }
-
-
-         .main-content {
-                margin-left: 275px;
-                padding: 20px;
-            }
-
-        .news-posts-card{
-            margin-left: auto; 
-            max-width: 80%; 
-        }  
-        .pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
-
-.pagination {
-    display: flex;
-    align-items: center; 
-    gap: 5px;
-}
-
-.pagination-previous,
-.pagination-next,
-.pagination-link {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #dbdbdb;
-    text-decoration: none;
-    color: #363636;
-    background-color: #fff;
-    font-size: 0.875rem;
-}
-
-.pagination-link.is-current {
-    background-color: #00d1b2;
-    color: #fff;
-    border-color: #00d1b2;
-}
-.form-right {
-    margin-left: auto; /* Pushes the form to the far-right side */
-    border: 2px solid rgba(255, 0, 0, 0); /* Temporary for debugging */
-    margin-right: 80px;
-  }
-  
-
-        
-
-</style>
 <body>
- 
-     <!-- Sidebar Navigation -->
-     <div class="sidebar">
-        <h4>📖 Campus Hub</h4>
-        <a href="../index.html">🏠 Home</a>
-        <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
-        <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
-        <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
-        <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
-        <a href="#" class="active" >📰 Campus News</a>
-        <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
-        <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
-      </div>
 
-    <!--main page content-->
-    <div class="main-content">
-
-        <!--title-->
-        <h1 class="title is-1" style="color: darkblue;"> Campus News </h1>
-
-        <!--search bar & filter & sort-->
-        <div class="columns mb-5">
-            <div class="column is-6">
-                <input class="input" type="text" id="search-news" placeholder="search new">
-            </div>
-            <div class="column is-2">
-                <div class="select" id="news-filter">
-                    <select>
-                        <option value="no-filter-option"> Department </option>
-                        <option value="">Select department</option>
-                        <option value="engineering">Engineering</option>
-                        <option value="business">Business</option>
-                        <option value="science">Science</option>
-                        <option value="arts">Arts & Design </option>
-                        <option value="medicine">Medicine & Health</option>
-                        <option value="law">Law</option>
-                        <option value="education">Education</option>
-                        <option value="sports">Sports</option>
-                        <option value="Technology">Technology</option>
-                    </select>
-                </div>
-            </div>
-            <div class="column is-2">
-                <div class="select" id="news-sort">
-                    <select>
-                        <option value="no-sort-option"> Sort by </option>
-                        <option value="sort-by-date"> Date </option>
-                        <option value="most-popular"> most popular </option>
-                        <option value="from-A-to-Z"> A to Z </option>
-                        <option value="from-Z-to-A"> Z to A</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    
-    <!-- News Cards -->
-     <div class="news-posts-card">
-    <div class="columns is-multiline is-centered">
-        <!-- Card 1 -->
-        <div class="column is-one-quarter">
-          <div class="box">
-            <!-- Date -->
-            <p class="is-size-7 has-text-grey">Date: 10/3/2025</p>
-             <!-- Department - Added -->
-    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-      <strong>Department: Science</strong>
-    </p>
-  
-            <!-- Image -->
-            <figure class="image is-4by3">
-              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
-            </figure>
-  
-            <!-- Title -->
-            <h3 class="title is-6">The News Title</h3>
-  
-            <!-- Author -->
-            <p class="is-size-7"><strong>By: The Author</strong></p>
-  
-            <!-- News Details -->
-            <div id="news-details-1" class="mt-4">
-              <p class="is-size-7">The full details of the news article go here.</p>
-            </div>
-  
-            <!-- Buttons -->
-            <div class="buttons mt-4">
-              <a href="addpost.html" class="button is-info is-small">View Details</a>
-              <button class="button is-primary is-small">
-                <span class="icon">
-                  <i class="fas fa-heart">❤️</i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Card 2 -->
-        <div class="column is-one-quarter">
-          <div class="box">
-            <!-- Date -->
-            <p class="is-size-7 has-text-grey">Date: 12/5/2025</p>
-             <!-- Department - Added -->
-    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-      <strong>Department: Science</strong>
-    </p>
-  
-            <!-- Image -->
-            <figure class="image is-4by3">
-              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
-            </figure>
-  
-            <!-- Title -->
-            <h3 class="title is-6">Another News Title</h3>
-  
-            <!-- Author -->
-            <p class="is-size-7"><strong>By: Another Author</strong></p>
-  
-            <!-- News Details -->
-            <div id="news-details-2" class="mt-4">
-              <p class="is-size-7">The full details of another news article go here.</p>
-            </div>
-  
-            <!-- Buttons -->
-            <div class="buttons mt-4">
-              <a href="addpost.html" class="button is-info is-small">View Details</a>
-              <button class="button is-primary is-small">
-                <span class="icon">
-                  <i class="fas fa-heart">❤️</i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Card 3 -->
-        <div class="column is-one-quarter">
-          <div class="box">
-            <!-- Date -->
-            <p class="is-size-7 has-text-grey">Date: 15/7/2025</p>
-             <!-- Department - Added -->
-    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-      <strong>Department: Science</strong>
-    </p>
-  
-            <!-- Image -->
-            <figure class="image is-4by3">
-              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
-            </figure>
-  
-            <!-- Title -->
-            <h3 class="title is-6">Yet Another News Title</h3>
-  
-            <!-- Author -->
-            <p class="is-size-7"><strong>By: Yet Another Author</strong></p>
-  
-            <!-- News Details -->
-            <div id="news-details-3" class="mt-4">
-              <p class="is-size-7">The full details of yet another news article go here.</p>
-            </div>
-  
-            <!-- Buttons -->
-            <div class="buttons mt-4">
-              <a href="addpost.html" class="button is-info is-small">View Details</a>
-              <button class="button is-primary is-small">
-                <span class="icon">
-                  <i class="fas fa-heart">❤️</i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Pagination Controls -->
-    <div class="pagination-container">
-        <nav class="pagination" role="navigation" aria-label="pagination">
-            <ul class="pagination-list" style="display: flex; list-style: none; margin: 0; padding: 0;">
-                <!-- Previous Button -->
-                <li><a class="pagination-link pagination-previous" href="#">Previous</a></li>
-                <!-- Next Button -->
-                <li><a class="pagination-link pagination-next" href="#">Next</a></li>
-            </ul>
-        </nav>
-    </div>
-
-<!-- Add Post Button -->
-<div class="columns mt-4">
-    <div class="column is-one-quarter" style="margin-left: 345px;">
-      <button id="add-post-btn" class="button is-primary is-fullwidth">Add Post</button>
-    </div>
-</div>
-  
- <!-- Form for Adding News -->
-<div id="add-post-form" class="mt-4">
-  <div class="columns">
-    <div class="column is-two-thirds form-right">
-      <div class="box" style="padding: 20px;">
-        <!-- Title Input -->
-        <div class="field">
-          <label class="label">Title</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Enter the title of the news">
-          </div>
-        </div>
-        <!-- Author Input -->
-        <div class="field">
-          <label class="label">Author</label>
-          <div class="control">
-            <input class="input" type="text" placeholder="Enter the author's name">
-          </div>
-        </div>
-        
-        <!-- Department Dropdown -->
-        <div class="field">
-          <label class="label">Department</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select id="department-select">
-                <option value="">Select department</option>
-                <option value="engineering">Engineering</option>
-                <option value="business">Business</option>
-                <option value="science">Science</option>
-                <option value="arts">Arts & Design </option>
-                <option value="medicine">Medicine & Health</option>
-                <option value="law">Law</option>
-                <option value="education">Education</option>
-                <option value="sports">Sports</option>
-                <option value="Technology">Technology</option>
-              </select>
-            </div>
-          </div>
-        </div>
-        <!-- News Details Textarea -->
-        <div class="field">
-          <label class="label">News Details</label>
-          <div class="control">
-            <textarea class="textarea" placeholder="Enter the full details of the news"></textarea>
-          </div>
-        </div>
-        <!-- Image Upload -->
-        <div class="field">
-          <label class="label">Upload Image</label>
-          <div class="control">
-            <input class="input" type="file" accept="image/*">
-          </div>
-        </div>
-        <!-- Submit and Cancel Buttons -->
-        <div class="buttons mt-4">
-          <button class="button is-success is-fullwidth">Submit</button>
-          <button class="button is-danger is-fullwidth mt-2">Cancel</button>
-        </div>
-      </div>
-    </div>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <h4>📖 Campus Hub</h4>
+    <a href="../index.html">🏠 Home</a>
+    <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
+    <a href="../Manar(StudyGroupFinder)/SGF.html">👥 Study Group Finder</a>
+    <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
+    <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+    <a href="#" class="active">📰 Campus News</a>
+    <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
+    <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
   </div>
-</div>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1 class="title is-1" style="color: darkblue;">Campus News</h1>
+
+    <!-- Search / Filter / Sort -->
+    <div class="columns mb-5">
+      <div class="column is-6">
+        <input class="input" type="text" id="search-news" placeholder="Search news...">
+      </div>
+      <div class="column is-2">
+        <div class="select" id="news-filter">
+          <select>
+            <option value="">Department</option>
+            <option value="engineering">Engineering</option>
+            <option value="business">Business</option>
+            <option value="science">Science</option>
+            <option value="arts">Arts & Design</option>
+            <option value="medicine">Medicine & Health</option>
+            <option value="law">Law</option>
+            <option value="education">Education</option>
+            <option value="sports">Sports</option>
+            <option value="technology">Technology</option>
+          </select>
+        </div>
+      </div>
+      <div class="column is-2">
+        <div class="select" id="news-sort">
+          <select>
+            <option value="">Sort by</option>
+            <option value="date">Date</option>
+            <option value="popularity">Most Popular</option>
+            <option value="az">A to Z</option>
+            <option value="za">Z to A</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- News Cards Container -->
+    <div class="news-posts-card">
+      <div class="columns is-multiline is-centered" id="news-cards-container">
+        <!-- Cards will be inserted by JS -->
+      </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="pagination-container">
+      <nav class="pagination" role="navigation" aria-label="pagination">
+        <ul class="pagination-list" style="display: flex; list-style: none; margin: 0; padding: 0;">
+          <li><a class="pagination-link pagination-previous" href="#">Previous</a></li>
+          <li><a class="pagination-link pagination-next" href="#">Next</a></li>
+        </ul>
+      </nav>
+    </div>
+
+    <!-- Add Post Button -->
+    <div class="columns mt-4">
+      <div class="column is-one-quarter" style="margin-left: 345px;">
+        <button id="add-post-btn" class="button is-primary is-fullwidth">Add Post</button>
+      </div>
+    </div>
+
+    <!-- Add Post Form -->
+    <div id="add-post-form" class="mt-4" style="display: none;">
+      <div class="columns">
+        <div class="column is-two-thirds form-right">
+          <div class="box" style="padding: 20px;">
+            <!-- Title -->
+            <div class="field">
+              <label class="label">Title</label>
+              <div class="control">
+                <input class="input" type="text" id="post-title" placeholder="Enter the title">
+              </div>
+            </div>
+
+            <!-- Author -->
+            <div class="field">
+              <label class="label">Author</label>
+              <div class="control">
+                <input class="input" type="text" id="post-author" 
+                 placeholder="Enter the author's name">
+              </div>
+            </div>
+
+            <!-- Department -->
+            <div class="field">
+              <label class="label">Department</label>
+              <div class="control">
+                <div class="select is-fullwidth">
+                  <select id="post-department">
+                    <option value="">Select department</option>
+                    <option value="engineering">Engineering</option>
+                    <option value="business">Business</option>
+                    <option value="science">Science</option>
+                    <option value="arts">Arts & Design</option>
+                    <option value="medicine">Medicine & Health</option>
+                    <option value="law">Law</option>
+                    <option value="education">Education</option>
+                    <option value="sports">Sports</option>
+                    <option value="technology">Technology</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+            <!-- Header Text -->
+            <div class="field">
+              <label class="label">Header</label>
+              <div class="control">
+                <input class="input" type="text" id="post-header" 
+                 placeholder="Enter the short header (Main info)">
+              </div>
+            </div>
+
+            <!-- Full News Details -->
+            <div class="field">
+              <label class="label">Full News Details</label>
+              <div class="control">
+                <textarea class="textarea" id="post-details" 
+                 placeholder="Enter the full news details"></textarea>
+              </div>
+            </div>
+
+            <!-- Upload Image -->
+            <div class="field">
+              <label class="label">Upload Image</label>
+              <div class="control">
+                <input class="input" type="file" id="post-image" accept="image/*">
+              </div>
+            </div>
+
+            <!-- Submit and Cancel Buttons -->
+            <div class="buttons mt-4">
+              <button id="submit-post-btn" class="button is-success is-fullwidth">Submit</button>
+              <button id="cancel-post-btn" class="button is-danger is-fullwidth mt-2">Cancel</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loading Spinner (Hidden by default) -->
+    <div id="loading-spinner" class="modal" style="display: none;">
+      <div class="modal-background"></div>
+      <div class="modal-content">
+        <div class="box has-text-centered">
+          <span class="icon is-large">
+            <i class="fas fa-spinner fa-pulse fa-3x"></i>
+          </span>
+          <p>Loading...</p>
+        </div>
+      </div>
+    </div>
+
+  </div> 
+  <!-- End main-content -->
+
   <script src="script.js"></script>
- </body>
-
- </html>
-
- git config --global user.name "RanaElias"
- git config --global user.email "ranaelias04@gmail.com" 
+  
+</body>
+</html>
