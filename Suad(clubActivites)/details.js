@@ -1,4 +1,4 @@
-document.addEventListener("DOMContentLoaded", function() {
+document.addEventListener("DOMContentLoaded", function() { 
     const activityCard = document.getElementById('activity-card');
     const loadingSpinner = document.getElementById('loading-spinner');
     const commentsList = document.getElementById('comments-list');
