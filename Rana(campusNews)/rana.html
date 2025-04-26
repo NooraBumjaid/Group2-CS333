@@ -10,6 +10,128 @@
 </head>
 <body>
 
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        /* Sidebar Styles */
+        .sidebar {
+            width: 250px;
+            height: 100vh;
+            position: fixed;
+            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+            padding-top: 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h4 {
+            color: white;
+            text-align: center;
+            font-weight: 600;
+        }
+        .sidebar a {
+            display: block;
+            padding: 12px 20px;
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+        .sidebar a:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 5px;
+        }
+        .sidebar a.active {
+            background: rgba(255, 255, 255, 0.3);
+            font-weight: 700;
+            border-left: 4px solid white;
+        }
+
+        /* Content Layout */
+        .content {
+            margin-left: 270px;
+            padding: 40px 20px;
+        }
+        .box {
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+        .button {
+            border-radius: 5px;
+        }
+        .input, .textarea, .select select {
+            border-radius: 5px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .content {
+                margin-left: 240px;
+            }
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: relative;
+                padding-bottom: 10px;
+            }
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+      }
+
+
+         .main-content {
+                margin-left: 275px;
+                padding: 20px;
+            }
+
+        .news-posts-card{
+            margin-left: auto; 
+            max-width: 80%; 
+        }  
+        .pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.pagination {
+    display: flex;
+    align-items: center; 
+    gap: 5px;
+}
+
+.pagination-previous,
+.pagination-next,
+.pagination-link {
+    padding: 0.5rem 0.75rem;
+    border: 1px solid #dbdbdb;
+    text-decoration: none;
+    color: #363636;
+    background-color: #fff;
+    font-size: 0.875rem;
+}
+
+.pagination-link.is-current {
+    background-color: #00d1b2;
+    color: #fff;
+    border-color: #00d1b2;
+}
+.form-right {
+    margin-left: auto; /* Pushes the form to the far-right side */
+    border: 2px solid rgba(255, 0, 0, 0); /* Temporary for debugging */
+    margin-right: 80px;
+  }
+  
+
+        
+
+</style>
+
   <!-- Sidebar -->
   <div class="sidebar">
     <h4>📖 Campus Hub</h4>
@@ -181,6 +303,6 @@
   <!-- End main-content -->
 
   <script src="script.js"></script>
-  
+
 </body>
 </html>
