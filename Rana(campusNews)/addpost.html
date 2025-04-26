@@ -21,6 +21,57 @@
             font-size: 0.9rem;
             margin-bottom: 0.5rem;
         }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .modal.is-active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .spinner {
+            animation: spinAround 500ms infinite linear;
+            border: 2px solid #dbdbdb;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 1em;
+            width: 1em;
+        }
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+        .button.is-primary.is-active {
+            background-color: #ff4081;
+        }
+        .comment-replies {
+            margin-left: 2rem;
+            padding-left: 1rem;
+            border-left: 2px solid #dbdbdb;
+        }
+        
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        /* Form panel when editing */
+        .form-right {
+            margin-left: auto;
+            margin-right: 80px;
+        }
     </style>
 </head>
 <body>
@@ -30,17 +81,17 @@
     </div>
 
     <!-- View Post Page -->
-    <div class="container mt-6">
+    <div class="container mt-6" id="post-view">
         <div class="box" style="padding: 30px;">
             <!-- Title -->
-            <h1 class="title is-2 has-text-centered" id="post-title"></h1>
+            <h1 class="title is-2 has-text-centered" id="post-title">New Computer Science Program Launch</h1>
 
             <!-- Author and Department -->
             <div class="has-text-centered">
                 <p class="subtitle is-6 has-text-grey">
-                    By <strong id="post-author"></strong> | <span id="post-date"></span>
+                    By <strong id="post-author">Dr. Sarah Johnson</strong> | <span id="post-date">2024-03-15</span>
                 </p>
-                <p class="tag is-info is-medium" id="post-department"></p>
+                <p class="tag is-info is-medium" id="post-department">Engineering</p>
             </div>
 
             <!-- Image and Text Layout -->
@@ -48,15 +99,18 @@
                 <!-- Left Column: Image -->
                 <div class="column is-one-third">
                     <figure class="image">
-                        <img id="post-image" src="" alt="News Image" 
-                            style="border-radius: 8px; width: 100%; height: auto;">
+                        <img id="post-image" src="collage.PNG" alt="News Image" 
+                            style="border-radius: 8px; width: 100%; height: auto; object-fit: cover;">
                     </figure>
                 </div>
 
                 <!-- Right Column: Text -->
                 <div class="column is-two-thirds">
                     <div class="content">
-                        <p id="post-details"></p>
+                        <p id="post-details">The university is proud to announce the launch of a new Computer Science program focusing on Artificial Intelligence and Machine Learning. This cutting-edge program will prepare students for the future of technology.</p>
+                        <p>The program will include courses taught by leading experts in the field, hands-on projects with industry partners, and opportunities for research in our newly established AI Lab.</p>
+                        <p>Students will learn about neural networks, deep learning, natural language processing, computer vision, and other cutting-edge topics in AI and ML.</p>
+                        <p>Applications for the program will open next month, and classes will begin in the Fall semester.</p>
                     </div>
                 </div>
             </div>
@@ -73,23 +127,154 @@
         </div>
     </div>
 
-    <!-- Comment Section Header -->
-    <div class="container">
+    <!-- Form for Adding/Editing News -->
+    <div id="add-post-form" class="mt-4" style="display: none;">
+        <div class="columns">
+            <div class="column is-two-thirds form-right">
+                <div class="box" style="padding: 20px;">
+                    <h2 class="title is-4" id="form-title">Add New Post</h2>
+                    <form id="post-form">
+                        <!-- Title Input -->
+                        <div class="field">
+                            <label class="label">Title</label>
+                            <div class="control">
+                                <input class="input" type="text" id="post-title" name="title" placeholder="Enter the title of the news" required>
+                            </div>
+                        </div>
+
+                        <!-- Author Input -->
+                        <div class="field">
+                            <label class="label">Author</label>
+                            <div class="control">
+                                <input class="input" type="text" id="post-author" name="author" placeholder="Enter the author's name" required>
+                            </div>
+                        </div>
+
+                        <!-- Department Dropdown -->
+                        <div class="field">
+                            <label class="label">Department</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="department-select" name="department" required>
+                                        <option value="">Select department</option>
+                                        <option value="Engineering">Engineering</option>
+                                        <option value="Business">Business</option>
+                                        <option value="Science">Science</option>
+                                        <option value="Arts & Design">Arts & Design</option>
+                                        <option value="Medicine & Health">Medicine & Health</option>
+                                        <option value="Law">Law</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Sports">Sports</option>
+                                        <option value="Technology">Technology</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Header Text -->
+                        <div class="field">
+                            <label class="label">Header (Brief Summary)</label>
+                            <div class="control">
+                                <input class="input" type="text" id="post-header" name="header" placeholder="Enter a brief summary (will appear in cards)" required>
+                            </div>
+                        </div>
+
+                        <!-- News Details Textarea -->
+                        <div class="field">
+                            <label class="label">News Details</label>
+                            <div class="control">
+                                <textarea class="textarea" id="post-details" name="details" placeholder="Enter the full details of the news" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="field">
+                            <label class="label">Upload Image</label>
+                            <div class="control">
+                                <input class="input" type="file" id="post-image" name="image" accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- Submit and Cancel Buttons -->
+                        <div class="buttons mt-4">
+                            <button type="submit" class="button is-success is-fullwidth">Submit</button>
+                            <button type="button" class="button is-danger is-fullwidth mt-2" id="cancel-post">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comment Section -->
+    <div class="container" id="comments-section">
         <div class="columns is-vcentered mt-4">
             <div class="column">
                 <h2 class="title is-3" style="color: darkblue;">Comments</h2>
             </div>
             <div class="column has-text-right">
-                <button class="button is-primary" id="add-comment-btn">Add Comment</button>
+                <a id="add-comment-link" class="button is-primary add-comment-btn" href="#">Add Comment</a>
             </div>
         </div>
 
         <!-- Comments Container -->
         <div class="comments-container mb-6">
-            <!-- Comments will be dynamically inserted here -->
+            <!-- Comments will be dynamically inserted here by script.js -->
         </div>
     </div>
 
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <div class="spinner is-size-1"></div>
+                <p class="mt-3">Loading...</p>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .spinner {
+            animation: spinAround 800ms infinite linear;
+            border: 4px solid #3273dc;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 3em;
+            width: 3em;
+            margin: 0 auto;
+        }
+        
+        #loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #loading-spinner.is-active {
+            display: flex !important;
+        }
+        
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+    </style>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <script src="api.js"></script>
     <script src="script.js"></script>
 </body>
 </html>

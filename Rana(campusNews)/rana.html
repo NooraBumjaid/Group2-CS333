@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>Campus News</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
         /* Sidebar Styles */
         .sidebar {
@@ -49,6 +48,45 @@
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
+        
+        /* News card styling */
+        .card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            border-radius: 8px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+        .card-content {
+            flex-grow: 1;
+            padding: 1.5rem;
+        }
+        .card-footer {
+            margin-top: auto;
+            border-top: 1px solid #f0f0f0;
+            background-color: #fcfcfc;
+        }
+        .card-image img {
+            height: 200px;
+            object-fit: cover;
+            width: 100%;
+        }
+        .card .title {
+            font-weight: bold;
+            margin-bottom: 0.75rem;
+            color: #333;
+        }
+        .card .subtitle {
+            color: #666;
+            margin-bottom: 1rem;
+        }
         .button {
             border-radius: 5px;
         }
@@ -76,121 +114,180 @@
                 margin-left: 0;
                 padding: 20px;
             }
-      }
+        }
 
+        .main-content {
+            margin-left: 275px;
+            padding: 20px;
+        }
 
-         .main-content {
-                margin-left: 275px;
-                padding: 20px;
-            }
-
-        .news-posts-card{
+        .news-posts-card {
             margin-left: auto; 
             max-width: 80%; 
         }  
+
         .pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
+            display: flex;
+            justify-content: center;
+            margin-top: 2rem;
+        }
 
-.pagination {
-    display: flex;
-    align-items: center; 
-    gap: 5px;
-}
+        .pagination {
+            display: flex;
+            align-items: center; 
+            gap: 5px;
+        }
 
-.pagination-previous,
-.pagination-next,
-.pagination-link {
-    padding: 0.5rem 0.75rem;
-    border: 1px solid #dbdbdb;
-    text-decoration: none;
-    color: #363636;
-    background-color: #fff;
-    font-size: 0.875rem;
-}
+        .pagination-list {
+            display: flex !important;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            align-items: center;
+            gap: 5px;
+        }
 
-.pagination-link.is-current {
-    background-color: #00d1b2;
-    color: #fff;
-    border-color: #00d1b2;
-}
-.form-right {
-    margin-left: auto; /* Pushes the form to the far-right side */
-    border: 2px solid rgba(255, 0, 0, 0); /* Temporary for debugging */
-    margin-right: 80px;
-  }
+        .pagination-previous,
+        .pagination-next,
+        .pagination-link,
+        .pagination-ellipsis {
+            padding: 0.5rem 0.75rem;
+            border: 1px solid #dbdbdb;
+            text-decoration: none;
+            color: #363636;
+            background-color: #fff;
+            font-size: 0.875rem;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.25em;
+        }
 
-  .news-posts-card .column {
-    padding: 0.5rem; /* Reduce spacing between cards */
-}
-.news-posts-card .box {
-    padding: 10px; /* Reduce padding inside the cards */
-}
-.news-posts-card .box img {
-    max-height: 100px; /* Limit image height */
-}
-.pagination-container {
-    display: flex;
-    justify-content: center;
-    margin-top: 2rem;
-}
-.pagination {
-    display: flex;
-    align-items: center;
-    gap: 5px;
-}
-.pagination-link {
-    padding: 0.5rem 0.75rem;
-    font-size: 0.8rem;
-}
-.pagination-link.is-current {
-    background-color: #00d1b2;
-    color: #fff;
-    border-color: #00d1b2;
-}
+        .pagination-ellipsis {
+            border: none;
+        }
+
+        .pagination-link.is-current {
+            background-color: #00d1b2;
+            color: #fff;
+            border-color: #00d1b2;
+        }
+
+        .pagination-link:hover:not(.is-current):not(.is-disabled) {
+            background-color: #f5f5f5;
+        }
+
+        .pagination-link.is-disabled {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .form-right {
+            margin-left: auto;
+            margin-right: 80px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+
+        .modal.is-active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .spinner {
+            animation: spinAround 800ms infinite linear;
+            border: 4px solid #3273dc;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 3em;
+            width: 3em;
+            margin: 0 auto;
+        }
         
+        #loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #loading-spinner.is-active {
+            display: flex !important;
+        }
 
-</style>
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+
+        .button.is-primary.is-active {
+            background-color: #ff4081;
+        }
+        
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+    </style>
+</head>
 <body>
- 
-     <!-- Sidebar Navigation -->
-     <div class="sidebar">
+    <!-- Sidebar Navigation -->
+    <div class="sidebar">
         <h4>📖 Campus Hub</h4>
-        <a href="../index.html">🏠 Home</a>
-        <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
-        <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
-        <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
-        <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
-        <a href="#" class="active" >📰 Campus News</a>
-        <a href="../Suad(clubActivites)/index.html">👥 Club Activities</a>
-        <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
-      </div>
+        <a href="#" class="active">🏠 Home</a>
+        <a href="#">📅 Event Calendar</a>
+        <a href="#">👥 Study Group Finder</a>
+        <a href="#">⭐ Course Reviews</a>
+        <a href="#">📚 Course Notes</a>
+        <a href="#">📰 Campus News</a>
+        <a href="#">👥 Club Activities</a>
+        <a href="#">💰 Student Marketplace</a>
+    </div>
 
     <!--main page content-->
     <div class="main-content">
-
         <!--title-->
-        <h1 class="title is-1" style="color: darkblue;"> Campus News </h1>
+        <h1 class="title is-1" style="color: darkblue;">Campus News</h1>
 
         <!--search bar & filter & sort-->
         <div class="columns mb-5">
             <div class="column is-6">
-                <input class="input" type="text" id="search-news" placeholder="search new">
+                <input class="input" type="text" id="search-news" placeholder="Search news">
             </div>
             <div class="column is-2">
                 <div class="select" id="news-filter">
                     <select>
-                        <option value="no-filter-option"> Department </option>
-                        <option value="engineering">Engineering</option>
-                        <option value="business">Business</option>
-                        <option value="science">Science</option>
-                        <option value="arts">Arts & Design </option>
-                        <option value="medicine">Medicine & Health</option>
-                        <option value="law">Law</option>
-                        <option value="education">Education</option>
-                        <option value="sports">Sports</option>
+                        <option value="no-filter-option">Department</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Business">Business</option>
+                        <option value="Science">Science</option>
+                        <option value="Arts & Design">Arts & Design</option>
+                        <option value="Medicine & Health">Medicine & Health</option>
+                        <option value="Law">Law</option>
+                        <option value="Education">Education</option>
+                        <option value="Sports">Sports</option>
                         <option value="Technology">Technology</option>
                     </select>
                 </div>
@@ -198,254 +295,164 @@
             <div class="column is-2">
                 <div class="select" id="news-sort">
                     <select>
-                        <option value="no-sort-option"> Sort by </option>
-                        <option value="sort-by-date"> Date </option>
-                        <option value="most-popular"> most popular </option>
-                        <option value="from-A-to-Z"> A to Z </option>
-                        <option value="from-Z-to-A"> Z to A</option>
+                        <option value="no-sort-option">Sort by</option>
+                        <option value="sort-by-date">Date</option>
+                        <option value="most-popular">Most popular</option>
+                        <option value="from-A-to-Z">A to Z</option>
+                        <option value="from-Z-to-A">Z to A</option>
                     </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- News Cards -->
+        <div class="news-posts-card">
+            <div class="columns is-multiline is-centered" id="news-cards-container">
+                <!-- Cards will be dynamically inserted here -->
+                
+                <!-- 
+                Static example cards are commented out since they're just for display purposes.
+                The dynamically loaded cards from the script will appear instead.
+                -->
+            </div>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-container">
+            <nav class="pagination" role="navigation" aria-label="pagination">
+                <div id="pagination-pages"></div>
+            </nav>
+        </div>
+
+        <!-- Add Post Button -->
+        <div class="columns mt-4">
+            <div class="column is-one-quarter" style="margin-left: 345px;">
+                <button id="add-post-btn" class="button is-primary is-fullwidth">Add Post</button>
+            </div>
+        </div>
+
+        <!-- Form for Adding/Editing News -->
+        <div id="add-post-form" class="mt-4" style="display: none;">
+            <div class="columns">
+                <div class="column is-two-thirds form-right">
+                    <div class="box" style="padding: 20px;">
+                        <h2 class="title is-4" id="form-title">Add New Post</h2>
+                        <form id="post-form">
+                            <!-- Title Input -->
+                            <div class="field">
+                                <label class="label">Title</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="post-title" name="title" placeholder="Enter the title of the news" required>
+                                </div>
+                            </div>
+
+                            <!-- Author Input -->
+                            <div class="field">
+                                <label class="label">Author</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="post-author" name="author" placeholder="Enter the author's name" required>
+                                </div>
+                            </div>
+
+                            <!-- Department Dropdown -->
+                            <div class="field">
+                                <label class="label">Department</label>
+                                <div class="control">
+                                    <div class="select is-fullwidth">
+                                        <select id="department-select" name="department" required>
+                                            <option value="">Select department</option>
+                                            <option value="Engineering">Engineering</option>
+                                            <option value="Business">Business</option>
+                                            <option value="Science">Science</option>
+                                            <option value="Arts & Design">Arts & Design</option>
+                                            <option value="Medicine & Health">Medicine & Health</option>
+                                            <option value="Law">Law</option>
+                                            <option value="Education">Education</option>
+                                            <option value="Sports">Sports</option>
+                                            <option value="Technology">Technology</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Header Text -->
+                            <div class="field">
+                                <label class="label">Header (Brief Summary)</label>
+                                <div class="control">
+                                    <input class="input" type="text" id="post-header" name="header" placeholder="Enter a brief summary (will appear in cards)" required>
+                                </div>
+                            </div>
+
+                            <!-- News Details Textarea -->
+                            <div class="field">
+                                <label class="label">News Details</label>
+                                <div class="control">
+                                    <textarea class="textarea" id="post-details" name="details" placeholder="Enter the full details of the news" required></textarea>
+                                </div>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="field">
+                                <label class="label">Upload Image</label>
+                                <div class="control">
+                                    <input class="input" type="file" id="post-image" name="image" accept="image/*">
+                                </div>
+                            </div>
+
+                            <!-- Submit and Cancel Buttons -->
+                            <div class="buttons mt-4">
+                                <button type="submit" class="button is-success is-fullwidth">Submit</button>
+                                <button type="button" class="button is-danger is-fullwidth mt-2" id="cancel-post">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 
-    
-    <!-- News Cards -->
-     <div class="news-posts-card">
-    <div class="columns is-multiline is-centered">
-        <!-- Card 1 -->
-        <div class="column is-one-quarter">
-          <div class="box">
-            <!-- Date -->
-            <p class="is-size-7 has-text-grey">Date: 10/3/2025</p>
-             <!-- Department - Added -->
-    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-      <strong>Department: Science</strong>
-    </p>
-  
-            <!-- Image -->
-            <figure class="image is-4by3">
-              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
-            </figure>
-  
-            <!-- Title -->
-            <h3 class="title is-6">The News Title</h3>
-  
-            <!-- Author -->
-            <p class="is-size-7"><strong>By: The Author</strong></p>
-  
-            <!-- News Details -->
-            <div id="news-details-1" class="mt-4">
-              <p class="is-size-7">The full details of the news article go here.</p>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <div class="spinner is-size-1"></div>
+                <p class="mt-3">Loading...</p>
             </div>
-  
-            <!-- Buttons -->
-            <div class="buttons mt-4">
-              <a href="addpost.html" class="button is-info is-small">View Details</a>
-              <button class="button is-primary is-small">
-                <span class="icon">
-                  <i class="fas fa-heart">❤️</i>
-                </span>
-              </button>
-            </div>
-          </div>
         </div>
-  
-        <!-- Card 2 -->
-        <div class="column is-one-quarter">
-          <div class="box">
-            <!-- Date -->
-            <p class="is-size-7 has-text-grey">Date: 12/5/2025</p>
-             <!-- Department - Added -->
-    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-      <strong>Department: Science</strong>
-    </p>
-  
-            <!-- Image -->
-            <figure class="image is-4by3">
-              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
-            </figure>
-  
-            <!-- Title -->
-            <h3 class="title is-6">Another News Title</h3>
-  
-            <!-- Author -->
-            <p class="is-size-7"><strong>By: Another Author</strong></p>
-  
-            <!-- News Details -->
-            <div id="news-details-2" class="mt-4">
-              <p class="is-size-7">The full details of another news article go here.</p>
-            </div>
-  
-            <!-- Buttons -->
-            <div class="buttons mt-4">
-              <a href="addpost.html" class="button is-info is-small">View Details</a>
-              <button class="button is-primary is-small">
-                <span class="icon">
-                  <i class="fas fa-heart">❤️</i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-  
-        <!-- Card 3 -->
-        <div class="column is-one-quarter">
-          <div class="box">
-            <!-- Date -->
-            <p class="is-size-7 has-text-grey">Date: 15/7/2025</p>
-             <!-- Department - Added -->
-    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-      <strong>Department: Science</strong>
-    </p>
-  
-            <!-- Image -->
-            <figure class="image is-4by3">
-              <img src="collage.PNG" alt="News Image" style="width: 100%; height: auto;">
-            </figure>
-  
-            <!-- Title -->
-            <h3 class="title is-6">Yet Another News Title</h3>
-  
-            <!-- Author -->
-            <p class="is-size-7"><strong>By: Yet Another Author</strong></p>
-  
-            <!-- News Details -->
-            <div id="news-details-3" class="mt-4">
-              <p class="is-size-7">The full details of yet another news article go here.</p>
-            </div>
-  
-            <!-- Buttons -->
-            <div class="buttons mt-4">
-              <a href="addpost.html" class="button is-info is-small">View Details</a>
-              <button class="button is-primary is-small">
-                <span class="icon">
-                  <i class="fas fa-heart">❤️</i>
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
 
-    <!-- Pagination Controls -->
-    <div class="pagination-container">
-      <nav class="pagination" role="navigation" aria-label="pagination">
-          <ul class="pagination-list" style="display: flex; list-style: none; margin: 0; padding: 0;">
-              <!-- Previous Button -->
-              <li><a class="pagination-link pagination-previous" href="#">Previous</a></li>
-              <!-- Page Numbers Placeholder -->
-              <li id="pagination-pages"></li>
-              <!-- Next Button -->
-              <li><a class="pagination-link pagination-next" href="#">Next</a></li>
-          </ul>
-      </nav>
-  </div>
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
 
-<!-- Add Post Button -->
-<div class="columns mt-4">
-    <div class="column is-one-quarter" style="margin-left: 345px;">
-      <button id="add-post-btn" class="button is-primary is-fullwidth">Add Post</button>
-    </div>
-</div>
-  
- <!-- Form for Adding/Editing News -->
-<div id="add-post-form" class="mt-4" style="display: none;">
-  <div class="columns">
-    <div class="column is-two-thirds form-right">
-      <div class="box" style="padding: 20px;">
-        <h2 class="title is-4" id="form-title">Add New Post</h2>
-        
-        <!-- Title Input -->
-        <div class="field">
-          <label class="label">Title</label>
-          <div class="control">
-            <input class="input" type="text" id="post-title" name="title" placeholder="Enter the title of the news" required>
-          </div>
-        </div>
-
-        <!-- Author Input -->
-        <div class="field">
-          <label class="label">Author</label>
-          <div class="control">
-            <input class="input" type="text" id="post-author" name="author" placeholder="Enter the author's name" required>
-          </div>
-        </div>
-        
-        <!-- Department Dropdown -->
-        <div class="field">
-          <label class="label">Department</label>
-          <div class="control">
-            <div class="select is-fullwidth">
-              <select id="department-select" name="department" required>
-                <option value="">Select department</option>
-                <option value="Engineering">Engineering</option>
-                <option value="Business">Business</option>
-                <option value="Science">Science</option>
-                <option value="Arts & Design">Arts & Design</option>
-                <option value="Medicine & Health">Medicine & Health</option>
-                <option value="Law">Law</option>
-                <option value="Education">Education</option>
-                <option value="Sports">Sports</option>
-                <option value="Technology">Technology</option>
-              </select>
-            </div>
-          </div>
-        </div>
-
-        <!-- Header Text -->
-        <div class="field">
-          <label class="label">Header (Brief Summary)</label>
-          <div class="control">
-            <input class="input" type="text" id="post-header" name="header" placeholder="Enter a brief summary (will appear in cards)" required>
-          </div>
-        </div>
-
-        <!-- News Details Textarea -->
-        <div class="field">
-          <label class="label">News Details</label>
-          <div class="control">
-            <textarea class="textarea" id="post-details" name="details" placeholder="Enter the full details of the news" required></textarea>
-          </div>
-        </div>
-
-        <!-- Image Upload -->
-        <div class="field">
-          <label class="label">Upload Image</label>
-          <div class="control">
-            <input class="input" type="file" id="post-image" name="image" accept="image/*">
-          </div>
-        </div>
-
-        <!-- Submit and Cancel Buttons -->
-        <div class="buttons mt-4">
-          <button type="submit" class="button is-success is-fullwidth">Submit</button>
-          <button type="button" class="button is-danger is-fullwidth mt-2" id="cancel-post">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
- <!-- Loading Spinner (Hidden by default) -->
- <div id="loading-spinner" class="modal" style="display: none;">
-  <div class="modal-background"></div>
-  <div class="modal-content">
-    <div class="box has-text-centered">
-      <span class="icon is-large">
-        <i class="fas fa-spinner fa-pulse fa-3x"></i>
-      </span>
-      <p>Loading...</p>
-    </div>
-  </div>
-</div>
-
-  <script src="script.js"></script>
-
- </body>
-
- </html>
-
- git config --global user.name "RanaElias"
- git config --global user.email "ranaelias04@gmail.com" 
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+    <script>
+        // Direct event listener for testing
+        document.addEventListener('DOMContentLoaded', function() {
+            const addPostBtn = document.getElementById('add-post-btn');
+            const addPostForm = document.getElementById('add-post-form');
+            
+            if (addPostBtn && addPostForm) {
+                console.log('Add Post button found');
+                
+                addPostBtn.addEventListener('click', function() {
+                    console.log('Add Post button clicked');
+                    addPostForm.style.display = 'block';
+                });
+                
+                const cancelBtn = document.getElementById('cancel-post');
+                if (cancelBtn) {
+                    cancelBtn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        console.log('Cancel button clicked');
+                        addPostForm.style.display = 'none';
+                    });
+                }
+            } else {
+                console.error('Add Post button or form not found');
+            }
+        });
+    </script>
+</body>
+</html>

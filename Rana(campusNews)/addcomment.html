@@ -1,110 +1,221 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Add or Edit Comment</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
-  <style>
-    .custom-blue {
-      background-color: #0074D9;
-      color: white;
-      border: none;
-    }
-    .custom-box {
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Add or Edit Comment</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <style>
+        .custom-blue {
+            background-color: #0074D9;
+            color: white;
+            border: none;
+        }
+        .custom-box {
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0px 4px 12px rgba(0,0,0,0.1);
+        }
+        .reply-indicator {
+            background-color: #f5f5f5;
+            padding: 0.5rem;
+            margin-bottom: 1rem;
+            border-radius: 4px;
+        }
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .modal.is-active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .spinner {
+            animation: spinAround 500ms infinite linear;
+            border: 2px solid #dbdbdb;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 1em;
+            width: 1em;
+        }
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+    </style>
 </head>
-
 <body>
-
-<!-- Back Button -->
-<div class="container mt-5">
-  <a href="addpost.html" class="button custom-blue">⬅️ Back to Post Page</a>
-</div>
-
-<!-- Add/Edit Comment Form -->
-<div class="container mt-6">
-  <div class="columns is-centered">
-    <div class="column is-half">
-      <div class="box custom-box">
-        <h1 class="title has-text-centered">💬 Add or Edit Comment</h1>
-
-        <form id="commentForm">
-          <!-- Username -->
-          <div class="field">
-            <label class="label">Your Name</label>
-            <div class="control">
-              <input class="input" type="text" id="username" placeholder="Enter your name" required>
-            </div>
-          </div>
-
-          <!-- Profile Picture Upload -->
-          <div class="field">
-            <label class="label">Profile Picture</label>
-            <div class="control">
-              <input class="input" type="file" id="profilePic" accept="image/*">
-            </div>
-          </div>
-
-          <!-- Choose Submission Type -->
-          <div class="field">
-            <label class="label">Submission Type</label>
-            <div class="control">
-              <label class="radio">
-                <input type="radio" name="submissionType" value="photo"> Photo
-              </label>
-              <label class="radio ml-4">
-                <input type="radio" name="submissionType" value="link"> Link
-              </label>
-              <label class="radio ml-4">
-                <input type="radio" name="submissionType" value="none" checked> No Upload
-              </label>
-            </div>
-          </div>
-
-          <!-- Upload or Link Field (hidden initially) -->
-          <div class="field uploadField" style="display: none;">
-            <label class="label">Upload Photo</label>
-            <div class="control">
-              <input class="input" type="file" id="uploadField" accept="image/*">
-            </div>
-          </div>
-
-          <div class="field linkField" style="display: none;">
-            <label class="label">Enter Link</label>
-            <div class="control">
-              <input class="input" type="url" id="linkField" placeholder="https://example.com">
-            </div>
-          </div>
-
-          <!-- Comment Textarea -->
-          <div class="field">
-            <label class="label">Comment Text</label>
-            <div class="control">
-              <textarea class="textarea" id="commentText" placeholder="Write your comment..." rows="4" required></textarea>
-            </div>
-          </div>
-
-          <!-- Submit Buttons -->
-          <div class="field is-grouped is-grouped-centered mt-5">
-            <div class="control">
-              <button type="submit" class="button is-primary">📨 Submit / Reply</button>
-            </div>
-            <div class="control">
-              <button type="reset" class="button is-danger">🗑️ Clear Form</button>
-            </div>
-          </div>
-        </form>
-
-      </div>
+    <!-- Back Button -->
+    <div class="container mt-5">
+        <a href="#" class="button custom-blue" id="back-button">⬅️ Back to Post</a>
     </div>
-  </div>
-</div>
 
-<script src="addcomment.js"></script>
+    <!-- Add/Edit Comment Form -->
+    <div class="container mt-6">
+        <div class="columns is-centered">
+            <div class="column is-half">
+                <div class="box custom-box">
+                    <h1 class="title has-text-centered" id="form-title">💬 Add Comment</h1>
+
+                    <!-- Reply Indicator (hidden by default) -->
+                    <div id="reply-indicator" class="reply-indicator" style="display: none;">
+                        Replying to: <span id="reply-to-username"></span>
+                        <button class="delete" id="cancel-reply"></button>
+                    </div>
+
+                    <form id="commentForm">
+                        <!-- Username -->
+                        <div class="field">
+                            <label class="label">Your Name</label>
+                            <div class="control">
+                                <input class="input" type="text" id="username" name="username" 
+                                       placeholder="Enter your name" required>
+                            </div>
+                        </div>
+
+                        <!-- Profile Picture Upload -->
+                        <div class="field">
+                            <label class="label">Profile Picture</label>
+                            <div class="control">
+                                <input class="input" type="file" id="profilePic" name="profilePic" 
+                                       accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- Choose Submission Type -->
+                        <div class="field">
+                            <label class="label">Include Attachment</label>
+                            <div class="control">
+                                <label class="radio">
+                                    <input type="radio" name="submissionType" value="photo"> Photo
+                                </label>
+                                <label class="radio ml-4">
+                                    <input type="radio" name="submissionType" value="link"> Link
+                                </label>
+                                <label class="radio ml-4">
+                                    <input type="radio" name="submissionType" value="none" checked> 
+                                    No Attachment
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Upload or Link Field (hidden initially) -->
+                        <div class="field uploadField" style="display: none;">
+                            <label class="label">Upload Photo</label>
+                            <div class="control">
+                                <input class="input" type="file" id="uploadField" accept="image/*">
+                            </div>
+                        </div>
+
+                        <div class="field linkField" style="display: none;">
+                            <label class="label">Enter Link</label>
+                            <div class="control">
+                                <input class="input" type="url" id="linkField" 
+                                       placeholder="https://example.com">
+                            </div>
+                        </div>
+
+                        <!-- Comment Textarea -->
+                        <div class="field">
+                            <label class="label">Comment Text</label>
+                            <div class="control">
+                                <textarea class="textarea" id="commentText" name="commentText" 
+                                          placeholder="Write your comment..." rows="4" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Hidden Fields -->
+                        <input type="hidden" id="postId" name="postId">
+                        <input type="hidden" id="replyToId" name="replyToId">
+                        <input type="hidden" id="editCommentId" name="editCommentId">
+
+                        <!-- Submit Buttons -->
+                        <div class="field is-grouped is-grouped-centered mt-5">
+                            <div class="control">
+                                <button type="submit" class="button is-primary">
+                                    <span id="submit-button-text">📨 Submit Comment</span>
+                                </button>
+                            </div>
+                            <div class="control">
+                                <button type="button" class="button is-danger" id="cancel-button">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
+
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <div class="spinner is-size-1"></div>
+                <p class="mt-3">Loading...</p>
+            </div>
+        </div>
+    </div>
+    
+    <style>
+        .spinner {
+            animation: spinAround 800ms infinite linear;
+            border: 4px solid #3273dc;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 3em;
+            width: 3em;
+            margin: 0 auto;
+        }
+        
+        #loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #loading-spinner.is-active {
+            display: flex !important;
+        }
+        
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+    </style>
+
+    <script src="api.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
