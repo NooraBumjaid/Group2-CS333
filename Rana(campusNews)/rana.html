@@ -361,6 +361,13 @@
             </div>
           </div>
         </div>
+        <!-- Header Text -->
+        <div class="field">
+          <label class="label">Header</label>
+          <div class="control">
+            <input class="input" type="text" id="post-header" placeholder="Enter the short header (Main info)">
+          </div>
+        </div>
         <!-- News Details Textarea -->
         <div class="field">
           <label class="label">News Details</label>
@@ -384,7 +391,22 @@
     </div>
   </div>
 </div>
+
+ <!-- Loading Spinner (Hidden by default) -->
+ <div id="loading-spinner" class="modal" style="display: none;">
+  <div class="modal-background"></div>
+  <div class="modal-content">
+    <div class="box has-text-centered">
+      <span class="icon is-large">
+        <i class="fas fa-spinner fa-pulse fa-3x"></i>
+      </span>
+      <p>Loading...</p>
+    </div>
+  </div>
+</div>
+
   <script src="script.js"></script>
+  
  </body>
 
  </html>
