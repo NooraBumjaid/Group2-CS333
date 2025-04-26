@@ -2,46 +2,57 @@
  * Campus News Portal - Core JavaScript Functionality
  */
 
+// Debug script loading
+console.log('======== SCRIPT.JS LOADED ========');
+console.log('Window API object available:', !!window.newsApi);
+console.log('Document readyState:', document.readyState);
+
+// Simple function to check our page setup
+function diagnoseEnvironment() {
+    console.log('---- CHECKING PAGE ----');
+    console.log('1. API loaded:', !!window.newsApi);
+    console.log('2. Portal ready:', !!window.newsPortal);
+    console.log('3. JSON file:', window.location.origin + '/example.json');
+    console.log('4. Page path:', window.location.pathname);
+    
+    // Check our container
+    const container = document.getElementById('news-cards-container');
+    console.log('5. Container found:', !!container);
+    
+    // Count images
+    const imgElements = document.querySelectorAll('img');
+    console.log('6. Images found:', imgElements.length);
+    console.log('--------------------');
+}
+
+// Run diagnosis after a short delay to ensure DOM is ready
+setTimeout(diagnoseEnvironment, 1000);
+
+// Clear localStorage for testing (remove this in production)
+localStorage.clear();
+console.log("localStorage cleared to force data reload");
+
 class NewsPortal {
     constructor() {
-        // Initialize state
+        // Initialize variables
         this.posts = [];
         this.comments = [];
-        this.currentPageNum = 1; // For pagination
-        this.postsPerPage = 3; // Changed to 3 posts per page as requested
+        this.currentPage = 1;
+        this.postsPerPage = 3;
+        this.currentFilter = '';
+        this.currentSort = 'newest';
         this.currentSearch = '';
-        this.currentDepartment = '';
-        this.currentSort = 'sort-by-date'; // Default to newest first
         this.isLoading = false;
-        this.currentUser = 'user1'; // Default user for likes
-        this.currentPostId = null;
+        this.currentUser = 'user1'; // Default user ID for likes
         
-        // Show loading spinner immediately
-        this.showLoading();
-        
-        // Determine which page we're on
-        this.currentPageName = window.location.pathname.split('/').pop();
-        
-        // Initialize common UI components first
+        // Initialize the portal
         this.initCommonListeners();
-        
-        // Wait a short time to ensure spinner is visible, then initialize page
-        setTimeout(() => {
-            // Initialize the application based on the current page
-            if (this.currentPageName.includes('rana.html') || this.currentPageName === '' || this.currentPageName === '/') {
-                // Main news listing page
-                this.initMainPageListeners();
-            } else if (this.currentPageName.includes('addpost.html')) {
-                // Post detail/edit page
-                this.initDetailPageListeners();
-            } else if (this.currentPageName.includes('addcomment.html')) {
-                // Comment add/edit page
-                this.initCommentPageListeners();
-            }
-            
-            // Load initial data after a slight delay
-            this.loadData();
-        }, 300);
+        this.loadData();
+    }
+    
+    // Helper method to simulate delay for async operations
+    async simulateDelay(ms = 500) {
+        return new Promise(resolve => setTimeout(resolve, ms));
     }
 
     /**
@@ -51,77 +62,95 @@ class NewsPortal {
         // Show loading spinner immediately when page loads
         this.showLoading();
         
-        // Set up notification container
-        const notificationContainer = document.getElementById('notification-container');
-        if (!notificationContainer) {
-            const container = document.createElement('div');
-            container.id = 'notification-container';
-            container.className = 'notification-container';
-            document.body.appendChild(container);
-        }
+        const pagePath = window.location.pathname.split('/').pop();
         
-        // Load Font Awesome if not already loaded
-        if (!document.querySelector('link[href*="font-awesome"]')) {
-            const fontAwesome = document.createElement('link');
-            fontAwesome.rel = 'stylesheet';
-            fontAwesome.href = 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css';
-            document.head.appendChild(fontAwesome);
+        if (!pagePath || pagePath === '' || pagePath.includes('rana.html')) {
+            // Main page initialization
+            this.initMainPageListeners();
+        } else if (pagePath.includes('addpost.html')) {
+            // Post detail/edit page initialization
+            this.initDetailPageListeners();
+        } else if (pagePath.includes('addcomment.html')) {
+            // Comment page initialization
+            this.initCommentPageListeners();
         }
     }
-    
+
     /**
      * Initialize the main news listing page
      */
     initMainPageListeners() {
         console.log('Initializing main page listeners');
         
+        // Filter dropdown
+        const filterSelect = document.querySelector('#news-filter select');
+        if (filterSelect) {
+            filterSelect.addEventListener('change', () => {
+                const selectedValue = filterSelect.value === 'no-filter-option' ? '' : filterSelect.value;
+                this.currentFilter = selectedValue;
+                this.currentPage = 1;
+                this.renderPosts();
+            });
+        }
+        
+        // Sort dropdown
+        const sortSelect = document.querySelector('#news-sort select');
+        if (sortSelect) {
+            sortSelect.addEventListener('change', () => {
+                let selectedValue = 'newest'; // Default
+                
+                switch (sortSelect.value) {
+                    case 'sort-by-date':
+                        selectedValue = 'newest';
+                        break;
+                    case 'most-popular':
+                        selectedValue = 'popular';
+                        break;
+                    case 'from-A-to-Z':
+                        selectedValue = 'az';
+                        break;
+                    case 'from-Z-to-A':
+                        selectedValue = 'za';
+                        break;
+                }
+                
+                this.currentSort = selectedValue;
+                this.renderPosts();
+            });
+        }
+        
         // Search input
         const searchInput = document.getElementById('search-news');
         if (searchInput) {
-            searchInput.addEventListener('input', (e) => {
-                this.currentSearch = e.target.value.toLowerCase();
-                this.currentPageNum = 1; // Reset to first page when searching
+            searchInput.addEventListener('input', () => {
+                this.currentSearch = searchInput.value;
+                this.currentPage = 1;
                 this.renderPosts();
             });
         }
-
-        // Department filter
-        const departmentSelect = document.querySelector('#news-filter select');
-        if (departmentSelect) {
-            departmentSelect.addEventListener('change', (e) => {
-                this.currentDepartment = e.target.value === 'no-filter-option' ? '' : e.target.value;
-                this.currentPageNum = 1; // Reset to first page when filtering
-                this.renderPosts();
-            });
-        }
-
-        // Sort options
-        const sortSelect = document.querySelector('#news-sort select');
-        if (sortSelect) {
-            sortSelect.addEventListener('change', (e) => {
-                this.currentSort = e.target.value;
-                this.renderPosts();
-            });
-        }
-
-        // Add post button (show form)
+        
+        // Add post button to toggle form visibility
         const addPostBtn = document.getElementById('add-post-btn');
         if (addPostBtn) {
             addPostBtn.addEventListener('click', () => {
+                // Find the add post form
                 const addPostForm = document.getElementById('add-post-form');
                 if (addPostForm) {
-                    addPostForm.style.display = 'block';
-                    // Clear form
-                    const form = document.getElementById('post-form');
-                    if (form) form.reset();
-                    
-                    const formTitle = document.getElementById('form-title');
-                    if (formTitle) formTitle.textContent = 'Add New Post';
+                    // Toggle its visibility
+                    addPostForm.style.display = addPostForm.style.display === 'none' ? 'block' : 'none';
                 }
             });
         }
 
-        // Post form submission
+        // Add post form cancel button
+        const cancelPostBtn = document.getElementById('cancel-post');
+        if (cancelPostBtn) {
+            cancelPostBtn.addEventListener('click', () => {
+                document.getElementById('add-post-form').style.display = 'none';
+            });
+        }
+        
+        // Form submission for adding/editing post directly on the main page
         const postForm = document.getElementById('post-form');
         if (postForm) {
             postForm.addEventListener('submit', (e) => {
@@ -129,50 +158,50 @@ class NewsPortal {
                 this.handlePostSubmission();
             });
         }
-
-        // Cancel post button (hide form)
-        const cancelPostBtn = document.getElementById('cancel-post');
-        if (cancelPostBtn) {
-            cancelPostBtn.addEventListener('click', () => {
-                const addPostForm = document.getElementById('add-post-form');
-                if (addPostForm) {
-                    addPostForm.style.display = 'none';
-                }
-            });
-        }
     }
-    
+
     /**
      * Initialize the post detail/edit page
      */
     initDetailPageListeners() {
-        console.log('Initializing post detail page listeners');
+        console.log('Initializing detail page listeners');
         
         // Get post ID from URL
         const urlParams = new URLSearchParams(window.location.search);
         const postId = urlParams.get('id');
-        this.currentPostId = postId;
         
         if (!postId) {
-            // No post ID provided, redirect to main page
-            window.location.href = 'rana.html';
-            return;
-        }
-        
-        // Function to set up event listeners
-        const setupListeners = () => {
-            console.log('Setting up detail page event listeners');
+            // If no post ID, this is a new post
+            document.getElementById('post-view').style.display = 'none';
+            document.getElementById('add-post-form').style.display = 'block';
+            document.getElementById('comments-section').style.display = 'none';
             
-            // Like button
-            const likeBtn = document.getElementById('like-post-btn');
-            if (likeBtn) {
-                likeBtn.addEventListener('click', () => {
-                    this.toggleLike(postId);
-                    this.updatePostDetails();
+            // Update form title
+            const formTitle = document.getElementById('form-title');
+            if (formTitle) formTitle.textContent = 'Add New Post';
+            
+            // Handle form submission
+            const postForm = document.getElementById('post-form');
+            if (postForm) {
+                postForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handlePostSubmission();
                 });
             }
             
-            // Edit button
+            // Cancel button
+            const cancelBtn = document.getElementById('cancel-post');
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', () => {
+                    window.location.href = 'rana.html';
+                });
+            }
+        } else {
+            // This is viewing/editing an existing post
+            document.getElementById('post-view').style.display = 'block';
+            document.getElementById('add-post-form').style.display = 'none';
+            
+            // Edit post button
             const editBtn = document.getElementById('edit-post-btn');
             if (editBtn) {
                 editBtn.addEventListener('click', () => {
@@ -180,29 +209,52 @@ class NewsPortal {
                 });
             }
             
-            // Delete button
+            // Delete post button
             const deleteBtn = document.getElementById('delete-post-btn');
             if (deleteBtn) {
                 deleteBtn.addEventListener('click', () => {
-                    if (confirm('Are you sure you want to delete this post?')) {
-                        this.deletePost(postId);
-                    }
+                    this.deletePost(postId);
                 });
             }
             
-            // Add comment link
+            // Like post button
+            const likeBtn = document.getElementById('like-post-btn');
+            if (likeBtn) {
+                // Add transition for smooth animation
+                likeBtn.style.transition = 'transform 0.2s ease, background-color 0.2s ease';
+                
+                // Add hover effect
+                likeBtn.addEventListener('mouseenter', () => {
+                    if (!likeBtn.classList.contains('is-active')) {
+                        likeBtn.style.backgroundColor = '#ff7c9c';
+                    }
+                });
+                
+                likeBtn.addEventListener('mouseleave', () => {
+                    if (!likeBtn.classList.contains('is-active')) {
+                        likeBtn.style.backgroundColor = '#ff5c7c';
+                    }
+                });
+                
+                // Add click with visual feedback
+                likeBtn.addEventListener('click', () => {
+                    // Visual feedback animation
+                    likeBtn.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        likeBtn.style.transform = 'scale(1)';
+                    }, 200);
+                    
+                    this.toggleLike(postId);
+                });
+            }
+            
+            // Add comment button/link
             const addCommentLink = document.getElementById('add-comment-link');
             if (addCommentLink) {
-                console.log('Found Add Comment link, setting href to:', `addcomment.html?id=${postId}`);
-                addCommentLink.href = `addcomment.html?id=${postId}`;
-            } else {
-                console.log('Add Comment link not found');
+                addCommentLink.href = `addcomment.html?postId=${postId}`;
             }
-        };
-        
-        // Function to set up form-related event listeners
-        const setupFormListeners = () => {
-            // Post form submission (for edit)
+            
+            // Form submission for editing
             const postForm = document.getElementById('post-form');
             if (postForm) {
                 postForm.addEventListener('submit', (e) => {
@@ -215,185 +267,72 @@ class NewsPortal {
             const cancelBtn = document.getElementById('cancel-post');
             if (cancelBtn) {
                 cancelBtn.addEventListener('click', () => {
-                    // Reset the form
-                    const form = document.getElementById('post-form');
-                    if (form) {
-                        form.reset();
-                    }
-                    
-                    // Hide the form
-                    const addPostForm = document.getElementById('add-post-form');
-                    if (addPostForm) {
-                        addPostForm.style.display = 'none';
-                    }
-                    
-                    // Show post view with the original data
-                    const postView = document.getElementById('post-view');
-                    if (postView) {
-                        postView.style.display = 'block';
-                        this.updatePostDetails(); // Restore original post details
-                    }
+                    document.getElementById('post-view').style.display = 'block';
+                    document.getElementById('add-post-form').style.display = 'none';
                 });
             }
-        };
-        
-        // Set up all event listeners
-        const setupAllListeners = () => {
-            setupListeners();
-            setupFormListeners();
-        };
-        
-        // If the DOM is already loaded, set up listeners immediately
-        if (document.readyState === 'complete' || document.readyState === 'interactive') {
-            setupAllListeners();
-        } else {
-            // Otherwise, wait for the DOM to be fully loaded
-            document.addEventListener('DOMContentLoaded', setupAllListeners);
         }
     }
-    
+
     /**
      * Initialize the comment page
      */
     initCommentPageListeners() {
         console.log('Initializing comment page listeners');
         
-        // Get post ID and other parameters from URL
+        // Get post ID from URL
         const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
-        const replyToId = urlParams.get('replyTo');
-        const editCommentId = urlParams.get('edit');
-        
-        this.currentPostId = postId;
+        const postId = urlParams.get('postId');
+        const commentId = urlParams.get('replyTo');
         
         if (!postId) {
-            // No post ID provided, redirect to main page
+            alert('No post ID provided. Redirecting to main page.');
             window.location.href = 'rana.html';
             return;
         }
         
-        // Set up back button
-        const backButton = document.getElementById('back-button');
-        if (backButton) {
-            backButton.addEventListener('click', (e) => {
+        // Set post ID in form - using correct ID from HTML
+        const postIdInput = document.getElementById('postId');
+        if (postIdInput) postIdInput.value = postId;
+        
+        // Set reply to ID in form if this is a reply
+        const replyToInput = document.getElementById('replyToId');
+        if (replyToInput && commentId) {
+            replyToInput.value = commentId;
+            
+            // Update form title if this is a reply
+            const formTitle = document.getElementById('form-title');
+            if (formTitle) {
+                const replyingToComment = this.comments.find(c => c.id === commentId);
+                if (replyingToComment) {
+                    formTitle.textContent = `Replying to ${replyingToComment.username}`;
+                }
+            }
+        }
+        
+        // Form submission for adding comment - using correct ID from HTML
+        const commentForm = document.getElementById('commentForm');
+        if (commentForm) {
+            commentForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                this.handleCommentSubmission();
+            });
+        }
+        
+        // Back button - fixed to work with the ID in HTML
+        const backBtn = document.getElementById('back-button');
+        if (backBtn) {
+            backBtn.addEventListener('click', (e) => {
                 e.preventDefault();
                 window.location.href = `addpost.html?id=${postId}`;
             });
         }
         
-        // Set up comment form
-        const commentForm = document.getElementById('commentForm');
-        if (commentForm) {
-            // Set the hidden post ID field
-            const postIdField = document.getElementById('postId');
-            if (postIdField) {
-                postIdField.value = postId;
-            }
-            
-            // Set up reply info if replying to a comment
-            if (replyToId) {
-                const replyToIdField = document.getElementById('replyToId');
-                if (replyToIdField) {
-                    replyToIdField.value = replyToId;
-                }
-                
-                // Show reply indicator
-                const replyIndicator = document.getElementById('reply-indicator');
-                const replyUsername = document.getElementById('reply-to-username');
-                
-                if (replyIndicator && replyUsername) {
-                    // Find the comment being replied to
-                    this.loadData().then(() => {
-                        const comment = this.comments.find(c => c.id === replyToId);
-                        if (comment) {
-                            replyUsername.textContent = comment.username;
-                            replyIndicator.style.display = 'block';
-                        }
-                    });
-                }
-                
-                // Cancel reply button
-                const cancelReplyBtn = document.getElementById('cancel-reply');
-                if (cancelReplyBtn) {
-                    cancelReplyBtn.addEventListener('click', () => {
-                        // Clear reply to field and hide indicator
-                        const replyToIdField = document.getElementById('replyToId');
-                        if (replyToIdField) {
-                            replyToIdField.value = '';
-                        }
-                        
-                        replyIndicator.style.display = 'none';
-                    });
-                }
-            }
-            
-            // Setup for editing a comment
-            if (editCommentId) {
-                const editCommentIdField = document.getElementById('editCommentId');
-                if (editCommentIdField) {
-                    editCommentIdField.value = editCommentId;
-                }
-                
-                // Load comment data
-                this.loadData().then(() => {
-                    const comment = this.comments.find(c => c.id === editCommentId);
-                    if (comment) {
-                        // Set form title
-                        const formTitle = document.getElementById('form-title');
-                        if (formTitle) {
-                            formTitle.textContent = '✏️ Edit Comment';
-                        }
-                        
-                        // Fill form fields
-                        const usernameField = document.getElementById('username');
-                        const commentTextField = document.getElementById('commentText');
-                        
-                        if (usernameField) {
-                            usernameField.value = comment.username;
-                        }
-                        
-                        if (commentTextField) {
-                            commentTextField.value = comment.text;
-                        }
-                        
-                        // Set submit button text
-                        const submitButtonText = document.getElementById('submit-button-text');
-                        if (submitButtonText) {
-                            submitButtonText.textContent = 'Update Comment';
-                        }
-                    }
-                });
-            }
-            
-            // Handle form submission
-            commentForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                this.handleCommentSubmission();
-            });
-            
-            // Cancel button
-            const cancelButton = document.getElementById('cancel-button');
-            if (cancelButton) {
-                cancelButton.addEventListener('click', () => {
-                    window.location.href = `addpost.html?id=${postId}`;
-                });
-            }
-            
-            // Type of submission handler
-            const radioButtons = document.querySelectorAll('input[name="submissionType"]');
-            radioButtons.forEach(radio => {
-                radio.addEventListener('change', () => {
-                    // Hide all fields first
-                    document.querySelector('.uploadField').style.display = 'none';
-                    document.querySelector('.linkField').style.display = 'none';
-                    
-                    // Show the appropriate field based on selection
-                    if (radio.value === 'photo') {
-                        document.querySelector('.uploadField').style.display = 'block';
-                    } else if (radio.value === 'link') {
-                        document.querySelector('.linkField').style.display = 'block';
-                    }
-                });
+        // Cancel button - fixed to work with the ID in HTML
+        const cancelBtn = document.getElementById('cancel-button');
+        if (cancelBtn) {
+            cancelBtn.addEventListener('click', () => {
+                window.location.href = `addpost.html?id=${postId}`;
             });
         }
     }
@@ -405,6 +344,12 @@ class NewsPortal {
         this.showLoading();
         
         try {
+            console.log('Loading data...');
+            
+            // Clear localStorage for testing
+            localStorage.removeItem('posts');
+            localStorage.removeItem('comments');
+            
             // Try to get data from localStorage first
             const savedPosts = localStorage.getItem('posts');
             const savedComments = localStorage.getItem('comments');
@@ -415,98 +360,122 @@ class NewsPortal {
                 this.posts = JSON.parse(savedPosts) || [];
                 this.comments = JSON.parse(savedComments) || [];
             } else {
-                // Otherwise load from example.json
-                console.log('Loading data from example.json');
-                const response = await fetch('example.json');
-                if (!response.ok) {
-                    throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                // Otherwise load from api.js which will load from example.json
+                console.log('Loading data from example.json via api.js');
+                try {
+                    // First, check if newsApi exists, or try to wait for it
+                    if (!window.newsApi) {
+                        console.log('WARNING: window.newsApi not found! Waiting 500ms to see if it loads...');
+                        await this.simulateDelay(500); // Wait a bit to see if it loads
+                        console.log('After waiting: window.newsApi exists:', !!window.newsApi);
+                    }
+                    
+                    // Try to use newsApi if available
+                    if (window.newsApi) {
+                        // Load data directly from example.json
+                        console.log('Attempting to fetch example.json...');
+                        const response = await fetch('example.json');
+                        console.log('Fetch response:', response);
+                        if (!response.ok) {
+                            console.error('Fetch failed:', response.status, response.statusText);
+                            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                        }
+                        
+                        // Get the raw text first to check if it's valid JSON
+                        const responseText = await response.text();
+                        console.log('Response text (first 100 chars):', responseText.substring(0, 100));
+                        
+                        try {
+                            const data = JSON.parse(responseText);
+                            console.log('JSON parsed successfully, found posts:', data.posts?.length);
+                        } catch (parseError) {
+                            console.error('JSON parse error:', parseError);
+                            throw parseError;
+                        }
+                        
+                        // Initialize the API with our data
+                        console.log('Initializing newsApi with data:', {
+                            posts: data.posts?.length || 0,
+                            comments: data.comments?.length || 0
+                        });
+                        window.newsApi.initMockData(data.posts, data.comments);
+                        
+                        // Get the data from the API
+                        this.posts = await window.newsApi.getPosts();
+                        this.comments = await window.newsApi.getComments();
+                        
+                        // Save to localStorage for future use
+                        this.savePosts();
+                        
+                        console.log('Data loaded successfully from example.json via api.js');
+                    } else {
+                        throw new Error('NewsAPI not found. Make sure api.js is loaded before script.js');
+                    }
+                } catch (apiError) {
+                    console.error('Error loading from API:', apiError);
+                    
+                    // Fallback to direct loading from example.json
+                    console.log('Falling back to direct loading from example.json');
+                    const response = await fetch('example.json');
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                    }
+                    
+                    const data = await response.json();
+                    this.posts = data.posts || [];
+                    this.comments = data.comments || [];
+                    
+                    // Save to localStorage for future use
+                    this.savePosts();
                 }
-                
-                const data = await response.json();
-                console.log('Data loaded from example.json:', data);
-                
-                // Store the posts and comments
-                this.posts = data.posts || [];
-                this.comments = data.comments || [];
-                
-                // Save to localStorage for future use
-                this.savePosts();
             }
             
             // Initialize the current page
             const pagePath = window.location.pathname.split('/').pop();
             
-            if (pagePath.includes('rana.html') || pagePath === '' || pagePath === '/') {
+            if (!pagePath || pagePath === '' || pagePath.includes('rana.html')) {
                 // Main page - render post listing
                 this.renderPosts();
             } else if (pagePath.includes('addpost.html')) {
                 // Post detail page - render post details and comments
-                this.updatePostDetails();
-                this.renderComments();
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('id');
+                
+                if (postId) {
+                    this.updatePostDetails(postId);
+                    this.renderComments(postId);
+                }
             }
             
+            console.log(`Loaded ${this.posts.length} posts and ${this.comments.length} comments`);
             return { posts: this.posts, comments: this.comments };
+            
         } catch (error) {
             console.error('Error loading data:', error);
+            this.showNotification('Failed to load data: ' + error.message, 'is-danger');
             
-            // If we have no data at all, create empty arrays
-            if (!this.posts || !this.posts.length) {
-                this.posts = [];
-            }
-            if (!this.comments || !this.comments.length) {
-                this.comments = [];
-            }
+            // Create empty arrays if we failed to load data
+            if (!this.posts) this.posts = [];
+            if (!this.comments) this.comments = [];
             
-            this.showNotification('Failed to load data. Using empty data set.', 'is-warning');
-            
-            // Still try to render whatever we have
-            const pagePath = window.location.pathname.split('/').pop();
-            if (pagePath.includes('rana.html') || pagePath === '' || pagePath === '/') {
-                this.renderPosts();
-            }
-            
-            return { posts: this.posts, comments: this.comments };
+            return { posts: [], comments: [] };
         } finally {
             this.hideLoading();
         }
     }
-    
+
     /**
      * Update post details on the detail page
      */
-    updatePostDetails() {
-        // If not on the detail page, return
-        if (!window.location.pathname.includes('addpost.html')) {
-            return;
-        }
+    updatePostDetails(postId) {
+        const post = this.getPost(postId);
         
-        // Get post ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
-        
-        if (!postId) {
-            window.location.href = 'rana.html';
-            return;
-        }
-        
-        // Find the post
-        const post = this.posts.find(p => p.id === postId);
         if (!post) {
-            this.showNotification('Post not found', 'is-danger');
-            setTimeout(() => {
-                window.location.href = 'rana.html';
-            }, 2000);
+            this.showNotification('Post not found', 'is-warning');
             return;
         }
         
-        // Update the add comment link
-        const addCommentLink = document.getElementById('add-comment-link');
-        if (addCommentLink) {
-            console.log('Setting add comment link href in updatePostDetails');
-            addCommentLink.href = `addcomment.html?id=${postId}`;
-        }
-        
-        // Update elements
+        // Set the post details in the UI
         document.title = post.title;
         
         const titleElement = document.getElementById('post-title');
@@ -521,236 +490,160 @@ class NewsPortal {
         const departmentElement = document.getElementById('post-department');
         if (departmentElement) departmentElement.textContent = post.department;
         
-        const imageElement = document.getElementById('post-image');
-        if (imageElement) imageElement.src = post.image;
-        
         const detailsElement = document.getElementById('post-details');
-        if (detailsElement) detailsElement.innerHTML = post.details;
+        if (detailsElement) detailsElement.textContent = post.details;
+        
+        const imageElement = document.getElementById('post-image');
+        if (imageElement) imageElement.src = this.getImageUrl(post.image);
         
         // Update like button
-        const likeBtn = document.getElementById('like-post-btn');
-        const likeIcon = document.getElementById('like-icon');
+        const likeButton = document.getElementById('like-post-btn');
         const likeCount = document.getElementById('like-count');
+        const likeIcon = document.getElementById('like-icon');
         
-        if (likeBtn && likeCount) {
-            // Convert likedBy to array if needed
-            const likedBy = Array.isArray(post.likedBy) ? post.likedBy : [];
+        if (likeCount) likeCount.textContent = post.likes || 0;
+        
+        if (likeButton && post.likedBy) {
+            // Add transition for smooth animation
+            likeButton.style.transition = 'transform 0.2s ease, background-color 0.2s ease';
             
-            // Check if current user has liked
-            const isLiked = likedBy.includes(this.currentUser);
-            
-            // Update button appearance
-            if (isLiked) {
-                likeBtn.classList.add('is-danger', 'is-active');
-                likeBtn.classList.remove('is-light');
-                if (likeIcon) {
-                    likeIcon.textContent = '❤️';
-                    likeIcon.style.transition = 'transform 0.3s ease';
-                }
+            if (post.likedBy.includes(this.currentUser)) {
+                likeButton.classList.add('is-active');
+                likeButton.style.backgroundColor = '#ff2c5c'; // Darker heart color for active
+                if (likeIcon) likeIcon.textContent = '❤️';
             } else {
-                likeBtn.classList.remove('is-danger', 'is-active');
-                likeBtn.classList.add('is-light');
-                if (likeIcon) {
-                    likeIcon.textContent = '🤍';
-                    likeIcon.style.transition = 'transform 0.3s ease';
-                }
+                likeButton.classList.remove('is-active');
+                likeButton.style.backgroundColor = '#ff5c7c'; // Regular heart color
+                if (likeIcon) likeIcon.textContent = '🤍';
             }
-            
-            // Update count
-            likeCount.textContent = post.likes || 0;
-        }
-        
-        // Setup edit button
-        const editBtn = document.getElementById('edit-post-btn');
-        if (editBtn) {
-            editBtn.addEventListener('click', () => {
-                this.showEditPostForm(post.id);
-            });
-        }
-        
-        // Setup delete button
-        const deleteBtn = document.getElementById('delete-post-btn');
-        if (deleteBtn) {
-            deleteBtn.addEventListener('click', () => {
-                if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-                    this.deletePost(post.id);
-                }
-            });
         }
     }
-    
+
     /**
      * Render comments for the current post
      */
-    renderComments() {
-        // If not on the detail page, return
-        if (!window.location.pathname.includes('addpost.html')) {
+    renderComments(postId) {
+        const commentsContainer = document.querySelector('.comments-container');
+        
+        if (!commentsContainer) {
+            console.error('Comments container not found');
             return;
         }
         
-        const commentsContainer = document.querySelector('.comments-container');
-        if (!commentsContainer) return;
-        
-        // Get post ID from URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const postId = urlParams.get('id');
-        
-        if (!postId) return;
+        // Clear the container
+        commentsContainer.innerHTML = '';
         
         // Get comments for this post
-        const postComments = this.comments.filter(comment => comment.postId === postId);
-        
-        // Clear comments container
-        commentsContainer.innerHTML = '';
+        const postComments = this.comments.filter(comment => comment.postId === postId && comment.replyTo === null);
         
         if (postComments.length === 0) {
             commentsContainer.innerHTML = `
-                <div class="notification is-info">
-                    No comments yet. Be the first to comment!
+                <div class="notification is-info is-light">
+                    <p>No comments yet. Be the first to comment!</p>
                 </div>
             `;
             return;
         }
         
-        // Get top-level comments (no replyTo)
-        const topLevelComments = postComments.filter(comment => !comment.replyTo);
-        
-        // Render each top-level comment
-        topLevelComments.forEach(comment => {
+        // Render each top-level comment with its replies
+        postComments.forEach(comment => {
             const commentElement = this.createCommentElement(comment);
             commentsContainer.appendChild(commentElement);
         });
     }
-    
+
     /**
      * Create comment element with replies
      */
     createCommentElement(comment) {
-        const commentDiv = document.createElement('div');
-        commentDiv.className = 'box mb-5';
-        commentDiv.dataset.commentId = comment.id;
-        
-        // Get replies to this comment
-        const replies = this.comments.filter(c => c.replyTo === comment.id);
+        // Create the main comment box
+        const commentBox = document.createElement('div');
+        commentBox.className = 'box mb-4';
+        commentBox.id = `comment-${comment.id}`;
         
         // Format timestamp
-        let timestamp = comment.timestamp;
-        try {
-            const date = new Date(comment.timestamp);
-            const now = new Date();
-            const diffMs = now - date;
-            const diffMins = Math.floor(diffMs / (1000 * 60));
-            const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
-            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
-            
-            if (diffMins < 1) {
-                timestamp = 'Just now';
-            } else if (diffMins < 60) {
-                timestamp = `${diffMins} minute${diffMins > 1 ? 's' : ''} ago`;
-            } else if (diffHours < 24) {
-                timestamp = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-            } else if (diffDays < 7) {
-                timestamp = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-            } else {
-                timestamp = this.formatDate(comment.timestamp);
-            }
-        } catch (error) {
-            console.warn('Invalid timestamp format:', comment.timestamp);
-        }
+        const commentDate = new Date(comment.timestamp);
+        const timeAgo = this.getTimeAgo(commentDate);
         
-        // If this is a reply, get parent comment info for "replying to" text
-        let replyingToText = '';
-        if (comment.replyTo) {
-            const parentComment = this.comments.find(c => c.id === comment.replyTo);
-            if (parentComment) {
-                replyingToText = `<small class="is-block has-text-grey mb-2">
-                    <span class="icon is-small"><i class="fas fa-reply"></i></span>
-                    Replying to <strong>${parentComment.username}</strong>
-                </small>`;
-            }
-        }
-        
-        // Create comment HTML with indentation based on reply level
-        commentDiv.innerHTML = `
+        // Create the comment content
+        commentBox.innerHTML = `
             <article class="media">
-                <figure class="media-left">
-                    <p class="image is-64x64">
-                        <img class="is-rounded" src="${comment.profilePic || 'https://bulma.io/images/placeholders/128x128.png'}" 
-                            alt="${comment.username}'s profile">
-                    </p>
-                </figure>
+                <div class="media-left">
+                    <figure class="image is-48x48">
+                        <img src="${this.getImageUrl(comment.profilePic || 'https://bulma.io/images/placeholders/96x96.png')}" alt="Profile">
+                    </figure>
+                </div>
                 <div class="media-content">
                     <div class="content">
                         <p>
-                            <strong>${comment.username}</strong>
-                            <small class="has-text-grey">${timestamp}</small>
-                            ${replyingToText}
+                            <strong>${this.escapeHtml(comment.username)}</strong> 
+                            <small>${timeAgo}</small>
+                            ${comment.replyTo ? `<span class="reply-indicator">Replying to comment</span>` : ''}
                             <br>
-                            ${comment.text}
+                            ${this.escapeHtml(comment.text)}
                         </p>
-                        
-                        ${comment.attachment ? `
-                            <div class="attachment mt-2">
-                                ${comment.attachment.type === 'photo' ? 
-                                    `<img src="${comment.attachment.content}" alt="Attachment" style="max-width: 300px;">` : 
-                                    `<a href="${comment.attachment.content}" target="_blank" rel="noopener noreferrer">
-                                        <span class="icon"><i class="fas fa-link"></i></span> ${comment.attachment.content}
-                                    </a>`
-                                }
-                            </div>
-                        ` : ''}
                     </div>
                     <nav class="level is-mobile">
                         <div class="level-left">
-                            <a class="level-item reply-btn" title="Reply">
-                                <span class="icon is-small"><i class="fas fa-reply"></i></span>
+                            <a class="level-item reply-comment-btn" data-id="${comment.id}" aria-label="reply">
+                                <span class="icon is-small">
+                                    <i class="fas fa-reply">↩️</i>
+                                </span>
                                 <span>Reply</span>
                             </a>
-                            <a class="level-item like-comment-btn ${Array.isArray(comment.likedBy) && comment.likedBy.includes(this.currentUser) ? 'has-text-danger' : ''}" title="Like">
-                                <span class="icon is-small"><i class="fas fa-heart"></i></span>
-                                <span>${comment.likes || 0}</span>
+                            <a class="level-item like-comment-btn" data-id="${comment.id}" aria-label="like">
+                                <span class="icon is-small">
+                                    ${comment.likedBy && comment.likedBy.includes(this.currentUser) ? '❤️' : '🤍'}
+                                </span>
+                                <span class="ml-1">${comment.likes || 0}</span>
                             </a>
-                            <a class="level-item edit-comment-btn" title="Edit">
-                                <span class="icon is-small"><i class="fas fa-edit"></i></span>
+                            <a class="level-item edit-comment-btn" data-id="${comment.id}" aria-label="edit">
+                                <span class="icon is-small">
+                                    <i class="fas fa-edit">✏️</i>
+                                </span>
                                 <span>Edit</span>
                             </a>
-                            <a class="level-item delete-comment-btn" title="Delete">
-                                <span class="icon is-small"><i class="fas fa-trash"></i></span>
+                            <a class="level-item delete-comment-btn" data-id="${comment.id}" aria-label="delete">
+                                <span class="icon is-small">
+                                    <i class="fas fa-trash-alt">🗑️</i>
+                                </span>
                                 <span>Delete</span>
                             </a>
                         </div>
                     </nav>
                 </div>
             </article>
-            
-            <!-- Replies will be added here -->
-            <div class="comment-replies ml-5 pl-3" style="${replies.length > 0 ? '' : 'display: none;'}"></div>
         `;
         
         // Add event listeners
-        const replyBtn = commentDiv.querySelector('.reply-btn');
-        const likeBtn = commentDiv.querySelector('.like-comment-btn');
-        const editBtn = commentDiv.querySelector('.edit-comment-btn');
-        const deleteBtn = commentDiv.querySelector('.delete-comment-btn');
-        
-        if (replyBtn) {
-            replyBtn.addEventListener('click', () => {
-                window.location.href = `addcomment.html?id=${comment.postId}&replyTo=${comment.id}`;
-            });
-        }
-        
+        const likeBtn = commentBox.querySelector('.like-comment-btn');
         if (likeBtn) {
             likeBtn.addEventListener('click', () => {
                 this.toggleCommentLike(comment.id);
             });
         }
         
-        if (editBtn) {
-            editBtn.addEventListener('click', () => {
-                window.location.href = `addcomment.html?id=${comment.postId}&edit=${comment.id}`;
+        const replyBtn = commentBox.querySelector('.reply-comment-btn');
+        if (replyBtn) {
+            replyBtn.addEventListener('click', () => {
+                // Get post ID from URL
+                const urlParams = new URLSearchParams(window.location.search);
+                const postId = urlParams.get('id');
+                if (postId) {
+                    window.location.href = `addcomment.html?postId=${postId}&replyTo=${comment.id}`;
+                }
             });
         }
         
+        const editBtn = commentBox.querySelector('.edit-comment-btn');
+        if (editBtn) {
+            editBtn.addEventListener('click', () => {
+                // Not implemented in this simplified version
+                alert('Edit comment functionality not implemented in this version');
+            });
+        }
+        
+        const deleteBtn = commentBox.querySelector('.delete-comment-btn');
         if (deleteBtn) {
             deleteBtn.addEventListener('click', () => {
                 if (confirm('Are you sure you want to delete this comment?')) {
@@ -759,76 +652,74 @@ class NewsPortal {
             });
         }
         
-        // Add replies
+        // Get replies to this comment
+        const replies = this.comments.filter(c => c.replyTo === comment.id);
+        
+        // If there are replies, add them
         if (replies.length > 0) {
-            const repliesContainer = commentDiv.querySelector('.comment-replies');
+            const repliesContainer = document.createElement('div');
+            repliesContainer.className = 'comment-replies mt-4';
             
             replies.forEach(reply => {
                 const replyElement = this.createCommentElement(reply);
                 repliesContainer.appendChild(replyElement);
             });
+            
+            commentBox.appendChild(repliesContainer);
         }
         
-        return commentDiv;
+        return commentBox;
     }
 
     /**
-     * Filter and sort posts based on current criteria
+     * Get a post by ID
+     */
+    getPost(id) {
+        return this.posts.find(post => post.id === id);
+    }
+
+    /**
+     * Get filtered and sorted posts based on current criteria
      */
     getFilteredAndSortedPosts() {
+        // First filter the posts
         let filteredPosts = [...this.posts];
         
-        // Apply search filter
+        // Filter by department if a filter is selected
+        if (this.currentFilter) {
+            filteredPosts = filteredPosts.filter(post => post.department === this.currentFilter);
+        }
+        
+        // Filter by search term if one is entered
         if (this.currentSearch) {
+            const searchTerm = this.currentSearch.toLowerCase();
             filteredPosts = filteredPosts.filter(post => 
-                post.title.toLowerCase().includes(this.currentSearch) || 
-                post.details.toLowerCase().includes(this.currentSearch) ||
-                post.header.toLowerCase().includes(this.currentSearch) ||
-                post.author.toLowerCase().includes(this.currentSearch)
+                post.title.toLowerCase().includes(searchTerm) ||
+                post.details.toLowerCase().includes(searchTerm) ||
+                post.author.toLowerCase().includes(searchTerm) ||
+                post.department.toLowerCase().includes(searchTerm)
             );
         }
         
-        // Apply department filter
-        if (this.currentDepartment) {
-            filteredPosts = filteredPosts.filter(post => 
-                post.department === this.currentDepartment
-            );
-        }
-        
-        // Always sort by date first for consistent ordering
-        filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-        
-        // Then apply any additional sorting if specified
-        if (this.currentSort) {
-            switch(this.currentSort) {
-                case 'sort-by-date':
-                    // Already sorted by date
-                    break;
-                case 'most-popular':
-                    filteredPosts.sort((a, b) => {
-                        // Primary sort by likes
-                        const likeDiff = (b.likes || 0) - (a.likes || 0);
-                        // Secondary sort by date if likes are equal
-                        return likeDiff !== 0 ? likeDiff : new Date(b.date) - new Date(a.date);
-                    });
-                    break;
-                case 'from-A-to-Z':
-                    filteredPosts.sort((a, b) => {
-                        // Primary sort by title
-                        const titleCompare = a.title.localeCompare(b.title);
-                        // Secondary sort by date if titles are equal
-                        return titleCompare !== 0 ? titleCompare : new Date(b.date) - new Date(a.date);
-                    });
-                    break;
-                case 'from-Z-to-A':
-                    filteredPosts.sort((a, b) => {
-                        // Primary sort by title (reversed)
-                        const titleCompare = b.title.localeCompare(a.title);
-                        // Secondary sort by date if titles are equal
-                        return titleCompare !== 0 ? titleCompare : new Date(b.date) - new Date(a.date);
-                    });
-                    break;
-            }
+        // Sort the posts based on current sort option
+        switch (this.currentSort) {
+            case 'newest':
+                filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
+                break;
+            case 'oldest':
+                filteredPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
+                break;
+            case 'popular':
+                filteredPosts.sort((a, b) => (b.likes || 0) - (a.likes || 0));
+                break;
+            case 'az':
+                filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
+                break;
+            case 'za':
+                filteredPosts.sort((a, b) => b.title.localeCompare(a.title));
+                break;
+            default:
+                filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
         }
         
         return filteredPosts;
@@ -838,110 +729,198 @@ class NewsPortal {
      * Render posts with pagination
      */
     renderPosts() {
-        const postsContainer = document.getElementById('news-cards-container');
-        const paginationContainer = document.getElementById('pagination-pages');
+        console.log('==== RENDERING POSTS =====');
+        console.log('Total posts in array:', this.posts.length);
+        console.log('Container ID being used: news-cards-container');
+        console.log('Current filter:', this.currentFilter);
+        console.log('Current sort:', this.currentSort);
+        console.log('Current search:', this.currentSearch);
+        console.log('==========================');
+        this.showLoading();
         
-        if (!postsContainer || !paginationContainer) {
-            console.error('Required containers not found');
-            return;
-        }
-        
-        // Get filtered and sorted posts
-        const filteredPosts = this.getFilteredAndSortedPosts();
-        
-        // Calculate pagination
-        const totalPosts = filteredPosts.length;
-        const totalPages = Math.ceil(totalPosts / this.postsPerPage);
-        
-        // Make sure current page is valid
-        if (this.currentPageNum > totalPages) {
-            this.currentPageNum = Math.max(1, totalPages);
-        }
-        
-        // Get current page posts
-        const startIndex = (this.currentPageNum - 1) * this.postsPerPage;
-        const endIndex = startIndex + this.postsPerPage;
-        const currentPagePosts = filteredPosts.slice(startIndex, endIndex);
-        
-        // Render posts
-        postsContainer.innerHTML = '';
-        
-        if (currentPagePosts.length === 0) {
-            postsContainer.innerHTML = `
-                <div class="column is-full">
-                    <div class="notification is-info">
-                        No posts found. Try a different search or filter.
-                    </div>
-                </div>
-            `;
-            paginationContainer.innerHTML = '';
-            return;
-        }
-        
-        currentPagePosts.forEach(post => {
-            // Count comments for this post
-            const commentCount = this.comments.filter(c => c.postId === post.id).length;
+        try {
+            // Get the container - check more specific details with enhanced debugging
+            console.log('Looking for container with ID: news-cards-container');
+            console.log('All elements with class columns:', document.querySelectorAll('.columns').length);
+            console.log('All available DIV IDs:', Array.from(document.querySelectorAll('div[id]')).map(el => el.id));
             
-            // Create post card
-            const postCard = document.createElement('div');
-            postCard.className = 'column is-one-third'; // Changed to is-one-third for wider cards
-            postCard.innerHTML = `
-                <div class="box" style="transition: transform 0.3s ease, box-shadow 0.3s ease; height: 100%;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 8px 16px rgba(0,0,0,0.1)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 5px rgba(0,0,0,0.1)'">
-                    <!-- Date -->
-                    <p class="is-size-7 has-text-grey">Date: ${this.formatDate(post.date)}</p>
-                    
-                    <!-- Department -->
-                    <p class="is-size-7 has-text-info has-background-info-light px-2 py-1" style="display: inline-block; border-radius: 4px; margin: 5px 0;">
-                        <strong>Department: ${post.department}</strong>
-                    </p>
-                    
-                    <!-- Image -->
-                    <figure class="image is-4by3">
-                        <img src="${post.image}" alt="${post.title}" style="width: 100%; height: auto;">
-                    </figure>
-                    
-                    <!-- Title -->
-                    <h3 class="title is-6" style="height: 3em; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical;">${post.title}</h3>
-                    
-                    <!-- Author -->
-                    <p class="is-size-7"><strong>By: ${post.author}</strong></p>
-                    
-                    <!-- News Details -->
-                    <div class="mt-2">
-                        <p class="is-size-7" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${post.header}</p>
-                    </div>
-                    
-                    <!-- Buttons -->
-                    <div class="buttons mt-3" style="display: flex; justify-content: space-between;">
-                        <a href="addpost.html?id=${post.id}" class="button is-info is-small">View Details</a>
-                        <div>
-                            <button class="button is-small like-button ${Array.isArray(post.likedBy) && post.likedBy.includes(this.currentUser) ? 'is-danger' : 'is-light'}" 
-                                    data-like-id="${post.id}">
-                                <span class="icon like-icon" style="transition: transform 0.3s ease;">
-                                    ${Array.isArray(post.likedBy) && post.likedBy.includes(this.currentUser) ? '❤️' : '🤍'}
-                                </span>
-                                <span class="like-count">${post.likes || 0}</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            `;
+            // First try the exact ID
+            let postsContainer = document.getElementById('news-cards-container');
             
-            // Add event listener for like button
-            const likeButton = postCard.querySelector('.like-button');
-            if (likeButton) {
-                likeButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const postId = likeButton.getAttribute('data-like-id');
-                    this.toggleLike(postId);
-                });
+            // If not found, look for similar containers as fallback
+            if (!postsContainer) {
+                console.warn('Posts container not found with ID: news-cards-container');
+                
+                // Try alternate potential container options
+                const alternateContainers = [
+                    document.querySelector('.news-posts-card .columns'),
+                    document.querySelector('.columns.is-multiline'),
+                    document.querySelector('.content .columns')
+                ];
+                
+                for (const container of alternateContainers) {
+                    if (container) {
+                        console.log('Found alternate container:', container.tagName, container.className);
+                        postsContainer = container;
+                        break;
+                    }
+                }
+                
+                if (!postsContainer) {
+                    console.error('No suitable container found for posts');
+                    return;
+                }
             }
             
-            postsContainer.appendChild(postCard);
-        });
-        
-        // Render pagination
-        this.renderPagination(totalPages);
+            console.log('Using container:', postsContainer.tagName, postsContainer.className, 'with ID:', postsContainer.id);
+            
+            // Clear the container
+            postsContainer.innerHTML = '';
+            
+            // Get filtered and sorted posts
+            const filteredPosts = this.getFilteredAndSortedPosts();
+            
+            // If no posts, show message
+            if (filteredPosts.length === 0) {
+                postsContainer.innerHTML = `
+                    <div class="column is-full">
+                        <div class="notification is-warning">
+                            <p>No posts found. Try a different search or filter.</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Hide pagination
+                const paginationContainer = document.getElementById('pagination-pages');
+                if (paginationContainer) {
+                    paginationContainer.innerHTML = '';
+                }
+                
+                return;
+            }
+            
+            // Calculate pagination
+            const totalPosts = filteredPosts.length;
+            const totalPages = Math.ceil(totalPosts / this.postsPerPage);
+            
+            // Make sure current page is valid
+            if (this.currentPage > totalPages) {
+                this.currentPage = totalPages;
+            } else if (this.currentPage < 1) {
+                this.currentPage = 1;
+            }
+            
+            // Get posts for current page
+            const startIndex = (this.currentPage - 1) * this.postsPerPage;
+            const endIndex = Math.min(startIndex + this.postsPerPage, totalPosts);
+            const postsToShow = filteredPosts.slice(startIndex, endIndex);
+            
+            // Create a card for each post
+            postsToShow.forEach(post => {
+                // Format date
+                const dateObj = new Date(post.date);
+                const formattedDate = this.formatDate(post.date);
+                
+                // Create column for the card with fixed width
+                const column = document.createElement('div');
+                column.className = 'column is-4'; // Use is-4 for better sizing/consistency
+                column.style.padding = '15px';
+                
+                // Create card HTML matching the provided design image
+                column.innerHTML = `
+                    <div class="card" style="width: 100%; margin: 0; height: 450px; display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border-radius: 8px; background-color: #fff; overflow: hidden;">
+                        <div style="padding: 15px 20px; background-color: #f9f9f9;">
+                            <div style="margin: 0 0 5px 0; font-size: 15px; color: #666;">Date: ${formattedDate}</div>
+                            <div style="margin: 0; font-size: 15px; font-weight: 600; color: #333; background-color: #f0f5f9; display: inline-block; padding: 3px 10px; border-radius: 4px;">Department: ${post.department}</div>
+                        </div>
+                        <div style="height: 250px; width: 100%; padding: 0; position: relative; overflow: hidden; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                            <img src="${this.getImageUrl(post.image)}" alt="${post.title}" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                        </div>
+                        <div style="padding: 15px 20px; flex-grow: 1; overflow: hidden; background-color: #fff;">
+                            <div style="font-size: 14px; margin: 0 0 8px 0; color: #444; display: inline-block; font-weight: 500; padding: 4px 8px; background-color: #f8f8f8; border-radius: 4px; border: 1px solid #eee;">Author: ${post.author}</div>
+                            <h3 style="font-size: 14px; font-weight: bold; margin: 0; line-height: 1.3; color: #333; max-height: 36px; overflow: hidden; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; text-overflow: ellipsis;">${post.title}</h3>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 20px; gap: 15px;">
+                            <div class="like-btn" style="display: flex; align-items: center; justify-content: center; background-color: #ff5c7c; padding: 8px 15px; height: 36px; border-radius: 4px; transition: all 0.2s ease; cursor: pointer; user-select: none;" data-id="${post.id}">
+                                <span style="color: white; font-weight: bold; font-size: 18px;">❤️</span>
+                                <span style="font-size: 15px; color: white; margin-left: 5px;">${post.likes || 0}</span>
+                            </div>
+                            <a href="addpost.html?id=${post.id}" style="background-color: #3498db; color: white; padding: 8px 15px; height: 36px; text-decoration: none; font-size: 14px; border-radius: 4px; font-weight: bold; display: flex; align-items: center; justify-content: center; transition: transform 0.2s ease, background-color 0.2s ease;">
+                                <span style="margin-right: 5px;">👀</span> View Details
+                            </a>
+                        </div>
+                    </div>
+                `;
+                
+                // Add like button event listener to the heart container
+                const likeContainer = column.querySelector('.like-btn');
+                if (likeContainer) {
+                    // Add hover effect for better UX
+                    likeContainer.addEventListener('mouseenter', () => {
+                        likeContainer.style.backgroundColor = '#ff2c5c';
+                        likeContainer.style.transform = 'scale(1.05)';
+                    });
+                    
+                    likeContainer.addEventListener('mouseleave', () => {
+                        likeContainer.style.backgroundColor = '#ff5c7c';
+                        likeContainer.style.transform = 'scale(1)';
+                    });
+                    
+                    // Add click handler with visual feedback
+                    likeContainer.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        
+                        // Visual feedback when clicked
+                        likeContainer.style.transform = 'scale(0.95)';
+                        setTimeout(() => {
+                            likeContainer.style.transform = 'scale(1)';
+                        }, 100);
+                        
+                        this.toggleLike(post.id);
+                    });
+                }
+                
+                // Also handle click on "View Details" link
+                const viewDetailsLink = column.querySelector('a[href*="addpost.html"]');
+                if (viewDetailsLink) {
+                    viewDetailsLink.style.cursor = 'pointer';
+                    
+                    // Add hover effect
+                    viewDetailsLink.addEventListener('mouseenter', () => {
+                        viewDetailsLink.style.backgroundColor = '#2980b9';
+                    });
+                    
+                    viewDetailsLink.addEventListener('mouseleave', () => {
+                        viewDetailsLink.style.backgroundColor = '#3498db';
+                    });
+                    
+                    // Add click effect
+                    viewDetailsLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        // Add visual feedback when clicked
+                        viewDetailsLink.style.transform = 'scale(0.95)';
+                        
+                        // Navigate to the post page after a short delay for animation
+                        setTimeout(() => {
+                            window.location.href = `addpost.html?id=${post.id}`;
+                        }, 100);
+                    });
+                }
+                
+                // Add to container
+                postsContainer.appendChild(column);
+            });
+            
+            // Render pagination
+            this.renderPagination(totalPages);
+            
+        } catch (error) {
+            console.error('Error rendering posts:', error);
+            this.showNotification('Error rendering posts: ' + error.message, 'is-danger');
+        } finally {
+            this.hideLoading();
+        }
     }
 
     /**
@@ -949,221 +928,342 @@ class NewsPortal {
      */
     renderPagination(totalPages) {
         const paginationContainer = document.getElementById('pagination-pages');
-        if (!paginationContainer) return;
         
-        // Clear pagination
+        if (!paginationContainer) {
+            console.error('Pagination container not found');
+            return;
+        }
+        
+        // Clear the container
         paginationContainer.innerHTML = '';
         
-        // Create very simple pagination: Previous, current page, Next
-        const paginationDiv = document.createElement('div');
-        paginationDiv.className = 'pagination is-centered mt-4 mb-4';
-        paginationDiv.style.display = 'flex';
-        paginationDiv.style.justifyContent = 'center';
-        paginationDiv.style.alignItems = 'center';
-        paginationDiv.style.border = '1px solid #dbdbdb';
-        paginationDiv.style.borderRadius = '4px';
-        paginationDiv.style.backgroundColor = '#f5f5f5';
-        paginationDiv.style.padding = '5px';
-        paginationDiv.style.maxWidth = '400px';
-        paginationDiv.style.margin = '0 auto';
+        // Don't show pagination if only one page
+        if (totalPages <= 1) {
+            return;
+        }
         
-        // Previous button
-        const prevButton = document.createElement('a');
-        prevButton.className = `${this.currentPageNum === 1 ? 'is-disabled' : ''}`;
-        prevButton.innerHTML = '← Previous';
-        prevButton.style.margin = '0 5px';
-        prevButton.style.padding = '5px 10px';
-        prevButton.style.cursor = this.currentPageNum === 1 ? 'default' : 'pointer';
-        prevButton.style.color = this.currentPageNum === 1 ? '#999' : '#4a4a4a';
-        if (this.currentPageNum > 1) {
-            prevButton.addEventListener('click', () => {
-                this.currentPageNum--;
+        // Create a simple pagination div exactly matching the design
+        const pagination = document.createElement('div');
+        pagination.style.display = 'flex';
+        pagination.style.justifyContent = 'center';
+        pagination.style.alignItems = 'center';
+        pagination.style.margin = '40px 0 20px';
+        
+        // Previous text
+        const previousText = document.createElement('span');
+        previousText.textContent = 'Previous';
+        previousText.style.margin = '0 20px 0 0';
+        previousText.style.cursor = this.currentPage > 1 ? 'pointer' : 'default';
+        previousText.style.color = this.currentPage > 1 ? '#000' : '#aaa';
+        
+        if (this.currentPage > 1) {
+            previousText.addEventListener('click', () => {
+                this.currentPage--;
                 this.renderPosts();
             });
         }
-        paginationDiv.appendChild(prevButton);
         
-        // Show only current page number
-        for (let i = 1; i <= totalPages; i++) {
-            if (i === this.currentPageNum) {
-                const pageLink = document.createElement('a');
-                pageLink.className = 'is-current';
-                pageLink.style.backgroundColor = '#f14668';
-                pageLink.style.color = 'white';
-                pageLink.style.borderRadius = '4px';
-                pageLink.style.padding = '5px 10px';
-                pageLink.style.margin = '0 5px';
-                pageLink.style.fontWeight = 'bold';
-                pageLink.setAttribute('aria-label', `Page ${i}`);
-                pageLink.textContent = i;
-                paginationDiv.appendChild(pageLink);
-                break;
-            }
-        }
+        // Page number button (only show 1)
+        const pageButton = document.createElement('div');
+        pageButton.textContent = '1';
+        pageButton.style.border = '1px solid #000';
+        pageButton.style.width = '40px';
+        pageButton.style.height = '40px';
+        pageButton.style.display = 'flex';
+        pageButton.style.alignItems = 'center';
+        pageButton.style.justifyContent = 'center';
+        pageButton.style.margin = '0 20px';
+        pageButton.style.cursor = 'pointer';
         
-        // Next button
-        const nextButton = document.createElement('a');
-        nextButton.className = `${this.currentPageNum === totalPages ? 'is-disabled' : ''}`;
-        nextButton.innerHTML = 'Next →';
-        nextButton.style.margin = '0 5px';
-        nextButton.style.padding = '5px 10px';
-        nextButton.style.cursor = this.currentPageNum === totalPages ? 'default' : 'pointer';
-        nextButton.style.color = this.currentPageNum === totalPages ? '#999' : '#4a4a4a';
-        if (this.currentPageNum < totalPages) {
-            nextButton.addEventListener('click', () => {
-                this.currentPageNum++;
+        // Next text
+        const nextText = document.createElement('span');
+        nextText.textContent = 'Next';
+        nextText.style.margin = '0 0 0 0';
+        nextText.style.cursor = this.currentPage < totalPages ? 'pointer' : 'default';
+        nextText.style.color = this.currentPage < totalPages ? '#000' : '#aaa';
+        
+        if (this.currentPage < totalPages) {
+            nextText.addEventListener('click', () => {
+                this.currentPage++;
                 this.renderPosts();
             });
         }
-        paginationDiv.appendChild(nextButton);
         
-        paginationContainer.appendChild(paginationDiv);
+        // Add all elements to the pagination container
+        pagination.appendChild(previousText);
+        pagination.appendChild(pageButton);
+        pagination.appendChild(nextText);
+        
+        paginationContainer.appendChild(pagination);
     }
 
     /**
-     * Create a pagination item (page number)
+     * This method is no longer used but kept as a reference
+     * for the original pagination implementation
      */
-    createPageItem(pageNumber) {
-        const pageItem = document.createElement('li');
-        const pageLink = document.createElement('a');
-        pageLink.className = `pagination-link ${pageNumber === this.currentPageNum ? 'is-current' : ''}`;
-        pageLink.setAttribute('aria-label', `Page ${pageNumber}`);
-        pageLink.textContent = pageNumber;
-        
-        if (pageNumber !== this.currentPageNum) {
-            pageLink.addEventListener('click', () => {
-                this.currentPageNum = pageNumber;
-                this.renderPosts();
-            });
-        }
-        
-        pageItem.appendChild(pageLink);
-        return pageItem;
-    }
 
     /**
      * Toggle like on a post
      */
     toggleLike(postId) {
-        // Show loading spinner
+        console.log(`Toggling like for post ID: ${postId}`);
         this.showLoading();
         
-        const post = this.posts.find(p => p.id === postId);
-        if (!post) {
-            this.hideLoading();
-            return;
-        }
-        
-        // Initialize likedBy as array if it's not already
-        if (!Array.isArray(post.likedBy)) {
-            post.likedBy = [];
-        }
-        
-        const userIndex = post.likedBy.indexOf(this.currentUser);
-        
-        if (userIndex === -1) {
-            // Add like
-            post.likedBy.push(this.currentUser);
-            post.likes = (post.likes || 0) + 1;
-        } else {
-            // Remove like
-            post.likedBy.splice(userIndex, 1);
-            post.likes = Math.max(0, (post.likes || 1) - 1);
-        }
-        
-        // Update ALL like buttons for this post (to keep likes in sync across cards and posts)
-        const allLikeBtns = document.querySelectorAll(`[data-like-id="${postId}"]`);
-        allLikeBtns.forEach(likeBtn => {
-            const likeIcon = likeBtn.querySelector('.like-icon');
-            const likeCount = likeBtn.querySelector('.like-count');
+        try {
+            const post = this.getPost(postId);
             
-            if (likeIcon) {
-                // Update heart style based on liked state
-                if (post.likedBy.includes(this.currentUser)) {
-                    likeIcon.textContent = '❤️';
-                    likeIcon.style.transform = 'scale(1.2)';
-                    setTimeout(() => { 
-                        likeIcon.style.transform = 'scale(1)';
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            
+            // Ensure likes is initialized
+            if (typeof post.likes !== 'number') {
+                post.likes = 0;
+            }
+            
+            // Initialize likedBy array if it doesn't exist
+            if (!Array.isArray(post.likedBy)) {
+                post.likedBy = [];
+            }
+            
+            // Check if user already liked the post
+            const alreadyLiked = post.likedBy.includes(this.currentUser);
+            console.log(`Current like state: ${alreadyLiked ? 'liked' : 'not liked'}`);
+            
+            if (alreadyLiked) {
+                // Remove like
+                console.log('Removing like');
+                post.likedBy = post.likedBy.filter(userId => userId !== this.currentUser);
+                // Maintain consistent like count - don't reset to likedBy length
+                post.likes = Math.max(0, post.likes - 1);
+            } else {
+                // Add like
+                console.log('Adding like');
+                post.likedBy.push(this.currentUser);
+                // Increment likes directly
+                post.likes += 1;
+            }
+            
+            console.log(`New like count: ${post.likes}, Liked by: ${post.likedBy.length} users`);
+            
+            // Save changes
+            this.savePosts();
+            
+            // Update UI based on current page
+            const pagePath = window.location.pathname.split('/').pop();
+            console.log(`Current page: ${pagePath}`);
+            
+            if (!pagePath || pagePath === '' || pagePath.includes('rana.html')) {
+                // Main page - find the specific like button for this post
+                console.log('Updating main page like button');
+                const postCards = document.querySelectorAll('.column.is-4');
+                console.log(`Found ${postCards.length} cards to check`);
+                
+                // For better debugging
+                if (postCards.length === 0) {
+                    // Try alternate selectors if the default one fails
+                    const allColumns = document.querySelectorAll('.column');
+                    console.log(`Found ${allColumns.length} general columns to check as fallback`);
+                }
+                
+                for (const card of postCards) {
+                    const link = card.querySelector(`a[href*="${post.id}"]`);
+                    if (link) {
+                        console.log('Found matching card');
+                        // Found the correct card, update its like count
+                        const likeContainer = card.querySelector('.like-btn');
+                        
+                        if (likeContainer) {
+                            // Get the like count span
+                            const likeCount = likeContainer.querySelector('span:last-child');
+                            if (likeCount) {
+                                console.log(`Updating like count to ${post.likes}`);
+                                likeCount.textContent = post.likes;
+                            }
+                            
+                            // Indicate liked state with color
+                            const isLiked = post.likedBy.includes(this.currentUser);
+                            likeContainer.style.backgroundColor = isLiked ? '#ff2c5c' : '#ff5c7c';
+                            
+                            // Show heart animation or visual feedback
+                            likeContainer.style.transition = 'transform 0.2s ease, background-color 0.2s ease';
+                            likeContainer.style.transform = 'scale(1.2)';
+                            setTimeout(() => {
+                                likeContainer.style.transform = 'scale(1)';
+                            }, 200);
+                        } else {
+                            console.log('Like container not found in card');
+                        }
+                        break;
+                    }
+                }
+            } else if (pagePath.includes('addpost.html')) {
+                // Post detail page - update like button
+                console.log('Updating detail page like button');
+                const likeButton = document.getElementById('like-post-btn');
+                const likeCount = document.getElementById('like-count');
+                const likeIcon = document.getElementById('like-icon');
+                
+                if (likeCount) {
+                    console.log(`Updating like count to ${post.likes}`);
+                    likeCount.textContent = post.likes;
+                }
+                
+                if (likeButton) {
+                    // Update active state based on NEW state (after toggle)
+                    const isNowLiked = post.likedBy.includes(this.currentUser);
+                    console.log(`Post is now ${isNowLiked ? 'liked' : 'not liked'}`);
+                    
+                    if (isNowLiked) { // Post is now liked
+                        likeButton.classList.add('is-active');
+                        likeButton.style.backgroundColor = '#ff2c5c'; // Darker heart color
+                        if (likeIcon) likeIcon.textContent = '❤️';
+                    } else { // Post is now unliked
+                        likeButton.classList.remove('is-active');
+                        likeButton.style.backgroundColor = '#ff5c7c'; // Regular heart color
+                        if (likeIcon) likeIcon.textContent = '🤍';
+                    }
+                    
+                    // Show animation effect for the like button
+                    likeButton.style.transition = 'transform 0.2s ease';
+                    likeButton.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        likeButton.style.transform = 'scale(1)';
                     }, 200);
-                    likeBtn.classList.add('is-danger', 'is-active');
-                    likeBtn.classList.remove('is-light');
-                } else {
-                    likeIcon.textContent = '🤍';
-                    likeBtn.classList.remove('is-danger', 'is-active');
-                    likeBtn.classList.add('is-light');
                 }
             }
             
-            if (likeCount) {
-                likeCount.textContent = post.likes;
+            // Use API if available, but don't block on API errors
+            if (window.newsApi) {
+                try {
+                    console.log('Calling API to update like status');
+                    window.newsApi.likePost(postId, this.currentUser)
+                        .then(result => {
+                            console.log('Post like toggled via API:', result);
+                        })
+                        .catch(error => {
+                            console.error('Error toggling like via API (handled):', error);
+                            // Continue with local changes even if API fails
+                        });
+                } catch (apiError) {
+                    console.error('API error caught (handled):', apiError);
+                    // Continue with local changes even if API fails
+                }
             }
-        });
-        
-        // Save the updated posts to localStorage to persist changes across pages
-        this.savePosts();
-        
-        console.log(`Like toggled for post ${postId}. New likes: ${post.likes}`);
-        
-        // Hide loading spinner after a short delay
-        setTimeout(() => {
+            
+        } catch (error) {
+            console.error('Error toggling like:', error);
+            this.showNotification('Error toggling like: ' + error.message, 'is-danger');
+        } finally {
             this.hideLoading();
-        }, 300);
+        }
     }
-    
+
     /**
      * Save posts to localStorage
      */
     savePosts() {
-        try {
-            localStorage.setItem('posts', JSON.stringify(this.posts));
-            localStorage.setItem('comments', JSON.stringify(this.comments));
-        } catch (error) {
-            console.error('Error saving posts to localStorage:', error);
-        }
+        localStorage.setItem('posts', JSON.stringify(this.posts));
+        localStorage.setItem('comments', JSON.stringify(this.comments));
     }
-    
+
     /**
      * Toggle like on a comment
      */
     toggleCommentLike(commentId) {
-        // Show loading spinner
+        console.log(`Toggling like for comment ID: ${commentId}`);
         this.showLoading();
         
-        const comment = this.comments.find(c => c.id === commentId);
-        if (!comment) {
+        try {
+            const comment = this.comments.find(c => c.id === commentId);
+            
+            if (!comment) {
+                throw new Error('Comment not found');
+            }
+            
+            // Ensure likes is initialized
+            if (typeof comment.likes !== 'number') {
+                comment.likes = 0;
+            }
+            
+            // Initialize likedBy array if it doesn't exist
+            if (!Array.isArray(comment.likedBy)) {
+                comment.likedBy = [];
+            }
+            
+            // Check if user already liked the comment
+            const alreadyLiked = comment.likedBy.includes(this.currentUser);
+            console.log(`Current comment like state: ${alreadyLiked ? 'liked' : 'not liked'}`);
+            
+            if (alreadyLiked) {
+                // Remove like
+                comment.likedBy = comment.likedBy.filter(userId => userId !== this.currentUser);
+                // Maintain consistent like count - don't reset to likedBy length
+                comment.likes = Math.max(0, comment.likes - 1);
+            } else {
+                // Add like
+                comment.likedBy.push(this.currentUser);
+                // Increment likes directly
+                comment.likes += 1;
+            }
+            
+            console.log(`New comment like count: ${comment.likes}`);
+            
+            // Save changes
+            this.savePosts();
+            
+            // Update UI
+            const commentElement = document.querySelector(`#comment-${commentId} .like-comment-btn`);
+            if (commentElement) {
+                const icon = commentElement.querySelector('.icon');
+                const count = commentElement.querySelector('.ml-1');
+                
+                // Update heart icon (opposite of previous state since we're toggling)
+                if (icon) {
+                    icon.innerHTML = alreadyLiked ? '🤍' : '❤️';
+                    
+                    // Add visual feedback
+                    icon.style.transition = 'transform 0.2s ease';
+                    icon.style.transform = 'scale(1.3)';
+                    setTimeout(() => {
+                        icon.style.transform = 'scale(1)';
+                    }, 200);
+                }
+                
+                // Update count
+                if (count) count.textContent = comment.likes;
+                
+                // Add visual feedback to the button
+                commentElement.style.transition = 'transform 0.2s ease';
+                commentElement.style.transform = 'scale(1.05)';
+                setTimeout(() => {
+                    commentElement.style.transform = 'scale(1)';
+                }, 200);
+            }
+            
+            // Use API if available but don't block on errors
+            if (window.newsApi) {
+                try {
+                    window.newsApi.likeComment(commentId, this.currentUser)
+                        .then(result => {
+                            console.log('Comment like toggled via API:', result);
+                        })
+                        .catch(error => {
+                            console.error('Error toggling comment like via API (handled):', error);
+                            // Continue with local changes even if API fails
+                        });
+                } catch (apiError) {
+                    console.error('API error caught (handled):', apiError);
+                    // Continue with local changes even if API fails
+                }
+            }
+            
+        } catch (error) {
+            console.error('Error toggling comment like:', error);
+            this.showNotification('Error toggling comment like: ' + error.message, 'is-danger');
+        } finally {
             this.hideLoading();
-            return;
         }
-        
-        // Initialize likedBy as array if it's not already
-        if (!Array.isArray(comment.likedBy)) {
-            comment.likedBy = [];
-        }
-        
-        const userIndex = comment.likedBy.indexOf(this.currentUser);
-        
-        if (userIndex === -1) {
-            // Add like
-            comment.likedBy.push(this.currentUser);
-            comment.likes = (comment.likes || 0) + 1;
-        } else {
-            // Remove like
-            comment.likedBy.splice(userIndex, 1);
-            comment.likes = Math.max(0, (comment.likes || 1) - 1);
-        }
-        
-        // Update UI
-        this.renderComments();
-        
-        // Save to localStorage to persist changes
-        this.savePosts();
-        
-        console.log(`Like toggled for comment ${commentId}. New likes: ${comment.likes}`);
-        
-        // Hide loading spinner after a short delay
-        setTimeout(() => {
-            this.hideLoading();
-        }, 300);
     }
 
     /**
@@ -1172,112 +1272,79 @@ class NewsPortal {
     handlePostSubmission(editPostId = null) {
         this.showLoading();
         
-        // Get form values - note that the IDs might differ between pages
-        // Try different IDs to find the correct elements
-        const titleElement = document.getElementById('post-title') || document.querySelector('[name="title"]');
-        const authorElement = document.getElementById('post-author') || document.querySelector('[name="author"]');
-        const departmentElement = document.getElementById('department-select') || document.querySelector('[name="department"]');
-        const headerElement = document.getElementById('post-header') || document.querySelector('[name="header"]');
-        const detailsElement = document.getElementById('post-details') || document.querySelector('[name="details"]');
-        const imageElement = document.getElementById('post-image') || document.querySelector('[name="image"]');
-        
-        if (!titleElement || !authorElement || !departmentElement || !headerElement || !detailsElement) {
-            this.showNotification('Could not find all form elements', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        const title = titleElement.value.trim();
-        const author = authorElement.value.trim();
-        const department = departmentElement.value;
-        const header = headerElement.value.trim();
-        const details = detailsElement.value.trim();
-        
-        // Validate form
-        if (!title) {
-            this.showNotification('Please enter a title', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        if (!author) {
-            this.showNotification('Please enter an author name', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        if (!department) {
-            this.showNotification('Please select a department', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        if (!header) {
-            this.showNotification('Please enter a header/summary', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        if (!details) {
-            this.showNotification('Please enter post details', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        // Check if editing or creating
-        if (editPostId) {
-            // Editing existing post
-            const post = this.posts.find(p => p.id === editPostId);
-            if (!post) {
-                this.showNotification('Post not found', 'is-danger');
-                this.hideLoading();
-                return;
+        try {
+            // Get form data
+            const title = document.getElementById('post-title').value;
+            const author = document.getElementById('post-author').value;
+            const department = document.getElementById('department-select').value;
+            const header = document.getElementById('post-header').value;
+            const details = document.getElementById('post-details').value;
+            const imageInput = document.getElementById('post-image');
+            
+            // Validate required fields
+            if (!title || !author || !department || !header || !details) {
+                throw new Error('Please fill out all required fields');
             }
             
-            // Update post
-            post.title = title;
-            post.author = author;
-            post.department = department;
-            post.header = header;
-            post.details = details;
-            
-            // Handle new image
-            if (imageElement && imageElement.files && imageElement.files[0]) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    post.image = e.target.result; // Data URL
-                    this.finishPostEditing(post);
-                };
-                reader.readAsDataURL(imageElement.files[0]);
-            } else {
-                this.finishPostEditing(post);
-            }
-        } else {
-            // Creating new post
-            const newPost = {
-                id: 'post_' + Date.now(), // Generate unique ID
+            // Create post object
+            const post = {
+                id: editPostId || `post_${Date.now()}`,
                 title,
                 author,
                 department,
                 header,
                 details,
-                date: new Date().toISOString().split('T')[0], // YYYY-MM-DD format
+                date: new Date().toISOString().split('T')[0],
                 image: 'collage.PNG', // Default image
                 likes: 0,
                 likedBy: []
             };
             
-            // Handle image if provided
-            if (imageElement && imageElement.files && imageElement.files[0]) {
+            // Handle image upload
+            if (imageInput.files && imageInput.files[0]) {
+                // In a real application, you would upload the image to a server
+                // For this simplified version, we'll just use the default image
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    newPost.image = e.target.result; // Data URL
-                    this.savePost(newPost);
+                    // In a real app, you'd save this to a server
+                    console.log('Image data:', e.target.result);
                 };
-                reader.readAsDataURL(imageElement.files[0]);
-            } else {
-                this.savePost(newPost);
+                reader.readAsDataURL(imageInput.files[0]);
+                
+                // Set image based on file name
+                const fileName = imageInput.files[0].name.toLowerCase();
+                if (fileName.includes('woman') || fileName.includes('female')) {
+                    post.image = 'woman.PNG';
+                } else if (fileName.includes('man') || fileName.includes('male')) {
+                    post.image = 'man.PNG';
+                } else {
+                    post.image = 'collage.PNG';
+                }
             }
+            
+            // If editing, update the post
+            if (editPostId) {
+                // Preserve likes and likedBy from original post
+                const originalPost = this.getPost(editPostId);
+                if (originalPost) {
+                    post.likes = originalPost.likes || 0;
+                    post.likedBy = originalPost.likedBy || [];
+                    
+                    // If no new image was selected, keep the original
+                    if (!imageInput.files || !imageInput.files[0]) {
+                        post.image = originalPost.image;
+                    }
+                }
+                
+                this.finishPostEditing(post);
+            } else {
+                // Add new post
+                this.savePost(post);
+            }
+        } catch (error) {
+            console.error('Error submitting post:', error);
+            this.showNotification('Error submitting post: ' + error.message, 'is-danger');
+            this.hideLoading();
         }
     }
 
@@ -1285,363 +1352,314 @@ class NewsPortal {
      * Save post to the posts array
      */
     savePost(post) {
-        // Add to beginning of posts array
-        this.posts.unshift(post);
-        
-        // Save to localStorage
-        this.savePosts();
-        
-        // Hide form
-        const addPostForm = document.getElementById('add-post-form');
-        if (addPostForm) {
-            addPostForm.style.display = 'none';
+        try {
+            // Add to posts array
+            this.posts.push(post);
+            
+            // Save to localStorage
+            this.savePosts();
+            
+            // Use API if available
+            if (window.newsApi) {
+                window.newsApi.createPost(post)
+                    .then(result => {
+                        console.log('Post created via API:', result);
+                    })
+                    .catch(error => {
+                        console.error('Error creating post via API:', error);
+                    });
+            }
+            
+            // Show success message
+            this.showNotification('Post created successfully!', 'is-success');
+            
+            // Hide form
+            const formElement = document.getElementById('add-post-form');
+            if (formElement) formElement.style.display = 'none';
+            
+            // Re-render posts to show the new post
+            this.renderPosts();
+        } catch (error) {
+            console.error('Error saving post:', error);
+            this.showNotification('Error saving post: ' + error.message, 'is-danger');
+        } finally {
+            this.hideLoading();
         }
-        
-        // Reset form
-        const form = document.getElementById('post-form');
-        if (form) {
-            form.reset();
-        }
-        
-        // Show success notification
-        this.showNotification('Post added successfully!', 'is-success');
-        
-        // Refresh posts display
-        this.currentPageNum = 1; // Go to first page to see the new post
-        this.renderPosts();
-        
-        this.hideLoading();
     }
-    
+
     /**
      * Finish post editing
      */
     finishPostEditing(post) {
-        // Save to localStorage
-        this.savePosts();
-        
-        // Hide form
-        const addPostForm = document.getElementById('add-post-form');
-        if (addPostForm) {
-            addPostForm.style.display = 'none';
+        try {
+            // Find the post index
+            const index = this.posts.findIndex(p => p.id === post.id);
+            
+            if (index === -1) {
+                throw new Error('Post not found');
+            }
+            
+            // Update the post
+            this.posts[index] = post;
+            
+            // Save to localStorage
+            this.savePosts();
+            
+            // Use API if available
+            if (window.newsApi) {
+                window.newsApi.updatePost(post.id, post)
+                    .then(result => {
+                        console.log('Post updated via API:', result);
+                    })
+                    .catch(error => {
+                        console.error('Error updating post via API:', error);
+                    });
+            }
+            
+            // Show success message
+            this.showNotification('Post updated successfully!', 'is-success');
+            
+            // Hide form and show post view
+            const formElement = document.getElementById('add-post-form');
+            const viewElement = document.getElementById('post-view');
+            
+            if (formElement) formElement.style.display = 'none';
+            if (viewElement) viewElement.style.display = 'block';
+            
+            // Update post details
+            this.updatePostDetails(post.id);
+        } catch (error) {
+            console.error('Error updating post:', error);
+            this.showNotification('Error updating post: ' + error.message, 'is-danger');
+        } finally {
+            this.hideLoading();
         }
-        
-        // Show post view
-        const postView = document.getElementById('post-view');
-        if (postView) {
-            postView.style.display = 'block';
-        }
-        
-        // Update post details
-        this.updatePostDetails();
-        
-        // Show success notification
-        this.showNotification('Post updated successfully!', 'is-success');
-        
-        this.hideLoading();
     }
-    
+
     /**
      * Show the edit post form
      */
     showEditPostForm(postId) {
-        // Show loading spinner
         this.showLoading();
         
-        const post = this.posts.find(p => p.id === postId);
-        if (!post) {
-            this.showNotification('Post not found', 'is-danger');
+        try {
+            const post = this.getPost(postId);
+            
+            if (!post) {
+                throw new Error('Post not found');
+            }
+            
+            // Hide post view, show form
+            document.getElementById('post-view').style.display = 'none';
+            document.getElementById('add-post-form').style.display = 'block';
+            
+            // Update form title
+            const formTitle = document.getElementById('form-title');
+            if (formTitle) formTitle.textContent = 'Edit Post';
+            
+            // Fill form with post data
+            const titleInput = document.getElementById('post-title');
+            const authorInput = document.getElementById('post-author');
+            const departmentSelect = document.getElementById('department-select');
+            const headerInput = document.getElementById('post-header');
+            const detailsInput = document.getElementById('post-details');
+            
+            if (titleInput) titleInput.value = post.title;
+            if (authorInput) authorInput.value = post.author;
+            if (departmentSelect) departmentSelect.value = post.department;
+            if (headerInput) headerInput.value = post.header;
+            if (detailsInput) detailsInput.value = post.details;
+        } catch (error) {
+            console.error('Error showing edit form:', error);
+            this.showNotification('Error showing edit form: ' + error.message, 'is-danger');
+        } finally {
             this.hideLoading();
-            return;
         }
-        
-        // Hide post view
-        const postView = document.getElementById('post-view');
-        if (postView) {
-            postView.style.display = 'none';
-        }
-        
-        // Show edit form
-        const addPostForm = document.getElementById('add-post-form');
-        if (addPostForm) {
-            addPostForm.style.display = 'block';
-        }
-        
-        // Set form title
-        const formTitle = document.getElementById('form-title');
-        if (formTitle) {
-            formTitle.textContent = 'Edit Post';
-        }
-        
-        // Try to find form fields regardless of where they are in the DOM
-        // This handles different possible IDs and attribute selectors
-        const titleInput = document.getElementById('post-title') || document.querySelector('[name="title"]');
-        const authorInput = document.getElementById('post-author') || document.querySelector('[name="author"]');
-        const departmentSelect = document.getElementById('department-select') || document.querySelector('[name="department"]');
-        const headerInput = document.getElementById('post-header') || document.querySelector('[name="header"]');
-        const detailsInput = document.getElementById('post-details') || document.querySelector('[name="details"]');
-        
-        if (titleInput) titleInput.value = post.title;
-        if (authorInput) authorInput.value = post.author;
-        if (departmentSelect) departmentSelect.value = post.department;
-        if (headerInput) headerInput.value = post.header;
-        if (detailsInput) detailsInput.value = post.details;
-        
-        // Hide loading spinner after a short delay
-        setTimeout(() => {
-            this.hideLoading();
-        }, 300);
     }
-    
+
     /**
      * Delete a post
      */
     deletePost(postId) {
         this.showLoading();
         
-        // Find post
-        const postIndex = this.posts.findIndex(p => p.id === postId);
-        if (postIndex === -1) {
-            this.showNotification('Post not found', 'is-danger');
+        try {
+            // Confirm deletion
+            if (!confirm('Are you sure you want to delete this post?')) {
+                this.hideLoading();
+                return;
+            }
+            
+            // Find the post
+            const postIndex = this.posts.findIndex(post => post.id === postId);
+            
+            if (postIndex === -1) {
+                throw new Error('Post not found');
+            }
+            
+            // Remove the post
+            this.posts.splice(postIndex, 1);
+            
+            // Remove related comments
+            this.comments = this.comments.filter(comment => comment.postId !== postId);
+            
+            // Save to localStorage
+            this.savePosts();
+            
+            // Use API if available
+            if (window.newsApi) {
+                window.newsApi.deletePost(postId)
+                    .then(result => {
+                        console.log('Post deleted via API:', result);
+                    })
+                    .catch(error => {
+                        console.error('Error deleting post via API:', error);
+                    });
+            }
+            
+            // Show success message
+            this.showNotification('Post deleted successfully!', 'is-success');
+            
+            // Redirect to main page
+            setTimeout(() => {
+                window.location.href = 'rana.html';
+            }, 1000);
+        } catch (error) {
+            console.error('Error deleting post:', error);
+            this.showNotification('Error deleting post: ' + error.message, 'is-danger');
             this.hideLoading();
-            return;
         }
-        
-        // Remove post
-        this.posts.splice(postIndex, 1);
-        
-        // Also remove all comments for this post
-        this.comments = this.comments.filter(c => c.postId !== postId);
-        
-        // Save to localStorage
-        this.savePosts();
-        
-        // Show success notification
-        this.showNotification('Post deleted successfully', 'is-success');
-        
-        // Redirect to main page
-        setTimeout(() => {
-            window.location.href = 'rana.html';
-        }, 1500);
     }
-    
+
     /**
      * Handle comment form submission
      */
     handleCommentSubmission() {
         this.showLoading();
         
-        // Get form values
-        const username = document.getElementById('username').value.trim();
-        const commentText = document.getElementById('commentText').value.trim();
-        const postId = document.getElementById('postId').value;
-        const replyToId = document.getElementById('replyToId').value || null;
-        const editCommentId = document.getElementById('editCommentId').value || null;
-        
-        // Get attachment
-        const submissionType = document.querySelector('input[name="submissionType"]:checked').value;
-        let attachment = null;
-        
-        if (submissionType === 'photo') {
-            const uploadField = document.getElementById('uploadField');
-            if (uploadField.files && uploadField.files[0]) {
-                // We'll handle the file attachment later
-                attachment = {
-                    type: 'photo',
-                    content: null
-                };
-            }
-        } else if (submissionType === 'link') {
-            const linkField = document.getElementById('linkField');
-            if (linkField.value.trim()) {
-                attachment = {
-                    type: 'link',
-                    content: linkField.value.trim()
-                };
-            }
-        }
-        
-        // Validate form
-        if (!username) {
-            this.showNotification('Please enter your name', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        if (!commentText) {
-            this.showNotification('Please enter your comment', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        if (!postId) {
-            this.showNotification('Invalid post ID', 'is-danger');
-            this.hideLoading();
-            return;
-        }
-        
-        // Check if editing or creating
-        if (editCommentId) {
-            // Editing existing comment
-            const comment = this.comments.find(c => c.id === editCommentId);
-            if (!comment) {
-                this.showNotification('Comment not found', 'is-danger');
-                this.hideLoading();
-                return;
+        try {
+            // Get form data using the correct IDs from the HTML
+            const username = document.getElementById('username').value;
+            const text = document.getElementById('commentText').value;
+            const postId = document.getElementById('postId').value;
+            const replyTo = document.getElementById('replyToId')?.value || null;
+            
+            // Validate required fields
+            if (!username || !text || !postId) {
+                throw new Error('Please fill out all required fields');
             }
             
-            // Update comment
-            comment.username = username;
-            comment.text = commentText;
-            
-            // Update attachment
-            if (attachment) {
-                if (attachment.type === 'photo') {
-                    const uploadField = document.getElementById('uploadField');
-                    if (uploadField.files && uploadField.files[0]) {
-                        const reader = new FileReader();
-                        reader.onload = (e) => {
-                            comment.attachment = {
-                                type: 'photo',
-                                content: e.target.result
-                            };
-                            this.finishCommentEditing(comment);
-                        };
-                        reader.readAsDataURL(uploadField.files[0]);
-                        return; // We'll continue in the callback
-                    }
-                } else {
-                    comment.attachment = attachment;
-                }
-            }
-            
-            this.finishCommentEditing(comment);
-        } else {
-            // Creating new comment
-            const newComment = {
-                id: 'comment_' + Date.now(), // Generate unique ID
+            // Create comment object
+            const comment = {
+                id: `comment_${Date.now()}`,
                 username,
-                text: commentText,
+                text,
                 postId,
-                replyTo: replyToId,
+                replyTo,
                 timestamp: new Date().toISOString(),
                 likes: 0,
                 likedBy: [],
-                profilePic: `https://i.pravatar.cc/150?u=${Date.now()}-${username}`,
-                attachment
+                profilePic: this.getRandomAvatar(username)
             };
             
-            // Handle photo attachment
-            if (attachment && attachment.type === 'photo') {
-                const uploadField = document.getElementById('uploadField');
-                if (uploadField.files && uploadField.files[0]) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        newComment.attachment.content = e.target.result;
-                        this.saveComment(newComment);
-                    };
-                    reader.readAsDataURL(uploadField.files[0]);
-                    return; // We'll continue in the callback
-                }
-            }
-            
-            this.saveComment(newComment);
+            // Save the comment
+            this.saveComment(comment);
+        } catch (error) {
+            console.error('Error submitting comment:', error);
+            this.showNotification('Error submitting comment: ' + error.message, 'is-danger');
+            this.hideLoading();
         }
     }
-    
+
     /**
      * Save comment to the comments array
      */
     saveComment(comment) {
-        // Ensure timestamp is in ISO format
-        if (!comment.timestamp) {
-            comment.timestamp = new Date().toISOString();
+        try {
+            // Add to comments array
+            this.comments.push(comment);
+            
+            // Save to localStorage
+            this.savePosts();
+            
+            // Use API if available
+            if (window.newsApi) {
+                window.newsApi.createComment(comment)
+                    .then(result => {
+                        console.log('Comment created via API:', result);
+                    })
+                    .catch(error => {
+                        console.error('Error creating comment via API:', error);
+                    });
+            }
+            
+            // Show success message
+            this.showNotification('Comment added successfully!', 'is-success');
+            
+            // Redirect to post page
+            setTimeout(() => {
+                window.location.href = `addpost.html?id=${comment.postId}`;
+            }, 1000);
+        } catch (error) {
+            console.error('Error saving comment:', error);
+            this.showNotification('Error saving comment: ' + error.message, 'is-danger');
+        } finally {
+            this.hideLoading();
         }
-        
-        // Ensure we have a profile pic
-        if (!comment.profilePic) {
-            comment.profilePic = this.getRandomAvatar(comment.username);
-        }
-        
-        // Add to comments array
-        this.comments.push(comment);
-        
-        // Save to localStorage
-        this.savePosts();
-        
-        // Show success notification
-        this.showNotification('Comment added successfully!', 'is-success');
-        
-        // Spinner will remain visible while redirecting
-        // (it's already shown in handleCommentSubmission)
-        
-        // Redirect back to post
-        setTimeout(() => {
-            window.location.href = `addpost.html?id=${comment.postId}`;
-        }, 1500);
     }
-    
-    /**
-     * Finish comment editing
-     */
-    finishCommentEditing(comment) {
-        // Save to localStorage
-        this.savePosts();
-        
-        // Show success notification
-        this.showNotification('Comment updated successfully!', 'is-success');
-        
-        // Spinner will remain visible while redirecting
-        // (it's already shown in handleCommentSubmission)
-        
-        // Redirect back to post
-        setTimeout(() => {
-            window.location.href = `addpost.html?id=${comment.postId}`;
-        }, 1500);
-    }
-    
+
     /**
      * Delete a comment
      */
     deleteComment(commentId) {
         this.showLoading();
         
-        // Find comment
-        const comment = this.comments.find(c => c.id === commentId);
-        if (!comment) {
-            this.showNotification('Comment not found', 'is-danger');
+        try {
+            // Find the comment
+            const commentIndex = this.comments.findIndex(comment => comment.id === commentId);
+            
+            if (commentIndex === -1) {
+                throw new Error('Comment not found');
+            }
+            
+            const comment = this.comments[commentIndex];
+            
+            // Remove the comment
+            this.comments.splice(commentIndex, 1);
+            
+            // Remove replies to this comment
+            this.comments = this.comments.filter(c => c.replyTo !== commentId);
+            
+            // Save to localStorage
+            this.savePosts();
+            
+            // Use API if available
+            if (window.newsApi) {
+                window.newsApi.deleteComment(commentId)
+                    .then(result => {
+                        console.log('Comment deleted via API:', result);
+                    })
+                    .catch(error => {
+                        console.error('Error deleting comment via API:', error);
+                    });
+            }
+            
+            // Show success message
+            this.showNotification('Comment deleted successfully!', 'is-success');
+            
+            // Re-render comments
+            const urlParams = new URLSearchParams(window.location.search);
+            const postId = urlParams.get('id');
+            
+            if (postId) {
+                this.renderComments(postId);
+            }
+        } catch (error) {
+            console.error('Error deleting comment:', error);
+            this.showNotification('Error deleting comment: ' + error.message, 'is-danger');
+        } finally {
             this.hideLoading();
-            return;
         }
-        
-        const postId = comment.postId;
-        
-        // Find all replies to this comment recursively
-        const allCommentIds = [commentId];
-        
-        const findReplies = (parentId) => {
-            const replies = this.comments.filter(c => c.replyTo === parentId);
-            replies.forEach(reply => {
-                allCommentIds.push(reply.id);
-                findReplies(reply.id); // Find nested replies
-            });
-        };
-        
-        findReplies(commentId);
-        
-        // Remove all comments and replies
-        this.comments = this.comments.filter(c => !allCommentIds.includes(c.id));
-        
-        // Save to localStorage
-        this.savePosts();
-        
-        // Show success notification
-        this.showNotification('Comment deleted successfully', 'is-success');
-        
-        // Refresh comments
-        this.renderComments();
-        
-        this.hideLoading();
     }
 
     /**
@@ -1652,34 +1670,6 @@ class NewsPortal {
         const spinner = document.getElementById('loading-spinner');
         if (spinner) {
             spinner.style.display = 'flex';
-            spinner.classList.add('is-active');
-            
-            // Make sure the modal background is visible
-            const modalBg = spinner.querySelector('.modal-background');
-            if (modalBg) {
-                modalBg.style.opacity = '0.7';
-            }
-            
-            // Make sure the spinner animation is more visible
-            const spinnerEl = spinner.querySelector('.spinner');
-            if (spinnerEl) {
-                spinnerEl.style.width = '60px';
-                spinnerEl.style.height = '60px';
-                spinnerEl.style.borderWidth = '6px';
-                spinnerEl.style.borderColor = '#3273dc';
-                spinnerEl.style.borderRightColor = 'transparent';
-                spinnerEl.style.borderTopColor = 'transparent';
-            }
-            
-            // Make the loading text more visible
-            const loadingText = spinner.querySelector('p');
-            if (loadingText) {
-                loadingText.style.fontSize = '1.2rem';
-                loadingText.style.fontWeight = 'bold';
-                loadingText.style.color = '#3273dc';
-            }
-            
-            console.log('Loading spinner shown');
         }
     }
 
@@ -1690,11 +1680,8 @@ class NewsPortal {
         this.isLoading = false;
         const spinner = document.getElementById('loading-spinner');
         if (spinner) {
-            // Add a slight delay to ensure it was visible
             setTimeout(() => {
-                spinner.classList.remove('is-active');
                 spinner.style.display = 'none';
-                console.log('Loading spinner hidden');
             }, 300);
         }
     }
@@ -1703,76 +1690,110 @@ class NewsPortal {
      * Show notification message
      */
     showNotification(message, type = 'is-info') {
+        // Simple notification system - easier to understand for university students
         const container = document.getElementById('notification-container');
-        if (!container) return;
         
-        // Create notification element
+        // If no container, just use alert instead
+        if (!container) {
+            alert(message);
+            return;
+        }
+        
+        // Create a basic notification
         const notification = document.createElement('div');
-        notification.className = `notification ${type}`;
+        notification.className = `notification ${type} mb-2`;
         notification.innerHTML = `
             <button class="delete"></button>
-            <p>${message}</p>
+            ${message}
         `;
         
-        // Add delete button functionality
-        const deleteButton = notification.querySelector('.delete');
-        if (deleteButton) {
-            deleteButton.addEventListener('click', () => {
+        // Basic close button
+        const closeBtn = notification.querySelector('.delete');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', function() {
                 notification.remove();
             });
         }
         
-        // Add to container
+        // Add it to the page
         container.appendChild(notification);
         
-        // Auto remove after 5 seconds
-        setTimeout(() => {
-            if (notification.parentNode) {
-                notification.remove();
-            }
+        // Auto-remove after 5 seconds
+        setTimeout(function() {
+            notification.remove();
         }, 5000);
     }
-    
+
     /**
      * Format date string
      */
     formatDate(dateString) {
-        try {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            });
-        } catch (error) {
-            console.warn('Invalid date format:', dateString);
-            return dateString;
-        }
+        const date = new Date(dateString);
+        return date.toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
     }
-    
+
+    /**
+     * Get time ago string (e.g. "2 hours ago")
+     */
+    getTimeAgo(date) {
+        const seconds = Math.floor((new Date() - date) / 1000);
+        
+        let interval = Math.floor(seconds / 31536000);
+        if (interval > 1) return interval + ' years ago';
+        if (interval === 1) return '1 year ago';
+        
+        interval = Math.floor(seconds / 2592000);
+        if (interval > 1) return interval + ' months ago';
+        if (interval === 1) return '1 month ago';
+        
+        interval = Math.floor(seconds / 86400);
+        if (interval > 1) return interval + ' days ago';
+        if (interval === 1) return '1 day ago';
+        
+        interval = Math.floor(seconds / 3600);
+        if (interval > 1) return interval + ' hours ago';
+        if (interval === 1) return '1 hour ago';
+        
+        interval = Math.floor(seconds / 60);
+        if (interval > 1) return interval + ' minutes ago';
+        if (interval === 1) return '1 minute ago';
+        
+        if (seconds < 10) return 'just now';
+        
+        return Math.floor(seconds) + ' seconds ago';
+    }
+
     /**
      * Generate a random avatar URL
      */
     getRandomAvatar(username) {
-        // Using pravatar.cc to generate random avatars
-        return `https://i.pravatar.cc/150?u=${Date.now()}-${username}`;
+        // Simply return the base64 image directly to avoid loading issues
+        return 'data:image/jpeg;base64,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';
     }
-    
+
     /**
-     * Truncate text to a specific length
+     * Truncate text to a specific length, preserving whole words where possible
      */
     truncateText(text, maxLength = 100) {
         if (!text || text.length <= maxLength) return text;
-        return text.substring(0, maxLength) + '...';
+        
+        // Make it very short and sweet
+        const shortened = text.substring(0, maxLength);
+        const lastSpace = shortened.lastIndexOf(' ');
+        
+        // Always use word boundary
+        if (lastSpace > 0) {
+            return shortened.substring(0, lastSpace);
+        }
+        
+        // Fallback - very rare
+        return shortened;
     }
-    
-    /**
-     * Generate a unique ID
-     */
-    generateId(prefix = '') {
-        return prefix + Date.now() + '_' + Math.random().toString(36).substring(2, 9);
-    }
-    
+
     /**
      * Escape HTML to prevent XSS
      */
@@ -1784,10 +1805,64 @@ class NewsPortal {
             .replace(/"/g, "&quot;")
             .replace(/'/g, "&#039;");
     }
+    
+    /**
+     * Convert relative image paths to absolute URLs or use backup image if not found
+     */
+    getImageUrl(imagePath) {
+        // If it's already an absolute URL or data URL, return as is
+        if (imagePath && (imagePath.startsWith('http') || imagePath.startsWith('data:'))) {
+            return imagePath;
+        }
+        
+        // Default to a safe placeholder
+        const placeholder = 'data:image/jpeg;base64,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';
+        
+        // Check if the image specified in the JSON exists
+        if (!imagePath) {
+            console.log('No image path provided, using placeholder.');
+            return placeholder;
+        }
+        
+        // Known image patterns
+        if (imagePath === 'collage.PNG' || imagePath === 'man.PNG' || imagePath === 'woman.PNG') {
+            // Use embedded base64 images since local PNG files are having issues loading
+            return placeholder;
+        }
+        
+        // For any other cases, try to get from server with a fallback
+        try {
+            // Make it relative to the current page
+            const baseUrl = window.location.origin + '/';
+            return baseUrl + imagePath;
+        } catch (error) {
+            console.error('Error getting image URL:', error);
+            return placeholder;
+        }
+    }
 }
 
-// Initialize the news portal when the DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    // Create news portal instance
-    window.newsPortal = new NewsPortal();
+// Initialize the portal when the page is fully loaded
+function initializePortal() {
+    try {
+        console.log('Initializing NewsPortal instance');
+        console.log('newsApi exists:', !!window.newsApi);
+        window.newsPortal = new NewsPortal();
+        console.log('NewsPortal created successfully with:', {
+            posts: window.newsPortal.posts.length,
+            comments: window.newsPortal.comments.length
+        });
+    } catch (error) {
+        console.error('Error initializing NewsPortal:', error);
+    }
+}
+
+// Try both DOMContentLoaded and load events to ensure initialization
+document.addEventListener('DOMContentLoaded', initializePortal);
+window.addEventListener('load', () => {
+    // If not initialized by DOMContentLoaded, do it now
+    if (!window.newsPortal) {
+        console.log('NewsPortal not initialized by DOMContentLoaded, trying again');
+        initializePortal();
+    }
 });

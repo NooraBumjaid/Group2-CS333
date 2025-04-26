@@ -60,6 +60,8 @@
             overflow: hidden;
             margin-bottom: 20px;
         }
+        
+
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.15);
@@ -428,30 +430,69 @@
     <script src="api.js"></script>
     <script src="script.js"></script>
     <script>
+        // Debugging script to check if API and example.json load correctly
+        console.log('rana.html loaded, checking for newsApi and data loading...');
+        
         // Direct event listener for testing
         document.addEventListener('DOMContentLoaded', function() {
-            const addPostBtn = document.getElementById('add-post-btn');
-            const addPostForm = document.getElementById('add-post-form');
+            console.log('DOM fully loaded');
             
-            if (addPostBtn && addPostForm) {
-                console.log('Add Post button found');
-                
-                addPostBtn.addEventListener('click', function() {
-                    console.log('Add Post button clicked');
-                    addPostForm.style.display = 'block';
-                });
-                
-                const cancelBtn = document.getElementById('cancel-post');
-                if (cancelBtn) {
-                    cancelBtn.addEventListener('click', function(e) {
-                        e.preventDefault();
-                        console.log('Cancel button clicked');
-                        addPostForm.style.display = 'none';
-                    });
+            // Debug container IDs
+            console.log('Checking container IDs:');
+            console.log('news-cards-container exists:', !!document.getElementById('news-cards-container'));
+            console.log('pagination-pages exists:', !!document.getElementById('pagination-pages'));
+            
+            // Debug image loading
+            console.log('Checking image availability:');
+            
+            // Create test images to verify loading
+            const imageUrls = [
+                window.location.origin + '/collage.PNG',
+                window.location.origin + '/man.PNG',
+                window.location.origin + '/woman.PNG'
+            ];
+            
+            // Create a test div to check image loading
+            const testDiv = document.createElement('div');
+            testDiv.style.display = 'none';
+            testDiv.innerHTML = `
+                <div id="image-test-container">
+                    <img id="test-img-1" src="${imageUrls[0]}" onload="console.log('collage.PNG loaded successfully')" onerror="console.error('Failed to load collage.PNG')">
+                    <img id="test-img-2" src="${imageUrls[1]}" onload="console.log('man.PNG loaded successfully')" onerror="console.error('Failed to load man.PNG')">
+                    <img id="test-img-3" src="${imageUrls[2]}" onload="console.log('woman.PNG loaded successfully')" onerror="console.error('Failed to load woman.PNG')">
+                </div>
+            `;
+            document.body.appendChild(testDiv);
+            
+            // After 2 seconds, check if data was loaded
+            setTimeout(function() {
+                console.log('Checking newsApi and data after 2s:');
+                console.log('newsApi exists:', !!window.newsApi);
+                if (window.newsPortal) {
+                    console.log('newsPortal exists:', !!window.newsPortal);
+                    console.log('Posts loaded:', window.newsPortal.posts.length);
+                    console.log('Comments loaded:', window.newsPortal.comments.length);
+                    
+                    // Check image paths in posts
+                    if (window.newsPortal.posts.length > 0) {
+                        console.log('First few post image paths:');
+                        window.newsPortal.posts.slice(0, 3).forEach((post, i) => {
+                            console.log(`Post ${i+1} image:`, post.image);
+                        });
+                    }
+                } else {
+                    console.log('newsPortal not found, possible script error');
                 }
-            } else {
-                console.error('Add Post button or form not found');
-            }
+                
+                // Check cards container content
+                const container = document.getElementById('news-cards-container');
+                if (container) {
+                    console.log('Cards container children:', container.children.length);
+                }
+                
+                // Clean up test div
+                document.body.removeChild(testDiv);
+            }, 2000);
         });
     </script>
 </body>
