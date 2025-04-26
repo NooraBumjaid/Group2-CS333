@@ -121,8 +121,35 @@
     border: 2px solid rgba(255, 0, 0, 0); /* Temporary for debugging */
     margin-right: 80px;
   }
-  
 
+  .news-posts-card .column {
+    padding: 0.5rem; /* Reduce spacing between cards */
+}
+.news-posts-card .box {
+    padding: 10px; /* Reduce padding inside the cards */
+}
+.news-posts-card .box img {
+    max-height: 100px; /* Limit image height */
+}
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 2rem;
+}
+.pagination {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+.pagination-link {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
+}
+.pagination-link.is-current {
+    background-color: #00d1b2;
+    color: #fff;
+    border-color: #00d1b2;
+}
         
 
 </style>
@@ -304,15 +331,17 @@
 
     <!-- Pagination Controls -->
     <div class="pagination-container">
-        <nav class="pagination" role="navigation" aria-label="pagination">
-            <ul class="pagination-list" style="display: flex; list-style: none; margin: 0; padding: 0;">
-                <!-- Previous Button -->
-                <li><a class="pagination-link pagination-previous" href="#">Previous</a></li>
-                <!-- Next Button -->
-                <li><a class="pagination-link pagination-next" href="#">Next</a></li>
-            </ul>
-        </nav>
-    </div>
+      <nav class="pagination" role="navigation" aria-label="pagination">
+          <ul class="pagination-list" style="display: flex; list-style: none; margin: 0; padding: 0;">
+              <!-- Previous Button -->
+              <li><a class="pagination-link pagination-previous" href="#">Previous</a></li>
+              <!-- Page Numbers Placeholder -->
+              <li id="pagination-pages"></li>
+              <!-- Next Button -->
+              <li><a class="pagination-link pagination-next" href="#">Next</a></li>
+          </ul>
+      </nav>
+  </div>
 
 <!-- Add Post Button -->
 <div class="columns mt-4">
@@ -321,23 +350,26 @@
     </div>
 </div>
   
- <!-- Form for Adding News -->
-<div id="add-post-form" class="mt-4">
+ <!-- Form for Adding/Editing News -->
+<div id="add-post-form" class="mt-4" style="display: none;">
   <div class="columns">
     <div class="column is-two-thirds form-right">
       <div class="box" style="padding: 20px;">
+        <h2 class="title is-4" id="form-title">Add New Post</h2>
+        
         <!-- Title Input -->
         <div class="field">
           <label class="label">Title</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter the title of the news">
+            <input class="input" type="text" id="post-title" name="title" placeholder="Enter the title of the news" required>
           </div>
         </div>
+
         <!-- Author Input -->
         <div class="field">
           <label class="label">Author</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter the author's name">
+            <input class="input" type="text" id="post-author" name="author" placeholder="Enter the author's name" required>
           </div>
         </div>
         
@@ -346,46 +378,50 @@
           <label class="label">Department</label>
           <div class="control">
             <div class="select is-fullwidth">
-              <select id="department-select">
+              <select id="department-select" name="department" required>
                 <option value="">Select department</option>
-                <option value="engineering">Engineering</option>
-                <option value="business">Business</option>
-                <option value="science">Science</option>
-                <option value="arts">Arts & Design </option>
-                <option value="medicine">Medicine & Health</option>
-                <option value="law">Law</option>
-                <option value="education">Education</option>
-                <option value="sports">Sports</option>
+                <option value="Engineering">Engineering</option>
+                <option value="Business">Business</option>
+                <option value="Science">Science</option>
+                <option value="Arts & Design">Arts & Design</option>
+                <option value="Medicine & Health">Medicine & Health</option>
+                <option value="Law">Law</option>
+                <option value="Education">Education</option>
+                <option value="Sports">Sports</option>
                 <option value="Technology">Technology</option>
               </select>
             </div>
           </div>
         </div>
+
         <!-- Header Text -->
         <div class="field">
-          <label class="label">Header</label>
+          <label class="label">Header (Brief Summary)</label>
           <div class="control">
-            <input class="input" type="text" id="post-header" placeholder="Enter the short header (Main info)">
+            <input class="input" type="text" id="post-header" name="header" placeholder="Enter a brief summary (will appear in cards)" required>
           </div>
         </div>
+
         <!-- News Details Textarea -->
         <div class="field">
           <label class="label">News Details</label>
           <div class="control">
-            <textarea class="textarea" placeholder="Enter the full details of the news"></textarea>
+            <textarea class="textarea" id="post-details" name="details" placeholder="Enter the full details of the news" required></textarea>
           </div>
         </div>
+
         <!-- Image Upload -->
         <div class="field">
           <label class="label">Upload Image</label>
           <div class="control">
-            <input class="input" type="file" accept="image/*">
+            <input class="input" type="file" id="post-image" name="image" accept="image/*">
           </div>
         </div>
+
         <!-- Submit and Cancel Buttons -->
         <div class="buttons mt-4">
-          <button class="button is-success is-fullwidth">Submit</button>
-          <button class="button is-danger is-fullwidth mt-2">Cancel</button>
+          <button type="submit" class="button is-success is-fullwidth">Submit</button>
+          <button type="button" class="button is-danger is-fullwidth mt-2" id="cancel-post">Cancel</button>
         </div>
       </div>
     </div>
@@ -406,7 +442,7 @@
 </div>
 
   <script src="script.js"></script>
-  
+
  </body>
 
  </html>

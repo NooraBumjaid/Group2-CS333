@@ -3,146 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>View Post</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
-       .custom-blue {
-    background-color: #0074D9; /* A custom blue */
-    color: white; /* White text */
-    border: none; /* Remove border */
-  }
-</style>
+        .custom-blue {
+            background-color: #0074D9;
+            color: white;
+            border: none;
+        }
+        .comment-thread {
+            margin-left: 2rem;
+            border-left: 2px solid #dbdbdb;
+            padding-left: 1rem;
+        }
+        .reply-indicator {
+            color: #4a4a4a;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
 <body>
- 
-<!-- Back to Main Page Button -->
-<div class="container mt-4">
-  <div class="columns">
-    <div class="column">
-      <a href="rana.html" class="button custom-blue">Back to Main Page</a>
+    <!-- Back to Main Page Button -->
+    <div class="container mt-4">
+        <a href="rana.html" class="button custom-blue">⬅️ Back to Main Page</a>
     </div>
-  </div>
-</div>
 
- <!-- View Post Page -->
- <div class="container mt-6">
-  <div class="box" style="padding: 30px;">
-    <!-- Title -->
-    <h1 class="title is-2 has-text-centered">The News Title</h1>
+    <!-- View Post Page -->
+    <div class="container mt-6">
+        <div class="box" style="padding: 30px;">
+            <!-- Title -->
+            <h1 class="title is-2 has-text-centered" id="post-title"></h1>
 
-    <!-- Author -->
-    <p class="subtitle is-6 has-text-centered has-text-grey">
-      By <strong>The Author</strong> | Date: 10/3/2025
-    </p>
+            <!-- Author and Department -->
+            <div class="has-text-centered">
+                <p class="subtitle is-6 has-text-grey">
+                    By <strong id="post-author"></strong> | <span id="post-date"></span>
+                </p>
+                <p class="tag is-info is-medium" id="post-department"></p>
+            </div>
 
-    <!-- Image and Text Layout -->
-    <div class="columns mt-4">
-      <!-- Left Column: Image -->
-      <div class="column is-one-third">
-        <figure class="image">
-          <img src="collage.PNG" alt="News Image" style="border-radius: 8px; width: 100%; height: auto;">
-        </figure>
-      </div>
+            <!-- Image and Text Layout -->
+            <div class="columns mt-4">
+                <!-- Left Column: Image -->
+                <div class="column is-one-third">
+                    <figure class="image">
+                        <img id="post-image" src="" alt="News Image" 
+                            style="border-radius: 8px; width: 100%; height: auto;">
+                    </figure>
+                </div>
 
-      <!-- Right Column: Text -->
-      <div class="column is-two-thirds">
-        <div class="content">
-          <p>
-            The College of Engineering has just announced the launch of a new
-             "Introduction to Information Technology" 
-          </p>
+                <!-- Right Column: Text -->
+                <div class="column is-two-thirds">
+                    <div class="content">
+                        <p id="post-details"></p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="buttons is-centered mt-4">
+                <button class="button is-warning" id="edit-post-btn">Edit Post</button>
+                <button class="button is-danger" id="delete-post-btn">🗑️ Delete Post</button>
+                <button class="button is-primary" id="like-post-btn">
+                    <span class="icon" id="like-icon">❤️</span>
+                    <span id="like-count">0</span>
+                </button>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="buttons is-centered mt-4">
-      <button class="button is-primary">Edit Post</button>
-      <button class="button is-danger">Delete Post</button>
-      <button class="button is-small is-primary">❤️Like</button>
-    </div>
-  </div>
- </div>
+    <!-- Comment Section Header -->
+    <div class="container">
+        <div class="columns is-vcentered mt-4">
+            <div class="column">
+                <h2 class="title is-3" style="color: darkblue;">Comments</h2>
+            </div>
+            <div class="column has-text-right">
+                <button class="button is-primary" id="add-comment-btn">Add Comment</button>
+            </div>
+        </div>
 
- <!-- Comment Section Header -->
- <div class="columns is-vcentered mt-4" style="padding: 0 60px;">
-  <div class="column">
-    <h2 class="title is-3" style="color: darkblue;">Comment Section</h2>
-  </div>
-   <div class="column has-text-right">
-     <a href="addcomment.html" class="button is-primary">Add Post Comment</a>
-   </div>  
- </div>
-
-<!-- Comment Section Box -->
-<div class="box mt-4" style="padding: 30px;">
-  <!-- Comment 1 -->
-  <div class="box" style="padding: 15px;">
-    <!-- Profile Picture and Top Buttons -->
-    <div class="columns is-vcentered">
-      <div class="column is-narrow">
-        <figure class="image is-48x48">
-          <img src="woman.PNG" alt="Profile Picture" style="border-radius: 50%;">
-        </figure>
-      </div>
-      <div class="column">
-        <strong>sara ahmed</strong>
-      </div>
-      <div class="column is-narrow">
-        <button class="button is-small is-primary">❤️Like</button>
-        <button class="button is-small is-info ml-2">Reply</button>
-      </div>
+        <!-- Comments Container -->
+        <div class="comments-container mb-6">
+            <!-- Comments will be dynamically inserted here -->
+        </div>
     </div>
 
-    <!-- Comment Text -->
-    <div class="content mt-3">
-      <p>
-        This is a sample comment. 
-      </p>
-    </div>
-
-    <!-- Bottom Buttons -->
-    <div class="has-text-right">
-      <button class="button is-small is-danger">Delete</button>
-      <button class="button is-small is-info ml-2">Edit</button>
-    </div>
-  </div>
-
-  <!-- Comment 2 -->
-  <div class="box mt-3" style="padding: 15px;">
-    <!-- Profile Picture and Top Buttons -->
-    <div class="columns is-vcentered">
-      <div class="column is-narrow">
-        <figure class="image is-48x48">
-          <img src="woman.PNG" alt="Profile Picture" style="border-radius: 50%;">
-        </figure>
-      </div>
-      <div class="column">
-        <strong>lola Smith</strong>
-      </div>
-      <div class="column is-narrow">
-        <button class="button is-small is-primary">❤️Like</button>
-        <button class="button is-small is-info ml-2">Reply</button>
-      </div>
-    </div>
-
-    <!-- Comment Text -->
-    <div class="content mt-3">
-      <p>
-        Another comment here.
-    </div>
-
-    <!-- Bottom Buttons -->
-    <div class="has-text-right">
-      <button class="button is-small is-danger">Delete</button>
-      <button class="button is-small is-info ml-2">Edit</button>
-    </div>
-  </div>
-</div>
-<script src="script.js"></script>
- </body>
-
- </html>
-
- git config --global user.name "RanaElias"
- git config --global user.email "ranaelias04@gmail.com" 
+    <script src="script.js"></script>
+</body>
+</html>
