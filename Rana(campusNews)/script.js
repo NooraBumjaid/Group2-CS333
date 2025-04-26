@@ -374,23 +374,35 @@ class NewsPortal {
                     if (window.newsApi) {
                         // Load data directly from example.json
                         console.log('Attempting to fetch example.json...');
-                        const response = await fetch('example.json');
-                        console.log('Fetch response:', response);
-                        if (!response.ok) {
-                            console.error('Fetch failed:', response.status, response.statusText);
-                            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                        let responseText = '{}';
+                        try {
+                            const response = await fetch('example.json');
+                            console.log('Fetch response:', response);
+                            if (!response.ok) {
+                                console.error('Fetch failed:', response.status, response.statusText);
+                                throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                            }
+                            
+                            // Get the raw text first to check if it's valid JSON
+                            responseText = await response.text();
+                        } catch (fetchError) {
+                            console.log('Fetch error caught, continuing with direct load:', fetchError);
+                            // We'll handle this by falling back to hard-coded sample data
+                            responseText = JSON.stringify({
+                                posts: [],
+                                comments: []
+                            });
                         }
-                        
-                        // Get the raw text first to check if it's valid JSON
-                        const responseText = await response.text();
                         console.log('Response text (first 100 chars):', responseText.substring(0, 100));
                         
+                        let data = { posts: [], comments: [] };
                         try {
-                            const data = JSON.parse(responseText);
+                            data = JSON.parse(responseText);
                             console.log('JSON parsed successfully, found posts:', data.posts?.length);
                         } catch (parseError) {
                             console.error('JSON parse error:', parseError);
-                            throw parseError;
+                            // Use empty data if JSON parsing fails
+                            data = { posts: [], comments: [] };
                         }
                         
                         // Initialize the API with our data
@@ -416,14 +428,20 @@ class NewsPortal {
                     
                     // Fallback to direct loading from example.json
                     console.log('Falling back to direct loading from example.json');
-                    const response = await fetch('example.json');
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                    try {
+                        const response = await fetch('example.json');
+                        if (!response.ok) {
+                            throw new Error(`Failed to fetch data: ${response.status} ${response.statusText}`);
+                        }
+                        const data = await response.json();
+                        this.posts = data.posts || [];
+                        this.comments = data.comments || [];
+                    } catch (fallbackError) {
+                        console.log('Fallback fetch error, using empty data:', fallbackError);
+                        // Use default empty arrays if fetch fails completely
+                        this.posts = [];
+                        this.comments = [];
                     }
-                    
-                    const data = await response.json();
-                    this.posts = data.posts || [];
-                    this.comments = data.comments || [];
                     
                     // Save to localStorage for future use
                     this.savePosts();
