@@ -1,0 +1,40 @@
+[
+    {
+      "id": 1,
+      "courseName": "Design of Algorithms",
+      "noteTitle": "Chapter1 - Algorithm Introduction",
+      "description": "Algorithm Design and Analysis Techniques.",
+      "department": "computer-science",
+      "fileUrl": "#",                        
+      "comments": [
+        {
+          "name": "Noor Rashid",
+          "comment": "These notes helped me understand Algorithm Design and Analysis Techniques. Highly recommended!"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "courseName": "Database Mamagement Systems",
+      "noteTitle": "Chapter1 - Introduction",
+      "description": "Fundamental Concepts of Database Systems.",
+      "department": "information-system",
+      "fileUrl": "#",
+      "comments": []
+    },
+    {
+        "id": 3,
+        "courseName": "Network Security",
+        "noteTitle": "Chapter9 - JSON Files",
+        "description": "How to parsing JSON files.",
+        "department": "network-engineering",
+        "fileUrl": "#",                        
+        "comments": [
+          {
+            "name": "Dana alhayki",
+            "comment": "These notes helped me understand well!"
+          }
+        ]
+      }
+  ]
+  

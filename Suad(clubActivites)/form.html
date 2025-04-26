@@ -101,30 +101,34 @@
                 width: 100%; /* Full width for mobile */
             }
         }
-
     </style>
 </head>
 <body>
     <div class="container mt-4">
         <h1>Add New Activity</h1>
-        <form>
+        <form id="activity-form">
             <div class="form-group">
                 <label for="activityName">Activity Name</label>
                 <input type="text" class="form-control" id="activityName" required>
+                <span class="error-message" style="color: red; display: none;">Activity Name required.</span>
             </div>
             <div class="form-group">
                 <label for="activityDescription">Details</label>
                 <textarea class="form-control" id="activityDescription" required></textarea>
+                <span class="error-message" style="color: red; display: none;">Details are required.</span>
             </div>
             <div class="form-group">
                 <label for="activityDate">Date</label>
                 <input type="date" class="form-control" id="activityDate" required>
+                <span class="error-message" style="color: red; display: none;">Date is required.</span>
             </div>
             <div class="button-container">
-                <a href="index.html" onclick="return confirm('Are you sure you want to submit this activity?')" class="btn save-btn">Submit</a>
-                <a href="index.html" onclick="return confirm('Are you sure you want to cancel this activity?')" class="btn cancel-btn">Cancel</a>
+                <button type="submit" class="btn save-btn">Submit</button>
+                <button type="button" class="btn cancel-btn" onclick="window.location.href='index.html'">Cancel</button>
             </div>
         </form>
+        
     </div>
+    <script src="form.js" defer></script>
 </body>
 </html>

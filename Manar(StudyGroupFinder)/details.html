@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Study Group Details | Campus Hub</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css" />
+    <style>
+      .container {
+        max-width: 800px;
+        margin-top: 40px;
+      }
+      .comment {
+        background-color: #f5f5f5;
+        border-radius: 5px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
+      .buttons {
+        margin-top: 1rem;
+      }
+    </style>
+  </head>
+  <body>
+
+    <section class="section">
+      <div class="container">
+        <a href="SGF.html" class="button is-link mb-4">← Back to Finder</a>
+
+        <!-- Group Info -->
+        <div class="box">
+          <h1 class="title is-3"></h1>
+          <h2 class="subtitle is-5"></h2>
+          <p></p>
+          <p></p>
+          <p></p>
+
+          <div class="buttons">
+            <a href="#" class="button is-warning">✏️ Edit</a>
+            <a href="#" class="button is-danger">🗑️ Delete</a>
+          </div>
+        </div>
+
+        <!-- Members -->
+        <div class="box">
+          <h2 class="title is-4">👥 Group Members</h2>
+          <ul> </ul>
+        </div>
+
+        <!-- Comments & Form (injected by JS) -->
+        <div class="box"></div>
+
+      </div>
+    </section>
+
+    <script src="./studyGroupFinder.js" defer></script>
+
+  </body>
+</html>
