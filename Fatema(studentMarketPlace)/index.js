@@ -14,6 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const contentGrid = document.querySelector(".content-grid");
 
     let cartCount = 0;
+    let cardsArray = []; // مصفوفة لتخزين البطاقات
 
     function updateCartCount() {
         document.getElementById("cart-count").textContent = cartCount;
@@ -90,7 +91,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const newCard = { title, price, tags, imageUrl };
+
+        // تخزين البطاقة في المصفوفة
+        cardsArray.push(newCard);
+
+        // عرض البطاقة على الصفحة
         createCard(newCard); 
+
+        //  JSON في الكونسول
+        console.log(JSON.stringify(cardsArray, null, 2)); 
+
         closeModal(); 
     }
 
