@@ -1,9 +1,9 @@
 // Activity data (to be replaced later with data fetched from an API)
 const activities = [
-  { title: "Graphic Design Workshop", date: "10 MAR 2025", category: "workshops" },
-  { title: "Web Development Course", date: "13 MAR 2025", category: "courses" },
-  { title: "UI/UX Workshop", date: "15 MAR 2025", category: "workshops" },
-  { title: "JavaScript Course", date: "20 MAR 2025", category: "courses" },
+  { title: "Graphic Design Workshop", date: "2025-03-10", category: "workshops" },
+  { title: "Web Development Course", date: "2025-03-13", category: "courses" },
+  { title: "UI/UX Workshop", date: "2025-03-15", category: "workshops" },
+  { title: "JavaScript Course", date: "2025-03-20", category: "courses" },
 ];
 
 // Function to save activity details to localStorage
@@ -77,7 +77,8 @@ function displayActivities() {
         <div class="card-body">
           <h5 class="card-title">${activity.title}</h5>
           <p>Date: ${activity.date}</p>
-          <button class="btn btn-primary" onclick="window.location.href='details.html'">Show Details</button>
+          <button class="btn btn-primary" onclick="viewDetails('${activity.title}', '${activity.date}', '${activity.category}')">Show Details</button>
+
         </div>
       </div>
     `;

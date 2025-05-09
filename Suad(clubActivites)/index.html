@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="en" dir="auto">
 <head>
   <meta charset="UTF-8">
@@ -49,17 +49,6 @@
       justify-content: center;
     }
 
-    .page {
-      display: none;
-    }
-    #page1:target,
-    #page2:target {
-      display: block;
-    }
-    body:not(:has(:target)) #page1 {
-      display: block;
-    }
-
     @media (max-width: 1024px) {
       .sidebar {
         width: 220px;
@@ -96,8 +85,6 @@
   </div>
 
   <div class="content">
-
-
     <h1>Club Activities</h1>
 
     <!-- Search and Filter Section -->
@@ -117,82 +104,26 @@
           <option value="z_to_a">Z to A</option>
       </select>
       
-  
       <label for="filter-category" class="mr-2">Filter by:</label>
       <select class="form-control" id="filter-category">
           <option value="all">All Categories</option>
           <option value="workshops">Workshops</option>
           <option value="courses">Courses</option>
       </select>
-  </div>
-  
-
-    <!-- Page 1 -->
-    <div id="page1" class="page">
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <div class="card box">
-            <div class="card-body">
-              <h5 class="card-title">Graphic Design Workshop</h5>
-              <p>Date: 10 MAR 2025</p>
-              <button class="btn btn-info" onclick="viewDetails('Graphic Design Workshop', '10 MAR 2025', 'Learn the basics of design using Photoshop and Illustrator.')">Show Details</button>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 mb-4">
-          <div class="card box">
-            <div class="card-body">
-              <h5 class="card-title">Web Development Course</h5>
-              <p>Date: 13 MAR 2025</p>
-              <button class="btn btn-info" onclick="viewDetails('Web Development', '13 MAR 2025', 'The process of building, programming, and maintaining websites and web applications.')">Show Details</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <nav>
-        <ul class="pagination">
-          <li class="page-item disabled"><a class="page-link" href="#">Back</a></li>
-          <li class="page-item active"><a class="page-link" href="#page1">1</a></li>
-          <li class="page-item"><a class="page-link" href="#page2">2</a></li>
-          <li class="page-item"><a class="page-link" href="#page2">Next</a></li>
-        </ul>
-      </nav>
     </div>
 
-    <!-- Page 2 -->
-    <div id="page2" class="page">
-      <div class="row">
-        <div class="col-md-6 mb-4">
-          <div class="card box">
-            <div class="card-body">
-              <h5 class="card-title">UI/UX Workshop</h5>
-              <p>Date: 15 MAR 2025</p>
-              <button class="btn btn-info" onclick="viewDetails('UI/UX Workshop', '15 MAR 2025', 'Learn the basics of user interface and experience design. Create wireframes, explore design tools, and improve usability—all in one hands-on session!')">Show Details</button>
-            </div>
-          </div>
-        </div>
-        <div class="col-md-6 mb-4">
-          <div class="card box">
-            <div class="card-body">
-              <h5 class="card-title">JavaScript Course</h5>
-              <p>Date: 20 MAR 2025</p>
-              <button class="btn btn-info" onclick="viewDetails('JavaScript Course', '20 MAR 2025', 'Master the fundamentals of JavaScript, the language of the web. Learn how to create dynamic websites, interact with the DOM, and build real-world projects.')">Show Details</button>
-            </div>
-          </div>
-        </div>
-      </div>
-      <nav>
-        <ul class="pagination" id="pagination-container">
-          <li class="page-item disabled"><a class="page-link" href="#">Back</a></li>
-          <li class="page-item active"><a class="page-link" href="#page1">1</a></li>
-          <li class="page-item"><a class="page-link" href="#page2">2</a></li>
-          <li class="page-item"><a class="page-link" href="#page2">Next</a></li>
-
-        </ul>
-      </nav>
-    </div>
+    <!-- Activities container -->
+    <div class="row" id="activities-container"></div>
   </div>
+
+  <!-- Pagination -->
+  <nav>
+    <ul class="pagination" id="pagination-container"></ul>
+  </nav>
+
+  <!-- Loading indicator -->
   <div id="loading-indicator" style="display:none;">Loading...</div>
+
   <script src="script.js" defer></script>
 </body>
 </html>
