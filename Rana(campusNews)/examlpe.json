@@ -1,0 +1,143 @@
+{
+    "posts": [
+      {
+        "id": "abc123",
+        "title": "New Campus Library Opening Soon",
+        "author": "John Smith",
+        "department": "Engineering",
+        "date": "2023-04-15",
+        "image": "collage.PNG",
+        "details": "The new state-of-the-art campus library will be opening next month, featuring over 100,000 books, digital resources, and collaborative study spaces.",
+        "header": "New library features cutting-edge technology and study spaces",
+        "likes": 15,
+        "likedBy": ["user1", "user2", "user3"]
+      },
+      {
+        "id": "def456",
+        "title": "Engineering Department Wins National Competition",
+        "author": "Sarah Johnson",
+        "department": "Engineering",
+        "date": "2023-04-10",
+        "image": "woman.PNG",
+        "details": "Our Engineering Department has won the prestigious National Robotics Competition for the third consecutive year.",
+        "header": "Students develop award-winning autonomous robot",
+        "likes": 32,
+        "likedBy": ["user1", "user4", "user5"]
+      },
+      {
+        "id": "ghi789",
+        "title": "Campus Sustainability Initiative Launches",
+        "author": "Michael Chen",
+        "department": "Science",
+        "date": "2023-04-05",
+        "image": "man.PNG",
+        "details": "The university has announced a new campus-wide sustainability initiative aimed at reducing carbon emissions by 50% within the next five years.",
+        "header": "University commits to reducing carbon footprint",
+        "likes": 27,
+        "likedBy": ["user3", "user5"]
+      },
+      {
+        "id": "jkl012",
+        "title": "Business School Ranked Top 10 Nationally",
+        "author": "Emily Wilson",
+        "department": "Business",
+        "date": "2023-04-01",
+        "image": "collage.PNG",
+        "details": "Our Business School has been ranked among the top 10 in the country according to the latest Higher Education Rankings.",
+        "header": "National recognition highlights program excellence",
+        "likes": 41,
+        "likedBy": ["user1", "user2", "user4"]
+      },
+      {
+        "id": "mno345",
+        "title": "Arts & Design Exhibition Opens Next Week",
+        "author": "David Kim",
+        "department": "Arts & Design",
+        "date": "2023-03-28",
+        "image": "collage.PNG",
+        "details": "The annual student arts exhibition opens next week, showcasing works from over 100 students across various disciplines.",
+        "header": "Student artwork explores theme of boundaries",
+        "likes": 19,
+        "likedBy": ["user3"]
+      }
+    ],
+    "comments": [
+      {
+        "id": "comment1",
+        "username": "Alex Thompson",
+        "text": "This is fantastic news! I've been waiting for the new library to open.",
+        "postId": "abc123",
+        "replyTo": null,
+        "timestamp": "2023-04-15T15:30:00.000Z",
+        "likes": 7,
+        "likedBy": ["user1", "user3"],
+        "profilePic": "man.PNG"
+      },
+      {
+        "id": "comment2",
+        "username": "Jamie Rodriguez",
+        "text": "Will there be research assistance available for graduate students?",
+        "postId": "abc123",
+        "replyTo": "comment1",
+        "timestamp": "2023-04-15T16:45:00.000Z",
+        "likes": 3,
+        "likedBy": ["user2"],
+        "profilePic": "woman.PNG"
+      },
+      {
+        "id": "comment3",
+        "username": "Pat Kim",
+        "text": "Yes, according to the library website, they'll have dedicated research librarians available for appointments.",
+        "postId": "abc123",
+        "replyTo": "comment2",
+        "timestamp": "2023-04-15T17:10:00.000Z",
+        "likes": 5,
+        "likedBy": [],
+        "profilePic": "man.PNG"
+      },
+      {
+        "id": "comment4",
+        "username": "Jordan Lee",
+        "text": "Congratulations to the engineering team! Their robot design was truly innovative.",
+        "postId": "def456",
+        "replyTo": null,
+        "timestamp": "2023-04-10T14:20:00.000Z",
+        "likes": 12,
+        "likedBy": ["user1", "user5"],
+        "profilePic": "woman.PNG"
+      },
+      {
+        "id": "comment5",
+        "username": "Casey Brown",
+        "text": "Do you know if they're planning to open-source any of the robot's design or code?",
+        "postId": "def456",
+        "replyTo": "comment4",
+        "timestamp": "2023-04-10T18:45:00.000Z",
+        "likes": 8,
+        "likedBy": ["user2", "user3"],
+        "profilePic": "man.PNG"
+      },
+      {
+        "id": "comment6",
+        "username": "Morgan Williams",
+        "text": "I'm excited about the sustainability initiative.",
+        "postId": "ghi789",
+        "replyTo": null,
+        "timestamp": "2023-04-06T09:15:00.000Z",
+        "likes": 6,
+        "likedBy": ["user1"],
+        "profilePic": "woman.PNG"
+      },
+      {
+        "id": "comment7",
+        "username": "Sam Parker",
+        "text": "So proud of our Business School! I've had amazing professors who really prepare us for the real world.",
+        "postId": "jkl012",
+        "replyTo": null,
+        "timestamp": "2023-04-02T11:25:00.000Z",
+        "likes": 15,
+        "likedBy": ["user2", "user3", "user4"],
+        "profilePic": "man.PNG"
+      }
+    ]
+  }

@@ -3,158 +3,278 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+    <title>View Post</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
     <style>
-       .custom-blue {
-    background-color: #0074D9; /* A custom blue */
-    color: white; /* White text */
-    border: none; /* Remove border */
-  }
-</style>
+        .custom-blue {
+            background-color: #0074D9;
+            color: white;
+            border: none;
+        }
+        .comment-thread {
+            margin-left: 2rem;
+            border-left: 2px solid #dbdbdb;
+            padding-left: 1rem;
+        }
+        .reply-indicator {
+            color: #4a4a4a;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.8);
+        }
+        .modal.is-active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .spinner {
+            animation: spinAround 500ms infinite linear;
+            border: 2px solid #dbdbdb;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 1em;
+            width: 1em;
+        }
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+        .button.is-primary.is-active {
+            background-color: #ff4081;
+        }
+        .comment-replies {
+            margin-left: 2rem;
+            padding-left: 1rem;
+            border-left: 2px solid #dbdbdb;
+        }
+        
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+        
+        /* Form panel when editing */
+        .form-right {
+            margin-left: auto;
+            margin-right: 80px;
+        }
+    </style>
+</head>
 <body>
- 
-<!-- Back to Main Page Button -->
-<div class="container mt-4">
-  <div class="columns">
-    <div class="column">
-      <a href="index.html" class="button custom-blue">Back to Main Page</a>
+    <!-- Back to Main Page Button -->
+    <div class="container mt-4">
+        <a href="rana.html" class="button custom-blue">⬅️ Back to Main Page</a>
     </div>
-  </div>
-</div>
 
- <!-- View Post Page -->
- <div class="container mt-6">
-  <div class="box" style="padding: 30px;">
-    <!-- Title -->
-    <h1 class="title is-2 has-text-centered">The News Title</h1>
+    <!-- View Post Page -->
+    <div class="container mt-6" id="post-view">
+        <div class="box" style="padding: 30px;">
+            <!-- Title -->
+            <h1 class="title is-2 has-text-centered" id="post-title">New Computer Science Program Launch</h1>
 
-    <!-- Author -->
-    <p class="subtitle is-6 has-text-centered has-text-grey">
-      By <strong>The Author</strong> | Date: 10/3/2025
-    </p>
+            <!-- Author and Department -->
+            <div class="has-text-centered">
+                <p class="subtitle is-6 has-text-grey">
+                    By <strong id="post-author">Dr. Sarah Johnson</strong> | <span id="post-date">2024-03-15</span>
+                </p>
+                <p class="tag is-info is-medium" id="post-department">Engineering</p>
+            </div>
 
-    <!-- Image and Text Layout -->
-    <div class="columns mt-4">
-      <!-- Left Column: Image -->
-      <div class="column is-one-third">
-        <figure class="image">
-          <img src="collage.PNG" alt="News Image" style="border-radius: 8px; width: 100%; height: auto;">
-        </figure>
-      </div>
+            <!-- Image and Text Layout -->
+            <div class="columns mt-4">
+                <!-- Left Column: Image -->
+                <div class="column is-one-third">
+                    <figure class="image" style="height: 250px; width: 100%; overflow: hidden; background-color: #f0f0f0; display: flex; align-items: center; justify-content: center; border-radius: 8px;">
+                        <img id="post-image" src="collage.PNG" alt="News Image" 
+                            style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+                    </figure>
+                </div>
 
-      <!-- Right Column: Text -->
-      <div class="column is-two-thirds">
-        <div class="content">
-          <p>
-            The College of Engineering has just announced the launch of a new
-             "Introduction to Information Technology" course, designed to 
-             equip students with foundational skills in modern technology.
-              This hands-on class covers essential topics such as computer systems, networking 
-              basics, cybersecurity principles, and an introduction to programming languages
-               like Python and JavaScript. Students will also explore emerging technologies 
-               like artificial intelligence, cloud computing, and data analytics,
-                preparing them for diverse career paths in
-                 the ever-evolving IT industry. With a focus on practical applications 
-                 and real-world problem-solving, this course is ideal for beginners looking
-                  to build a strong technological foundation while fostering creativity and
-                   innovation. Whether you're pursuing a career in software development,
-                    IT support,
-             or tech entrepreneurship, this class promises to be a valuable stepping stone.
-          </p>
+                <!-- Right Column: Text -->
+                <div class="column is-two-thirds">
+                    <div class="content">
+                        <p id="post-details">The university is proud to announce the launch of a new Computer Science program focusing on Artificial Intelligence and Machine Learning. This cutting-edge program will prepare students for the future of technology.</p>
+                        <p>The program will include courses taught by leading experts in the field, hands-on projects with industry partners, and opportunities for research in our newly established AI Lab.</p>
+                        <p>Students will learn about neural networks, deep learning, natural language processing, computer vision, and other cutting-edge topics in AI and ML.</p>
+                        <p>Applications for the program will open next month, and classes will begin in the Fall semester.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Buttons -->
+            <div class="buttons is-centered mt-4" style="display: flex; justify-content: center; align-items: center; gap: 15px;">
+                <button class="button is-warning" id="edit-post-btn" style="height: 36px; display: flex; align-items: center; justify-content: center;">Edit Post</button>
+                <button class="button is-danger" id="delete-post-btn" style="height: 36px; display: flex; align-items: center; justify-content: center;">🗑️ Delete Post</button>
+                <button class="button is-primary" id="like-post-btn" style="height: 36px; display: flex; align-items: center; justify-content: center; background-color: #ff5c7c; gap: 5px;">
+                    <span class="icon" id="like-icon">❤️</span>
+                    <span id="like-count">0</span>
+                </button>
+            </div>
         </div>
-      </div>
     </div>
 
-    <!-- Buttons -->
-    <div class="buttons is-centered mt-4">
-      <button class="button is-primary">Edit Post</button>
-      <button class="button is-danger">Delete Post</button>
-      <button class="button is-small is-primary">❤️Like</button>
+    <!-- Form for Adding/Editing News -->
+    <div id="add-post-form" class="mt-4" style="display: none;">
+        <div class="columns">
+            <div class="column is-two-thirds form-right">
+                <div class="box" style="padding: 25px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); border-radius: 8px;">
+                    <h2 class="title is-4" id="form-title" style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Add New Post</h2>
+                    <form id="post-form">
+                        <!-- Title Input -->
+                        <div class="field">
+                            <label class="label">Title</label>
+                            <div class="control">
+                                <input class="input" type="text" id="post-title" name="title" placeholder="Enter the title of the news" required>
+                            </div>
+                        </div>
+
+                        <!-- Author Input -->
+                        <div class="field">
+                            <label class="label">Author</label>
+                            <div class="control">
+                                <input class="input" type="text" id="post-author" name="author" placeholder="Enter the author's name" required>
+                            </div>
+                        </div>
+
+                        <!-- Department Dropdown -->
+                        <div class="field">
+                            <label class="label">Department</label>
+                            <div class="control">
+                                <div class="select is-fullwidth">
+                                    <select id="department-select" name="department" required>
+                                        <option value="">Select department</option>
+                                        <option value="Engineering">Engineering</option>
+                                        <option value="Business">Business</option>
+                                        <option value="Science">Science</option>
+                                        <option value="Arts & Design">Arts & Design</option>
+                                        <option value="Medicine & Health">Medicine & Health</option>
+                                        <option value="Law">Law</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Sports">Sports</option>
+                                        <option value="Technology">Technology</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Header Text -->
+                        <div class="field">
+                            <label class="label">Header (Brief Summary)</label>
+                            <div class="control">
+                                <input class="input" type="text" id="post-header" name="header" placeholder="Enter a brief summary (will appear in cards)" required>
+                            </div>
+                        </div>
+
+                        <!-- News Details Textarea -->
+                        <div class="field">
+                            <label class="label">News Details</label>
+                            <div class="control">
+                                <textarea class="textarea" id="post-details" name="details" placeholder="Enter the full details of the news" required></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Image Upload -->
+                        <div class="field">
+                            <label class="label">Upload Image</label>
+                            <div class="control">
+                                <input class="input" type="file" id="post-image" name="image" accept="image/*">
+                            </div>
+                        </div>
+
+                        <!-- Submit and Cancel Buttons -->
+                        <div class="buttons mt-4" style="display: flex; gap: 15px;">
+                            <button type="submit" class="button is-success" style="flex: 1; height: 36px; display: flex; align-items: center; justify-content: center;">Submit</button>
+                            <button type="button" class="button is-danger" style="flex: 1; height: 36px; display: flex; align-items: center; justify-content: center;" id="cancel-post">Cancel</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
- </div>
 
- <!-- Comment Section Header -->
- <div class="columns is-vcentered mt-4" style="padding: 0 60px;">
-  <div class="column">
-    <h2 class="title is-3" style="color: darkblue;">Comment Section</h2>
-  </div>
-  <div class="column has-text-right">
-    <button class="button is-primary">Add Post Comment</button>
-  </div>
- </div>
+    <!-- Comment Section -->
+    <div class="container" id="comments-section">
+        <div class="columns is-vcentered mt-4">
+            <div class="column">
+                <h2 class="title is-3" style="color: darkblue;">Comments</h2>
+            </div>
+            <div class="column has-text-right">
+                <a id="add-comment-link" class="button is-primary add-comment-btn" href="#">Add Comment</a>
+            </div>
+        </div>
 
-<!-- Comment Section Box -->
-<div class="box mt-4" style="padding: 30px;">
-  <!-- Comment 1 -->
-  <div class="box" style="padding: 15px;">
-    <!-- Profile Picture and Top Buttons -->
-    <div class="columns is-vcentered">
-      <div class="column is-narrow">
-        <figure class="image is-48x48">
-          <img src="woman.PNG" alt="Profile Picture" style="border-radius: 50%;">
-        </figure>
-      </div>
-      <div class="column">
-        <strong>sara ahmed</strong>
-      </div>
-      <div class="column is-narrow">
-        <button class="button is-small is-primary">❤️Like</button>
-        <button class="button is-small is-info ml-2">Reply</button>
-      </div>
+        <!-- Comments Container -->
+        <div class="comments-container mb-6">
+            <!-- Comments will be dynamically inserted here by script.js -->
+        </div>
     </div>
 
-    <!-- Comment Text -->
-    <div class="content mt-3">
-      <p>
-        This is a sample comment. 
-      </p>
+    <!-- Loading Spinner -->
+    <div id="loading-spinner" class="modal">
+        <div class="modal-background"></div>
+        <div class="modal-content">
+            <div class="box has-text-centered">
+                <div class="spinner is-size-1"></div>
+                <p class="mt-3">Loading...</p>
+            </div>
+        </div>
     </div>
+    
+    <style>
+        .spinner {
+            animation: spinAround 800ms infinite linear;
+            border: 4px solid #3273dc;
+            border-radius: 50%;
+            border-right-color: transparent;
+            border-top-color: transparent;
+            content: "";
+            display: block;
+            height: 3em;
+            width: 3em;
+            margin: 0 auto;
+        }
+        
+        #loading-spinner {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+        
+        #loading-spinner.is-active {
+            display: flex !important;
+        }
+        
+        @keyframes spinAround {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(359deg); }
+        }
+    </style>
 
-    <!-- Bottom Buttons -->
-    <div class="has-text-right">
-      <button class="button is-small is-danger">Delete</button>
-      <button class="button is-small is-info ml-2">Edit</button>
-    </div>
-  </div>
+    <!-- Notification Container -->
+    <div id="notification-container" class="notification-container"></div>
 
-  <!-- Comment 2 -->
-  <div class="box mt-3" style="padding: 15px;">
-    <!-- Profile Picture and Top Buttons -->
-    <div class="columns is-vcentered">
-      <div class="column is-narrow">
-        <figure class="image is-48x48">
-          <img src="woman.PNG" alt="Profile Picture" style="border-radius: 50%;">
-        </figure>
-      </div>
-      <div class="column">
-        <strong>lola Smith</strong>
-      </div>
-      <div class="column is-narrow">
-        <button class="button is-small is-primary">❤️Like</button>
-        <button class="button is-small is-info ml-2">Reply</button>
-      </div>
-    </div>
-
-    <!-- Comment Text -->
-    <div class="content mt-3">
-      <p>
-        Another comment here.
-    </div>
-
-    <!-- Bottom Buttons -->
-    <div class="has-text-right">
-      <button class="button is-small is-danger">Delete</button>
-      <button class="button is-small is-info ml-2">Edit</button>
-    </div>
-  </div>
-</div>
-
- </body>
-
- </html>
-
- git config --global user.name "RanaElias"
- git config --global user.email "ranaelias04@gmail.com" 
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
