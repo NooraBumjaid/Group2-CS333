@@ -48,5 +48,59 @@
   </section>
 
   <script src="view-note.js"></script>
+
+  <!-- Edit Note Modal -->
+  <div class="modal" id="editNoteModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Edit Note</p>
+        <button class="delete" aria-label="close" id="closeEditModal"></button>
+      </header>
+      <section class="modal-card-body">
+        <form id="editNoteForm">
+          <input type="hidden" id="editNoteId">
+          <div class="field">
+            <label class="label">Course Name</label>
+            <div class="control">
+              <input class="input" type="text" id="editCourseName" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Note Title</label>
+            <div class="control">
+              <input class="input" type="text" id="editNoteTitle" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+              <input class="input" type="text" id="editDescription" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Department</label>
+            <div class="control">
+              <div class="select">
+                <select id="editDepartment" required>
+                  <option value="computer-science">Computer Science</option>
+                  <option value="information-system">Information System</option>
+                  <option value="network-engineering">Network Engineering</option>
+                  <option value="Elective">Elective</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">File URL</label>
+            <div class="control">
+              <input class="input" type="text" id="editFileUrl" required>
+            </div>
+          </div>
+          <button type="submit" class="button is-success">Save Changes</button>
+        </form>
+      </section>
+    </div>
+  </div>
 </body>
 </html>

@@ -54,7 +54,7 @@
         .input, .textarea, .select select {
             border-radius: 5px;
         }
-        /* Keep the disabled “Previous” looking like the other link-buttons */
+        /* Keep the disabled "Previous" looking like the other link-buttons */
 .pagination-previous[disabled] {
   opacity: 1 !important;
   pointer-events: none;  /* still non‑clickable */
@@ -147,26 +147,26 @@
     <!-- Add New Note Form -->
     <div class="box">
       <h2 class="title is-4">Add New Course Note</h2>
-      <form>
+      <form id="addNoteForm">
         <!-- Course Name -->
         <div class="field">
           <label class="label">Course Name</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter course name" required>
+            <input class="input" type="text" placeholder="Enter course name" required minlength="3" maxlength="100">
           </div>
         </div>
         <!-- Note Title -->
         <div class="field">
           <label class="label">Note Title</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter note title" required>
+            <input class="input" type="text" placeholder="Enter note title" required minlength="3" maxlength="100">
           </div>
         </div>
         <!-- Description -->
         <div class="field">
           <label class="label">Note Description</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter note description" required>
+            <input class="input" type="text" placeholder="Enter note description" required minlength="10" maxlength="500">
           </div>
         </div>
         <!-- File Upload -->
@@ -175,7 +175,7 @@
           <div class="control">
             <div class="file is-primary is-small has-name">
               <label class="file-label">
-                <input id="noteFile" class="file-input" type="file" accept="application/pdf" required>
+                <input id="noteFile" class="file-input" type="file" accept=".pdf,application/pdf" required>
                 <span class="file-cta">
                   <span class="file-icon">📁</span>
                   <span class="file-label">Choose file</span>
@@ -183,6 +183,7 @@
                 <span id="file-name" class="file-name">No file uploaded</span>
               </label>
             </div>
+            <p class="help">Only PDF files are allowed. Maximum size: 10MB</p>
             <button type="button" id="removeFileButton" class="button is-primary is-small mt-2">🗑️ Remove File</button>
           </div>
         </div>
@@ -215,5 +216,59 @@
 
   <!-- Link to our new JS -->
   <script src="course-notes.js"></script>
+
+  <!-- Edit Note Modal -->
+  <div class="modal" id="editNoteModal">
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">Edit Note</p>
+        <button class="delete" aria-label="close" id="closeEditModal"></button>
+      </header>
+      <section class="modal-card-body">
+        <form id="editNoteForm">
+          <input type="hidden" id="editNoteId">
+          <div class="field">
+            <label class="label">Course Name</label>
+            <div class="control">
+              <input class="input" type="text" id="editCourseName" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Note Title</label>
+            <div class="control">
+              <input class="input" type="text" id="editNoteTitle" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Description</label>
+            <div class="control">
+              <input class="input" type="text" id="editDescription" required>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">Department</label>
+            <div class="control">
+              <div class="select">
+                <select id="editDepartment" required>
+                  <option value="computer-science">Computer Science</option>
+                  <option value="information-system">Information System</option>
+                  <option value="network-engineering">Network Engineering</option>
+                  <option value="Elective">Elective</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label class="label">File URL</label>
+            <div class="control">
+              <input class="input" type="text" id="editFileUrl" required>
+            </div>
+          </div>
+          <button type="submit" class="button is-success">Save Changes</button>
+        </form>
+      </section>
+    </div>
+  </div>
 </body>
 </html>
