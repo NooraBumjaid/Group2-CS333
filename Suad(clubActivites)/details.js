@@ -6,11 +6,8 @@ document.addEventListener("DOMContentLoaded", function() {
     const addCommentBtn = document.getElementById('add-comment-btn');
     
     // Dummy Activity Data (to be replaced with actual Fetch API logic)
-    const activityData = {
-        title: "Graphic Design Workshop",
-        date: "10 MAR 2025",
-        description: "Learn the basics of design using Photoshop and Illustrator."
-    };
+    const activityData = JSON.parse(localStorage.getItem('activityDetails'));
+
 
     // Dummy Comments Data
     let comments = [];
@@ -30,17 +27,20 @@ document.addEventListener("DOMContentLoaded", function() {
     // Fetch Activity Details (Simulated here)
     async function fetchActivityDetails() {
         showLoading();
-        
+    
         try {
-            // Simulating an API fetch with setTimeout
             setTimeout(() => {
-                // Here we would normally use Fetch API to get the data from a server
-                renderActivityDetails(activityData);
-            }, 1000);
+                if (activityData) {
+                    renderActivityDetails(activityData);
+                } else {
+                    alert("No activity details found.");
+                }
+            }, 500); 
         } catch (error) {
             alert('Error loading activity details.');
         }
     }
+    
 
     // Render Activity Details
     function renderActivityDetails(data) {

@@ -1,22 +1,37 @@
 // Activity data (to be replaced later with data fetched from an API)
 const activities = [
-  { title: "Graphic Design Workshop", date: "10 MAR 2025", category: "workshops" },
-  { title: "Web Development Course", date: "13 MAR 2025", category: "courses" },
-  { title: "UI/UX Workshop", date: "15 MAR 2025", category: "workshops" },
-  { title: "JavaScript Course", date: "20 MAR 2025", category: "courses" },
+  {
+    title: "Graphic Design Workshop",
+    date: "2025-03-10",
+    description: "Learn the basics of design using Photoshop and Illustrator.",
+    category: "workshops"
+  },
+  {
+    title: "Web Development Course",
+    date: "2025-03-13",
+    description: "The process of building, programming, and maintaining websites.",
+    category: "courses"
+  },
+  {
+    title: "UI/UX Workshop",
+    date: "2025-03-15",
+    description: "Learn the basics of UI/UX design. Improve usability and create wireframes.",
+    category: "workshops"
+  },
+  {
+    title: "JavaScript Course",
+    date: "2025-03-20",
+    description: "Master the fundamentals of JavaScript, learn to interact with the DOM.",
+    category: "courses"
+  }
 ];
 
-// Function to save activity details to localStorage
-function viewDetails(title, date, category) {
-  // Save the activity details to localStorage
-  localStorage.setItem('activityTitle', title);
-  localStorage.setItem('activityDate', date);
-  localStorage.setItem('activityCategory', category);
 
-  // Redirect to details page
+// Function to save activity details to localStorage
+function viewDetails(activity) {
+  localStorage.setItem('activityDetails', JSON.stringify(activity));
   window.location.href = 'details.html';
 }
-
 
 let currentPage = 1;
 const activitiesPerPage = 2;
@@ -77,7 +92,7 @@ function displayActivities() {
         <div class="card-body">
           <h5 class="card-title">${activity.title}</h5>
           <p>Date: ${activity.date}</p>
-          <button class="btn btn-primary" onclick="window.location.href='details.html'">Show Details</button>
+          <button class="btn btn-primary" onclick='viewDetails(${JSON.stringify(activity)})'>Show Details</button>
         </div>
       </div>
     `;
@@ -143,7 +158,12 @@ function updatePagination(totalActivities) {
   });
   paginationList.appendChild(nextItem);
 
-  paginationContainer.appendChild(paginationList);
+  paginationContainer.innerHTML = ''; 
+  const wrapper = document.createElement('div');
+  wrapper.classList.add('d-flex', 'justify-content-center');
+  wrapper.appendChild(paginationList);
+  paginationContainer.appendChild(wrapper);
+  
 }
 
 // Event listeners for input changes and page load
