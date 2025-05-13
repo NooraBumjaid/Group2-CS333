@@ -1,15 +1,14 @@
-// reviewDetails.js
 document.addEventListener('DOMContentLoaded', () => {
     const loading   = document.getElementById('loading');
     const errorElem = document.getElementById('error');
     const container = document.getElementById('review-container');
   
-    // Get id from URL ?id=...
+    // Get id from URL 
     const params = new URLSearchParams(window.location.search);
     const id     = params.get('id');
     console.log('ID from URL:', id);
   
-    // Fetch all reviews from backend, then find the one with the matching id
+    // Fetch reviews and find the one with the matching id
     function fetchReviewDetails() {
         loading.textContent = 'Loading review details…';
         fetch('https://c150bfca-91c9-4938-8c8b-bbb4731b4509-00-30m016fqcb5lc.sisko.replit.dev/get_reviews.php')
@@ -147,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
       };
     }
   
-    // Submit review (saves to backend)
+    // Submit review 
     const reviewForm = document.getElementById('reviewForm');
     if (reviewForm) {
       reviewForm.addEventListener('submit', function(event) {

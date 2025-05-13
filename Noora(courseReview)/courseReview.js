@@ -10,7 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let allReviews = [];
   let filteredReviews = [];
   let currentPage = 1;
-  const pageSize = 2; // 2 reviews per page
+  const pageSize = 2; 
   let currentDepartment = 'All';
   let currentSearch = '';
 
@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Listen for search input changes
+  //  search i
   if (searchInput) {
     searchInput.addEventListener('input', function() {
       currentSearch = searchInput.value.trim().toLowerCase();
@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Department tab filtering
+  // Department filter
   tabLinks.forEach(tab => {
     tab.addEventListener('click', function(e) {
       e.preventDefault();
@@ -40,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Fetch reviews from backend
+  // Fetch reviews 
   function fetchReviews() {
     loadingElem.textContent = 'Loading reviews…';
     fetch('https://c150bfca-91c9-4938-8c8b-bbb4731b4509-00-30m016fqcb5lc.sisko.replit.dev/get_reviews.php?course_id=0')
@@ -165,7 +165,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 
-  // Submit review (sends to backend)
+  // Submit review 
   const reviewForm = document.getElementById('reviewForm');
   if (reviewForm) {
     reviewForm.addEventListener('submit', function(event) {
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const rating = (ratingStars.match(/⭐/g) || []).length;
       const reviewText = reviewTextField.value.trim();
 
-      // Debugging - Log the collected values
+      // Debugging the collected values
       console.log({
         courseName,
         reviewer,
