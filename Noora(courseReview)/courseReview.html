@@ -47,15 +47,23 @@
       text-decoration: none;
     }
 
+    .columns {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+    }
     .box.review-box {
-      height: 300px;
-      overflow-y: auto;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      margin-bottom: 32px;
     }
 
     .column.is-half {
+      flex: 1 1 0;
+      max-width: 400px;
       display: flex;
     }
 
@@ -73,17 +81,27 @@
       }
       .content { margin-left: 0; padding: 20px; }
     }
-    /* Keep the disabled “Previous” looking like the other link-buttons */
-    .pagination-previous[disabled] {
-     opacity: 1 !important;
-     pointer-events: none;  /* still non‑clickable */
-}
 
+    @media (max-width: 600px) {
+      .columns {
+        flex-direction: column !important;
+      }
+      .column.is-half {
+        width: 100% !important;
+        max-width: 100% !important;
+        flex: 0 0 100% !important;
+        display: block;
+      }
+    }
+
+    .pagination-previous[disabled] {
+      opacity: 1 !important;
+      pointer-events: none;
+    }
   </style>
 </head>
 <body>
 
-  <!-- Sidebar Navigation -->
   <div class="sidebar">
     <h4>📖 Campus Hub</h4>
     <a href="../index.html">🏠 Home</a>
@@ -96,11 +114,9 @@
     <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
   </div>
 
-  <!-- Main Content -->
   <div class="content">
     <h2 class="title is-3">Course Reviews</h2>
 
-    <!-- Filter Tabs -->
     <div class="tabs is-toggle is-toggle-rounded mb-4">
       <ul>
         <li class="is-active"><a>All</a></li>
@@ -111,14 +127,13 @@
       </ul>
     </div>
 
-    <!-- Search & Sort -->
     <div class="columns mb-4">
       <div class="column is-8">
         <input class="input" type="text" placeholder="Search course reviews...">
       </div>
       <div class="column is-4">
         <div class="select is-fullwidth">
-          <select>
+          <select id="sortSelect">
             <option value="rating">Sort by Rating</option>
             <option value="date">Sort by Most Recent</option>
           </select>
@@ -126,29 +141,31 @@
       </div>
     </div>
 
-    <!-- Loading & Error -->
     <p id="loading"></p>
     <p id="error" style="color:red;"></p>
 
-    <!-- Reviews will be injected here -->
     <div id="reviews-container" class="columns is-multiline"></div>
 
-    <!-- Pagination Controls -->
-<nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
-    <a class="pagination-previous button is-link" href="#" id="prevBtn">Previous</a>
-    <a class="pagination-next button is-link" href="#" id="nextBtn">Next</a>
-    <ul class="pagination-list"></ul>
-  </nav>
-  
+    <nav class="pagination is-centered mt-5" role="navigation" aria-label="pagination">
+      <a class="pagination-previous button is-link" href="#" id="prevBtn">Previous</a>
+      <a class="pagination-next button is-link" href="#" id="nextBtn">Next</a>
+      <ul class="pagination-list"></ul>
+    </nav>
 
-    <!-- Submit a Review Form (static) -->
     <div class="box mt-6">
       <h2 class="title is-4">Submit a Review</h2>
-      <form>
+      <form id="reviewForm">
         <div class="field">
           <label class="label">Course Name</label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter course name" required />
+            <input class="input" type="text" placeholder="Enter course name" id="courseName" required />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="label">Your Name (Reviewer)</label>
+          <div class="control">
+            <input class="input" type="text" id="reviewerName" placeholder="Enter your name" required />
           </div>
         </div>
 
@@ -156,20 +173,16 @@
           <label class="label">Department</label>
           <div class="control">
             <label class="radio">
-              <input type="radio" name="department" required />
-              Computer Science
+              <input type="radio" name="department" value="Computer Science" required /> Computer Science
             </label>
             <label class="radio">
-              <input type="radio" name="department" />
-              Information System
+              <input type="radio" name="department" value="Information System" /> Information System
             </label>
             <label class="radio">
-              <input type="radio" name="department" />
-              Network Engineering
+              <input type="radio" name="department" value="Network Engineering" /> Network Engineering
             </label>
             <label class="radio">
-              <input type="radio" name="department" />
-              Elective Courses
+              <input type="radio" name="department" value="Elective Courses" /> Elective Courses
             </label>
           </div>
         </div>
@@ -177,7 +190,7 @@
         <div class="field">
           <label class="label">Preferred Professor <span class="has-text-grey-light">(optional)</span></label>
           <div class="control">
-            <input class="input" type="text" placeholder="Enter professor's name if you want" />
+            <input class="input" type="text" id="professor" placeholder="Enter professor's name if you want" />
           </div>
         </div>
 
@@ -185,7 +198,7 @@
           <label class="label">Your Rating</label>
           <div class="control">
             <div class="select is-fullwidth">
-              <select required>
+              <select id="rating" required>
                 <option value="" disabled selected>Select rating</option>
                 <option>⭐⭐⭐⭐⭐ (5 - Excellent)</option>
                 <option>⭐⭐⭐⭐☆ (4 - Good)</option>
@@ -200,7 +213,7 @@
         <div class="field">
           <label class="label">Review</label>
           <div class="control">
-            <textarea class="textarea" rows="4" placeholder="Write your review here..." required></textarea>
+            <textarea class="textarea" id="reviewText" rows="4" placeholder="Write your review here..." required></textarea>
           </div>
         </div>
 
@@ -212,7 +225,6 @@
     </div>
   </div>
 
-  <!-- Link to the JavaScript -->
   <script src="courseReview.js" defer></script>
 </body>
 </html>
