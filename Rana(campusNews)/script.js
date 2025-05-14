@@ -1,6 +1,75 @@
 /**
  * Campus News Portal - Core JavaScript Functionality
  */
+// Store the original post data for cancel functionality
+let originalPostData = null;
+
+// Function to capture original post data
+function captureOriginalPostData() {
+    // Get current post ID from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const postId = urlParams.get('id');
+    
+    if (postId && window.newsPortal) {
+        const post = window.newsPortal.getPost(postId);
+        if (post) {
+            // Deep clone the post object to prevent reference issues
+            originalPostData = JSON.parse(JSON.stringify(post));
+            console.log('Original post data captured for restoration');
+        }
+    }
+}
+
+// Function to restore original post data
+function restoreOriginalPost() {
+    if (!originalPostData) {
+        console.log('No original post data to restore');
+        return;
+    }
+    
+    // Visual feedback for cancel button
+    const cancelBtn = document.getElementById('cancel-post');
+    if (cancelBtn) {
+        cancelBtn.classList.add('is-loading');
+    }
+    
+    // Delay for better UX
+    setTimeout(() => {
+        if (cancelBtn) {
+            cancelBtn.classList.remove('is-loading');
+        }
+        
+        // Get the post view and form elements
+        const postView = document.getElementById('post-view');
+        const postForm = document.getElementById('add-post-form');
+        
+        // Animation for smooth transition
+        if (postForm) {
+            postForm.style.opacity = "1";
+            postForm.style.transition = "opacity 0.3s ease";
+            postForm.style.opacity = "0";
+        }
+        
+        setTimeout(() => {
+            if (postForm) postForm.style.display = 'none';
+            if (postView) {
+                postView.style.display = 'block';
+                postView.style.opacity = "0";
+                postView.style.transition = "opacity 0.3s ease";
+                
+                // Update the UI with the original post data
+                if (window.newsPortal) {
+                    window.newsPortal.updatePostDetails(originalPostData.id);
+                    window.newsPortal.showNotification('Changes reverted to original post', 'is-info');
+                }
+                
+                setTimeout(() => {
+                    postView.style.opacity = "1";
+                }, 50);
+            }
+        }, 300);
+    }, 300);
+}
 
 // Debug script loading
 console.log('======== SCRIPT.JS LOADED ========');
@@ -42,6 +111,7 @@ class NewsPortal {
         this.currentFilter = '';
         this.currentSort = 'newest';
         this.currentSearch = '';
+        this.originalPostData = null; // Store original post data for cancel functionality
         this.isLoading = false;
         this.currentUser = 'user1'; // Default user ID for likes
         
@@ -201,11 +271,21 @@ class NewsPortal {
             document.getElementById('post-view').style.display = 'block';
             document.getElementById('add-post-form').style.display = 'none';
             
-            // Edit post button
-            const editBtn = document.getElementById('edit-post-btn');
+            // Edit post button with improved feedback
+            const editBtn = document.getElementById("edit-post-btn");
             if (editBtn) {
-                editBtn.addEventListener('click', () => {
-                    this.showEditPostForm(postId);
+                editBtn.addEventListener("click", () => {
+                    // Capture original post data for potential restoration
+                    captureOriginalPostData();
+                    
+                    // Show visual feedback when clicked
+                    editBtn.classList.add("is-loading");
+                    
+                    // Small delay for better user experience
+                    setTimeout(() => {
+                        editBtn.classList.remove("is-loading");
+                        this.showEditPostForm(postId);
+                    }, 300);
                 });
             }
             
@@ -263,12 +343,12 @@ class NewsPortal {
                 });
             }
             
-            // Cancel edit button
-            const cancelBtn = document.getElementById('cancel-post');
+            // Cancel edit button with restore functionality
+            const cancelBtn = document.getElementById("cancel-post");
             if (cancelBtn) {
-                cancelBtn.addEventListener('click', () => {
-                    document.getElementById('post-view').style.display = 'block';
-                    document.getElementById('add-post-form').style.display = 'none';
+                cancelBtn.addEventListener("click", () => {
+                    // Use the restore function from cancel_post.js
+                    restoreOriginalPost();
                 });
             }
         }
@@ -606,6 +686,8 @@ class NewsPortal {
             this.showNotification('Post not found', 'is-warning');
             return;
         }
+        // Store original post data for cancel functionality
+        this.originalPostData = JSON.parse(JSON.stringify(post));
         
         // Set the post details in the UI
         document.title = post.title;
@@ -770,8 +852,8 @@ class NewsPortal {
         const editBtn = commentBox.querySelector('.edit-comment-btn');
         if (editBtn) {
             editBtn.addEventListener('click', () => {
-                // Not implemented in this simplified version
-                alert('Edit comment functionality not implemented in this version');
+                // Show edit form for this comment
+                this.showEditCommentForm(comment);
             });
         }
         
@@ -1582,8 +1664,24 @@ class NewsPortal {
             }
             
             // Hide post view, show form
-            document.getElementById('post-view').style.display = 'none';
-            document.getElementById('add-post-form').style.display = 'block';
+            // Hide post view, show form with animation
+            const postView = document.getElementById("post-view");
+            const postForm = document.getElementById("add-post-form");
+            
+            postView.style.opacity = "1";
+            postView.style.transition = "opacity 0.3s ease";
+            postView.style.opacity = "0";
+            
+            setTimeout(() => {
+                postView.style.display = "none";
+                postForm.style.display = "block";
+                postForm.style.opacity = "0";
+                postForm.style.transition = "opacity 0.3s ease";
+                
+                setTimeout(() => {
+                    postForm.style.opacity = "1";
+                }, 50);
+            }, 300);
             
             // Update form title
             const formTitle = document.getElementById('form-title');
@@ -1791,6 +1889,102 @@ class NewsPortal {
             this.showNotification('Error deleting comment: ' + error.message, 'is-danger');
         } finally {
             this.hideLoading();
+        }
+    }
+
+    /**
+     * Shows an edit form for a comment
+     * @param {Object} comment - Comment to edit
+     */
+    showEditCommentForm(comment) {
+        console.log('Showing edit comment form for comment:', comment);
+        
+        // Create modal for editing comment
+        const modal = document.createElement('div');
+        modal.className = 'modal is-active';
+        modal.id = 'edit-comment-modal';
+        
+        // Create modal HTML with form
+        modal.innerHTML = `
+            <div class="modal-background"></div>
+            <div class="modal-card">
+                <header class="modal-card-head">
+                    <p class="modal-card-title">Edit Comment</p>
+                    <button class="delete" aria-label="close"></button>
+                </header>
+                <section class="modal-card-body">
+                    <div class="field">
+                        <label class="label">Comment</label>
+                        <div class="control">
+                            <textarea class="textarea" id="edit-comment-text">${comment.text}</textarea>
+                        </div>
+                    </div>
+                </section>
+                <footer class="modal-card-foot">
+                    <button class="button is-success" id="save-comment-btn">Save changes</button>
+                    <button class="button" id="cancel-comment-btn">Cancel</button>
+                </footer>
+            </div>
+        `;
+        
+        // Add modal to body
+        document.body.appendChild(modal);
+        
+        // Add event listeners
+        const closeBtn = modal.querySelector('.delete');
+        const cancelBtn = modal.querySelector('#cancel-comment-btn');
+        const saveBtn = modal.querySelector('#save-comment-btn');
+        
+        const closeModal = () => {
+            modal.remove();
+        };
+        
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+        if (cancelBtn) cancelBtn.addEventListener('click', closeModal);
+        
+        if (saveBtn) {
+            saveBtn.addEventListener('click', async () => {
+                // Get updated text
+                const updatedText = document.getElementById('edit-comment-text').value;
+                
+                if (!updatedText.trim()) {
+                    this.showNotification('Comment cannot be empty', 'is-warning');
+                    return;
+                }
+                
+                this.showLoading();
+                
+                try {
+                    // Update comment
+                    const result = await window.newsApi.updateComment(comment.id, {
+                        text: updatedText
+                    });
+                    
+                    if (result && result.success) {
+                        // Update comment in local data
+                        const commentIndex = this.comments.findIndex(c => c.id === comment.id);
+                        if (commentIndex !== -1) {
+                            this.comments[commentIndex].text = updatedText;
+                        }
+                        
+                        // Update comment in DOM
+                        const commentElement = document.querySelector(`#comment-${comment.id} .content p`);
+                        if (commentElement) {
+                            commentElement.textContent = updatedText;
+                        }
+                        
+                        this.showNotification('Comment updated successfully!', 'is-success');
+                    } else {
+                        this.showNotification('Failed to update comment. Please try again later.', 'is-danger');
+                    }
+                } catch (error) {
+                    console.error('Error updating comment:', error);
+                    this.showNotification('Failed to update comment. Please try again later.', 'is-danger');
+                } finally {
+                    this.hideLoading();
+                    closeModal();
+                }
+            });
         }
     }
 

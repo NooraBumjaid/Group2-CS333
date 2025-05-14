@@ -1,236 +1,236 @@
-/**
- * Mock News API Client
- * This simulates a real API service but works with localStorage for persistence.
- */
 
-class NewsAPI {
-    constructor() {
-        this.posts = [];
-        this.comments = [];
-        this.currentUser = 'user1'; // Default user ID for demonstration
-    }
-    
-    initMockData(posts, comments) {
-        this.posts = posts || [];
-        this.comments = comments || [];
-        console.log('Mock API initialized with:', {
-            posts: this.posts.length,
-            comments: this.comments.length
-        });
-    }
 
-    async simulateDelay(ms = 500) {
-        return new Promise(resolve => setTimeout(resolve, ms));
-    }
-    
+const newsApi = {
+    // Base API URL - points to Flask API endpoint
+    baseUrl: 'index.php?api=1',
+
+    /**
+     * Handles API errors
+     * @param {Response} response - Fetch response object
+     * @returns {Promise} - Promise that resolves to JSON response or rejects with error
+     */
+    async handleResponse(response) {
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({
+                error: `HTTP error ${response.status}`
+            }));
+            throw new Error(errorData.error || `HTTP error ${response.status}`);
+        }
+        return response.json();
+    },
+
+    /**
+     * Fetches all posts from the database
+     * @returns {Promise} - Promise that resolves to array of posts
+     */
     async getPosts() {
-        await this.simulateDelay();
-        return [...this.posts];
-    }
-    
+        try {
+            const response = await fetch(`${this.baseUrl}?action=getPosts`);
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error('Error fetching posts:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Fetches a single post by ID
+     * @param {string} id - Post ID
+     * @returns {Promise} - Promise that resolves to post object
+     */
     async getPost(id) {
-        await this.simulateDelay();
-        return this.posts.find(post => post.id === id) || null;
-    }
-    
+        try {
+            const response = await fetch(`${this.baseUrl}?action=getPost&id=${id}`);
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error fetching post ${id}:`, error);
+            throw error;
+        }
+    },
+
+    /**
+     * Creates a new post
+     * @param {Object} postData - Post data object
+     * @returns {Promise} - Promise that resolves to success response
+     */
     async createPost(postData) {
-        await this.simulateDelay();
-        
-        const newPost = {
-            ...postData,
-            id: postData.id || `post_${Date.now()}`,
-            date: postData.date || new Date().toISOString().split('T')[0],
-            likes: 0,
-            likedBy: []
-        };
-        
-        this.posts.push(newPost);
-        return newPost;
-    }
-    
+        try {
+            const response = await fetch(`${this.baseUrl}?action=createPost`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error('Error creating post:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Updates an existing post
+     * @param {string} id - Post ID
+     * @param {Object} postData - Updated post data
+     * @returns {Promise} - Promise that resolves to success response
+     */
     async updatePost(id, postData) {
-        await this.simulateDelay();
-        
-        const index = this.posts.findIndex(post => post.id === id);
-        if (index === -1) {
-            throw new Error(`Post with ID ${id} not found`);
+        try {
+            const response = await fetch(`${this.baseUrl}?action=updatePost&id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error updating post ${id}:`, error);
+            throw error;
         }
-        
-        this.posts[index] = { ...this.posts[index], ...postData };
-        return this.posts[index];
-    }
-    
+    },
+
+    /**
+     * Deletes a post
+     * @param {string} id - Post ID
+     * @returns {Promise} - Promise that resolves to success response
+     */
     async deletePost(id) {
-        await this.simulateDelay();
-        
-        const index = this.posts.findIndex(post => post.id === id);
-        if (index === -1) {
-            throw new Error(`Post with ID ${id} not found`);
+        try {
+            const response = await fetch(`${this.baseUrl}?action=deletePost&id=${id}`, {
+                method: 'POST'
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error deleting post ${id}:`, error);
+            throw error;
         }
-        
-        const deletedPost = this.posts[index];
-        this.posts.splice(index, 1);
-        
-        // Also delete all comments for this post
-        this.comments = this.comments.filter(comment => comment.postId !== id);
-        
-        return deletedPost;
-    }
-    
-    async getComments(postId = null) {
-        await this.simulateDelay();
-        
-        if (postId) {
-            return this.comments.filter(comment => comment.postId === postId);
+    },
+
+    /**
+     * Fetches comments for a post
+     * @param {string} postId - Post ID
+     * @returns {Promise} - Promise that resolves to array of comments
+     */
+    async getComments(postId) {
+        try {
+            const response = await fetch(`${this.baseUrl}?action=getComments&postId=${postId}`);
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error fetching comments for post ${postId}:`, error);
+            throw error;
         }
-        return [...this.comments];
-    }
-    
+    },
+
+    /**
+     * Creates a new comment
+     * @param {Object} commentData - Comment data object
+     * @returns {Promise} - Promise that resolves to success response
+     */
     async createComment(commentData) {
-        await this.simulateDelay();
-        
-        const newComment = {
-            ...commentData,
-            id: commentData.id || `comment_${Date.now()}`,
-            timestamp: commentData.timestamp || new Date().toISOString(),
-            likes: 0,
-            likedBy: []
-        };
-        
-        this.comments.push(newComment);
-        return newComment;
-    }
-    
+        try {
+            const response = await fetch(`${this.baseUrl}?action=createComment`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentData)
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error('Error creating comment:', error);
+            throw error;
+        }
+    },
+
+    /**
+     * Updates an existing comment
+     * @param {string} id - Comment ID
+     * @param {Object} commentData - Updated comment data
+     * @returns {Promise} - Promise that resolves to success response
+     */
+    async updateComment(id, commentData) {
+        try {
+            console.log('API: Updating comment', id);
+            console.log('API: Comment data:', commentData);
+            const response = await fetch(`${this.baseUrl}?action=updateComment&id=${id}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(commentData)
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error updating comment ${id}:`, error);
+            throw error;
+        }
+    },
+
+    /**
+     * Deletes a comment
+     * @param {string} id - Comment ID
+     * @returns {Promise} - Promise that resolves to success response
+     */
     async deleteComment(id) {
-        await this.simulateDelay();
-        
-        const index = this.comments.findIndex(comment => comment.id === id);
-        if (index === -1) {
-            throw new Error(`Comment with ID ${id} not found`);
+        try {
+            const response = await fetch(`${this.baseUrl}?action=deleteComment&id=${id}`, {
+                method: 'POST'
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error deleting comment ${id}:`, error);
+            throw error;
         }
-        
-        const deletedComment = this.comments[index];
-        this.comments.splice(index, 1);
-        
-        // Also delete replies to this comment
-        this.comments = this.comments.filter(comment => comment.replyTo !== id);
-        
-        return deletedComment;
-    }
-    
-    async searchPosts(criteria) {
-        await this.simulateDelay();
-        
-        let filteredPosts = [...this.posts];
-        
-        // Filter by search term
-        if (criteria.term) {
-            const searchTerm = criteria.term.toLowerCase();
-            filteredPosts = filteredPosts.filter(post => 
-                post.title.toLowerCase().includes(searchTerm) ||
-                post.details.toLowerCase().includes(searchTerm) ||
-                post.author.toLowerCase().includes(searchTerm)
-            );
-        }
-        
-        // Filter by department
-        if (criteria.department) {
-            filteredPosts = filteredPosts.filter(post => 
-                post.department === criteria.department
-            );
-        }
-        
-        // Sort posts
-        if (criteria.sort) {
-            switch (criteria.sort) {
-                case 'newest':
-                    filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-                    break;
-                case 'oldest':
-                    filteredPosts.sort((a, b) => new Date(a.date) - new Date(b.date));
-                    break;
-                case 'popular':
-                    filteredPosts.sort((a, b) => b.likes - a.likes);
-                    break;
-                case 'az':
-                    filteredPosts.sort((a, b) => a.title.localeCompare(b.title));
-                    break;
-                case 'za':
-                    filteredPosts.sort((a, b) => b.title.localeCompare(a.title));
-                    break;
-                default:
-                    // Default is newest first
-                    filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-            }
-        } else {
-            // Default sort by date (newest first)
-            filteredPosts.sort((a, b) => new Date(b.date) - new Date(a.date));
-        }
-        
-        return filteredPosts;
-    }
-    
-    async likePost(id, userId = this.currentUser) {
-        await this.simulateDelay();
-        
-        const post = this.posts.find(p => p.id === id);
-        if (!post) {
-            throw new Error(`Post with ID ${id} not found`);
-        }
-        
-        if (!post.likedBy) {
-            post.likedBy = [];
-        }
-        
-        const alreadyLiked = post.likedBy.includes(userId);
-        
-        if (alreadyLiked) {
-            // User already liked the post, so unlike it
-            post.likedBy = post.likedBy.filter(uid => uid !== userId);
-            post.likes = post.likedBy.length;
-            return { post, liked: false };
-        } else {
-            // User hasn't liked the post, so like it
-            post.likedBy.push(userId);
-            post.likes = post.likedBy.length;
-            return { post, liked: true };
-        }
-    }
-    
-    async likeComment(id, userId = this.currentUser) {
-        await this.simulateDelay();
-        
-        const comment = this.comments.find(c => c.id === id);
-        if (!comment) {
-            throw new Error(`Comment with ID ${id} not found`);
-        }
-        
-        if (!comment.likedBy) {
-            comment.likedBy = [];
-        }
-        
-        const alreadyLiked = comment.likedBy.includes(userId);
-        
-        if (alreadyLiked) {
-            // User already liked the comment, so unlike it
-            comment.likedBy = comment.likedBy.filter(uid => uid !== userId);
-            comment.likes = comment.likedBy.length;
-            return { comment, liked: false };
-        } else {
-            // User hasn't liked the comment, so like it
-            comment.likedBy.push(userId);
-            comment.likes = comment.likedBy.length;
-            return { comment, liked: true };
-        }
-    }
-}
+    },
 
-// Create a global instance with debugging
-console.log('Creating window.newsApi instance...');
-window.newsApi = new NewsAPI();
-console.log('window.newsApi created successfully:', !!window.newsApi);
+    /**
+     * Likes a post
+     * @param {string} id - Post ID
+     * @returns {Promise} - Promise that resolves to success response
+     */
+    async likePost(id) {
+        try {
+            console.log(`API: Liking post ${id}`);
+            const url = `${this.baseUrl}?action=likePost&id=${id}`;
+            console.log(`API: Request URL: ${url}`);
+            
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            console.log(`API: Response status: ${response.status}`);
+            const result = await this.handleResponse(response);
+            console.log(`API: Response data:`, result);
+            return result;
+        } catch (error) {
+            console.error(`Error liking post ${id}:`, error);
+            throw error;
+        }
+    },
 
-// Diagnostic check that will run on page load
-document.addEventListener('DOMContentLoaded', () => {
-    console.log('API.js DOMContentLoaded check: window.newsApi exists:', !!window.newsApi);
-});
+    /**
+     * Likes a comment
+     * @param {string} id - Comment ID
+     * @returns {Promise} - Promise that resolves to success response
+     */
+    async likeComment(id) {
+        try {
+            const response = await fetch(`${this.baseUrl}?action=likeComment&id=${id}`, {
+                method: 'POST'
+            });
+            return this.handleResponse(response);
+        } catch (error) {
+            console.error(`Error liking comment ${id}:`, error);
+            throw error;
+        }
+    }
+};
+
+// Make the API available globally
+window.newsApi = newsApi;
+console.log('API.js loaded - Campus News Portal API initialized');
