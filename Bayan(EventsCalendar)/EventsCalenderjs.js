@@ -4,124 +4,118 @@ const searchInput = document.querySelector('.input');
 const categoryFilter = document.querySelectorAll('select')[0];
 const sortBy = document.querySelectorAll('select')[1];
 
-
 let events = [];
 let currentPage = 1;
 const eventsPerPage = 3;
 
-
 function showLoading() {
-    eventContainer.innerHTML = "<p>Loading events...</p>";
+    eventContainer.innerHTML += "<p>Loading events...</p>";
 }
-
 
 function showError() {
-    eventContainer.innerHTML = "<p>Failed to load events. Please try again later.</p>";
+    eventContainer.innerHTML += "<p>Failed to load events. Please try again later.</p>";
 }
-
 
 async function fetchEvents() {
     showLoading();
     try {
         const response = await fetch('events.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network issue');
         const data = await response.json();
         events = data;
         renderEvents(events);
     } catch (error) {
-        console.error('Fetch error:', error);
         showError();
     }
 }
 
-
 function renderEvents(eventList) {
- 
-    const oldWeeks = document.querySelectorAll('.week');
-    oldWeeks.forEach(week => week.remove());
+    document.querySelectorAll('.week').forEach(w => w.remove());
 
-    const weeksDiv = document.createElement('div');
-    weeksDiv.classList.add('week');
+    const weekDiv = document.createElement('div');
+    weekDiv.className = 'week';
 
-   
     const start = (currentPage - 1) * eventsPerPage;
     const end = start + eventsPerPage;
-    const paginatedEvents = eventList.slice(start, end);
+    const paginated = eventList.slice(start, end);
 
-    paginatedEvents.forEach(event => {
+    paginated.forEach(event => {
         const eventDiv = document.createElement('div');
         eventDiv.className = 'event';
-        eventDiv.textContent = ${event.date} - ${event.title};
-        eventDiv.addEventListener('click', () => {
-            alert(Detail:\n${event.title}\nCategory: ${event.category});
-        });
-        weeksDiv.appendChild(eventDiv);
+        eventDiv.innerHTML = <strong>${event.date} - ${event.title}</strong>;
+        eventDiv.addEventListener('click', () => showEventDetails(event));
+        weekDiv.appendChild(eventDiv);
     });
 
-    eventContainer.appendChild(weeksDiv);
+    eventContainer.appendChild(weekDiv);
 }
 
+function showEventDetails(event) {
+    const modal = document.createElement('div');
+    modal.className = 'modal is-active';
+    modal.innerHTML = `
+        <div class="modal-background"></div>
+        <div class="modal-content box">
+            <h3 class="title is-4">${event.title}</h3>
+            <p><strong>Date:</strong> ${event.date}</p>
+            <p><strong>Category:</strong> ${event.category}</p>
+            <hr>
+            <h4 class="subtitle is-6">Comments:</h4>
+            <div class="comments"></div>
+            <textarea class="textarea" placeholder="Write a comment..."></textarea>
+            <button class="button is-link mt-2">Post Comment</button>
+        </div>
+        <button class="modal-close is-large" aria-label="close"></button>
+    `;
+    document.body.appendChild(modal);
 
-searchInput.addEventListener('input', function() {
+    modal.querySelector('.modal-close').onclick = () => modal.remove();
+    modal.querySelector('.modal-background').onclick = () => modal.remove();
+    modal.querySelector('button.button').onclick = () => {
+        const text = modal.querySelector('textarea').value.trim();
+        if (text !== '') {
+            const p = document.createElement('p');
+            p.textContent = text;
+            modal.querySelector('.comments').appendChild(p);
+            modal.querySelector('textarea').value = '';
+        }
+    };
+}
+
+searchInput.addEventListener('input', () => {
     const keyword = searchInput.value.trim().toLowerCase();
-    if (keyword.length < 2) {
-        
-        eventContainer.innerHTML = "<p>Please type at least 2 letters to search.</p>";
-        return;
-    }
-    const filteredEvents = events.filter(event => 
-        event.title.toLowerCase().includes(keyword) || 
-        event.date.toLowerCase().includes(keyword)
+    const filtered = events.filter(e =>
+        e.title.toLowerCase().includes(keyword) ||
+        e.date.toLowerCase().includes(keyword)
     );
-    currentPage = 1; // Reset to page 1
-    renderEvents(filteredEvents);
-});
-
-
-categoryFilter.addEventListener('change', function() {
-    const selectedCategory = categoryFilter.value;
-    let filtered = [...events];
-
-    if (selectedCategory !== "Filter by Category") {
-        filtered = events.filter(event => event.category === selectedCategory);
-    }
-
     currentPage = 1;
     renderEvents(filtered);
 });
 
+categoryFilter.addEventListener('change', () => {
+    const cat = categoryFilter.value;
+    const filtered = cat === "Filter by Category" ? events : events.filter(e => e.category === cat);
+    currentPage = 1;
+    renderEvents(filtered);
+});
 
-sortBy.addEventListener('change', function() {
-    const sortOption = sortBy.value;
-    let sorted = [...events];
-
-    if (sortOption === 'Date') {
-        sorted.sort((a, b) => a.date.localeCompare(b.date));
-    } else if (sortOption === 'Name') {
-        sorted.sort((a, b) => a.title.localeCompare(b.title));
-    } else if (sortOption === 'Category') {
-        sorted.sort((a, b) => a.category.localeCompare(b.category));
-    }
-
+sortBy.addEventListener('change', () => {
+    const option = sortBy.value;
+    const sorted = [...events];
+    if (option === 'Date') sorted.sort((a, b) => a.date.localeCompare(b.date));
+    if (option === 'Name') sorted.sort((a, b) => a.title.localeCompare(b.title));
+    if (option === 'Category') sorted.sort((a, b) => a.category.localeCompare(b.category));
     currentPage = 1;
     renderEvents(sorted);
 });
 
-
-document.querySelectorAll('.buttons .button').forEach(button => {
-    button.addEventListener('click', function() {
-        if (this.textContent === 'Previous' && currentPage > 1) {
-            currentPage--;
-        } else if (this.textContent === 'Next' && (currentPage * eventsPerPage) < events.length) {
-            currentPage++;
-        } else if (!isNaN(this.textContent)) {
-            currentPage = parseInt(this.textContent);
-        }
+document.querySelectorAll('.buttons .button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        if (btn.textContent === 'Previous') currentPage = Math.max(1, currentPage - 1);
+        else if (btn.textContent === 'Next') currentPage++;
+        else currentPage = parseInt(btn.textContent);
         renderEvents(events);
     });
 });
-
 
 fetchEvents();
