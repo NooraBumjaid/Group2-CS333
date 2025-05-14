@@ -1,4 +1,3 @@
-
 const eventContainer = document.querySelector('.calendar');
 const searchInput = document.querySelector('.input');
 const categoryFilter = document.querySelectorAll('select')[0];
