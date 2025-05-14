@@ -1,155 +1,129 @@
 <!DOCTYPE html>
 <html lang="en" dir="auto">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Club Activities</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
-    <style>
-        /* Sidebar Styles */
-        .sidebar {
-            width: 250px;
-            height: 100vh;
-            position: fixed;
-            background: linear-gradient(135deg, #3f51b5, #5c6bc0);
-            padding-top: 20px;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-        }
-        .sidebar h4 {
-            color: white;
-            text-align: center;
-            font-weight: 600;
-        }
-        .sidebar a {
-            display: block;
-            padding: 12px 20px;
-            color: white;
-            text-decoration: none;
-            font-size: 16px;
-            font-weight: 500;
-            transition: background 0.3s;
-        }
-        .sidebar a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 5px;
-        }
-        .sidebar a.active {
-            background: rgba(255, 255, 255, 0.3);
-            font-weight: 700;
-            border-left: 4px solid white;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Club Activities</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .sidebar {
+      width: 250px;
+      height: 100vh;
+      position: fixed;
+      background: linear-gradient(135deg, #3f51b5, #5c6bc0);
+      padding-top: 20px;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .sidebar h4 {
+      color: white;
+      text-align: center;
+      font-weight: 600;
+    }
+    .sidebar a {
+      display: block;
+      padding: 12px 20px;
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 500;
+    }
+    .sidebar a:hover {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 5px;
+    }
+    .sidebar a.active {
+      background: rgba(255, 255, 255, 0.3);
+      font-weight: 700;
+      border-left: 4px solid white;
+    }
 
-        /* Content Layout */
-        .content {
-            margin-left: 270px;
-            padding: 40px 20px;
-        }
-        .box {
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(77, 3, 162, 0.1);
-        }
+    .content {
+      margin-left: 270px;
+      padding: 40px 20px;
+    }
+    .box {
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(77, 3, 162, 0.1);
+    }
+    .pagination {
+      justify-content: center;
+    }
 
-        /* Pagination Styling */
-        .pagination {
-            justify-content: center;
-        }
-
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .sidebar {
-                width: 220px;
-            }
-            .content {
-                margin-left: 240px;
-            }
-        }
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 100%;
-                height: auto;
-                position: relative;
-                padding-bottom: 10px;
-            }
-            .content {
-                margin-left: 0;
-                padding: 20px;
-            }
-        }
-
-    </style>
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 220px;
+      }
+      .content {
+        margin-left: 240px;
+      }
+    }
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 100%;
+        height: auto;
+        position: relative;
+        padding-bottom: 10px;
+      }
+      .content {
+        margin-left: 0;
+        padding: 20px;
+      }
+    }
+  </style>
 </head>
 <body>
-    <div class="sidebar">
-      <h4>📖 Campus Hub</h4>
-      <a href="../index.html">🏠 Home</a>
-      <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
-      <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
-      <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
-      <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
-      <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
-      <a href="#" class="active">👥 Club Activities</a>
-      <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
+  <div class="sidebar">
+    <h4>📖 Campus Hub</h4>
+    <a href="../index.html">🏠 Home</a>
+    <a href="../Bayan(EventsCalendar)/EventsCalendar.html">📅 Event Calendar</a>
+    <a href="../Manar(StudyGroupFinder)/SGF.html"> 👥 Study Group Finder</a>
+    <a href="../Noora(courseReview)/courseReview.html">⭐ Course Reviews</a>
+    <a href="../Aljazi(courseNote)/courseNote.html">📚 Course Notes</a>
+    <a href="../Rana(campusNews)/rana.html">📰 Campus News</a>
+    <a href="#" class="active">👥 Club Activities</a>
+    <a href="../Fatema(studentMarketPlace)/index.html">💰 Student Marketplace</a>
+  </div>
+
+  <div class="content">
+    <h1>Club Activities</h1>
+
+    <!-- Search and Filter Section -->
+    <div class="form-inline mb-4 justify-content-between">
+        <input type="text" id="search-input" class="form-control w-50" placeholder="Search activity">
+        <button class="btn btn-primary ml-2" onclick="window.location.href='form.html'">Add New Activity</button>
     </div>
-    
-    <div class="content">
-        <h1>Club Activities</h1>
-        
-        <!-- Search and Filter Section -->
-        <div class="form-inline mb-4 justify-content-between">
-            <input type="text" class="form-control w-50" placeholder="Search for activity">
-            <button class="btn btn-primary ml-2" onclick="window.location.href='form.html'">Add New Activity</button>
-        </div>
 
-        <!-- Sort and Filter Controls -->
-        <div class="form-inline mb-4">
-            <label class="mr-2">Sort by:</label>
-            <select class="form-control mr-3">
-                <option></option>
-                <option>(Newest to Oldest)</option>
-                <option>(Oldest to Newest)</option>
-                <option>(A to Z)</option>
-                <option>(Z to A)</option>
-            </select>
-            <label class="mr-2">Filter by:</label>
-            <select class="form-control">
-                <option>All Categories</option>
-                <option>Workshops</option>
-                <option>Courses</option>
-            </select>
-        </div>
-
-        <!-- Activities List -->
-        <div class="row">
-            <div class="col-md-6 mb-4">
-                <div class="card box">
-                    <div class="card-body">
-                        <h5 class="card-title">Graphic Design Workshop</h5>
-                        <p>Date: 10 MAR 2025</p>
-                        <button class="btn btn-primary" onclick="window.location.href='details.html'">Show Details</button>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-6 mb-4">
-                <div class="card box">
-                    <div class="card-body">
-                        <h5 class="card-title">Web Development Course</h5>
-                        <p>Date: 13 MAR 2025</p>
-                        <button class="btn btn-primary" onclick="window.location.href='details.html'">Show Details</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Pagination -->
-        <nav aria-label="Page navigation example">
-            <ul class="pagination">
-                <li class="page-item"><a class="page-link" href="#">Back</a></li>
-                <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                <li class="page-item"><a class="page-link" href="#">Next</a></li>
-            </ul>
-        </nav>
+    <!-- Sort and Filter Controls -->
+    <div class="form-inline mb-4">
+      <label for="sort-select" class="mr-2">Sort by:</label>
+      <select class="form-control mr-3" id="sort-select">
+          <option value="">Select an option</option>
+          <option value="newest">Newest to Oldest</option>
+          <option value="oldest">Oldest to Newest</option>
+          <option value="a_to_z">A to Z</option>
+          <option value="z_to_a">Z to A</option>
+      </select>
+      
+      <label for="filter-category" class="mr-2">Filter by:</label>
+      <select class="form-control" id="filter-category">
+          <option value="all">All Categories</option>
+          <option value="workshops">Workshops</option>
+          <option value="courses">Courses</option>
+      </select>
     </div>
-    
+
+    <!-- Activities container -->
+    <div class="row" id="activities-container"></div>
+  </div>
+
+  <!-- Pagination -->
+  <nav>
+    <ul class="pagination" id="pagination-container"></ul>
+  </nav>
+
+  <!-- Loading indicator -->
+  <div id="loading-indicator" style="display:none;">Loading...</div>
+
+  <script src="script.js" defer></script>
 </body>
 </html>

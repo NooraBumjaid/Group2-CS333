@@ -1,0 +1,37 @@
+[
+    {
+      "date": "April 1st",
+      "title": "Senior Project Exhibition",
+      "category": "Exhibition"
+    },
+    {
+      "date": "April 3rd",
+      "title": "Networking Event: Meet & Greet with Alumni",
+      "category": "Networking Event"
+    },
+    {
+      "date": "April 9th",
+      "title": "Club Meeting: Technology Club",
+      "category": "Workshop"
+    },
+    {
+      "date": "April 14th",
+      "title": "Panel Discussion: Future of Artificial Intelligence",
+      "category": "Seminar"
+    },
+    {
+      "date": "April 16th",
+      "title": "Workshop: Graphic Design with Adobe",
+      "category": "Workshop"
+    },
+    {
+      "date": "April 21st",
+      "title": "Coding Bootcamp: From Beginner to Pro",
+      "category": "Workshop"
+    },
+    {
+      "date": "April 23rd",
+      "title": "Leadership Seminar: Building Strong Teams",
+      "category": "Seminar"
+    }
+  ]

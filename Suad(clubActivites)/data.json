@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Graphic Design Workshop",
+    "date": "2025-03-10",
+    "description": "Learn the basics of design using Photoshop and Illustrator.",
+    "category": "workshops"
+  },
+  {
+    "id": 2,
+    "title": "Web Development Course",
+    "date": "2025-03-13",
+    "description": "The process of building, programming, and maintaining websites.",
+    "category": "courses"
+  },
+  {
+    "id": 3,
+    "title": "UI/UX Workshop",
+    "date": "2025-03-15",
+    "description": "Learn the basics of UI/UX design. Improve usability and create wireframes.",
+    "category": "workshops"
+  },
+  {
+    "id": 4,
+    "title": "JavaScript Course",
+    "date": "2025-03-20",
+    "description": "Master the fundamentals of JavaScript, learn to interact with the DOM.",
+    "category": "courses"
+  }
+]
