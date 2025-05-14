@@ -36,7 +36,7 @@
           <p></p>
 
           <div class="buttons">
-            <a href="#" class="button is-warning">✏️ Edit</a>
+            <a href="#" id="edit-btn" class="button is-warning">✏️ Edit</a>
             <a href="#" class="button is-danger">🗑️ Delete</a>
           </div>
         </div>
@@ -51,6 +51,60 @@
         <div class="box"></div>
 
       </div>
+
+      <!-- Edit Group Modal -->
+      <div class="modal" id="edit-modal">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+          <header class="modal-card-head">
+            <p class="modal-card-title">Edit Group</p>
+            <button class="delete" aria-label="close" id="close-edit-modal"></button>
+          </header>
+          <section class="modal-card-body">
+            <form id="edit-form">
+              <input type="hidden" id="edit-group-id">
+              <!-- Name -->
+              <div class="field">
+                <label class="label">Group Name</label>
+                <input class="input" id="edit-name" required>
+              </div>
+              <!-- Major -->
+              <div class="field">
+                <label class="label">Major</label>
+                <div class="select is-fullwidth">
+                  <select id="edit-major" required>
+                    <option>Computer Science</option>
+                    <option>Information System</option>
+                    <option>Network Engineering</option>
+                    <option>Elective Courses</option>
+                  </select>
+                </div>
+              </div>
+              <!-- Meeting Time -->
+              <div class="field">
+                <label class="label">Meeting Time</label>
+                <input class="input" id="edit-meeting" required>
+              </div>
+              <div class="field">
+                <label class="label">Description</label>
+                <textarea class="textarea" id="edit-description" required></textarea>
+              </div>
+              <!-- Members -->
+              <div class="field">
+                <label class="label">Members (one per line: Name: Major)</label>
+                <div class="control">
+                  <textarea id="edit-members" class="textarea" rows="5" placeholder="Ali: Computer Science"></textarea>
+                </div>
+              </div>
+            </form>
+          </section>
+          <footer class="modal-card-foot">
+            <button type="button" class="button is-success" id="save-edit">Save Changes</button>
+            <button type="button" class="button" id="cancel-edit">Cancel</button>
+          </footer>
+        </div>
+      </div>
+
     </section>
 
     <script src="./studyGroupFinder.js" defer></script>
